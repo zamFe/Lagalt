@@ -9,6 +9,7 @@ import { MainFilterComponent } from './components/main-filter/main-filter.compon
 import { MainLoginComponent } from './components/main-login/main-login.component';
 import { MainYourProjectsComponent } from './components/main-your-projects/main-your-projects.component';
 import { MainListOfProjectsComponent } from './components/main-list-of-projects/main-list-of-projects.component';
+import { MainFilterOptionComponent } from './components/main-filter-option/main-filter-option.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { MainListOfProjectsComponent } from './components/main-list-of-projects/
     MainFilterComponent,
     MainLoginComponent,
     MainYourProjectsComponent,
-    MainListOfProjectsComponent
+    MainListOfProjectsComponent,
+    MainFilterOptionComponent
   ],
   imports: [
     BrowserModule,
