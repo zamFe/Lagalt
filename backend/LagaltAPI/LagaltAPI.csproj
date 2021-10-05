@@ -17,7 +17,6 @@
   <ItemGroup>
     <Folder Include="Context\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Models\" />
     <Folder Include="Views\" />
     <Folder Include="Repositories\" />
     <Folder Include="Profiles\" />
