@@ -8,6 +8,7 @@ import { MainSearchComponent } from './components/main-search/main-search.compon
 import { MainFilterComponent } from './components/main-filter/main-filter.component';
 import { MainLoginComponent } from './components/main-login/main-login.component';
 import { MainYourProjectsComponent } from './components/main-your-projects/main-your-projects.component';
+import { MainListOfProjectsComponent } from './components/main-list-of-projects/main-list-of-projects.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { MainYourProjectsComponent } from './components/main-your-projects/main-
     MainSearchComponent,
     MainFilterComponent,
     MainLoginComponent,
-    MainYourProjectsComponent
+    MainYourProjectsComponent,
+    MainListOfProjectsComponent
   ],
   imports: [
     BrowserModule,
