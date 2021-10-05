@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { MainPage } from './pages/main/main.page';
 import { MainSearchComponent } from './components/main-search/main-search.component';
 import { MainFilterComponent } from './components/main-filter/main-filter.component';
+import { MainLoginComponent } from './components/main-login/main-login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainPage,
     MainSearchComponent,
-    MainFilterComponent
+    MainFilterComponent,
+    MainLoginComponent
   ],
   imports: [
     BrowserModule,
