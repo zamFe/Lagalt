@@ -7,6 +7,7 @@ import { MainPage } from './pages/main/main.page';
 import { MainSearchComponent } from './components/main-search/main-search.component';
 import { MainFilterComponent } from './components/main-filter/main-filter.component';
 import { MainLoginComponent } from './components/main-login/main-login.component';
+import { MainYourProjectsComponent } from './components/main-your-projects/main-your-projects.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { MainLoginComponent } from './components/main-login/main-login.component
     MainPage,
     MainSearchComponent,
     MainFilterComponent,
-    MainLoginComponent
+    MainLoginComponent,
+    MainYourProjectsComponent
   ],
   imports: [
     BrowserModule,
