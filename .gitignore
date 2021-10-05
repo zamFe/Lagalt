@@ -2,6 +2,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/angular,dotnetcore,aspnetcore,macos,windows,linux,webstorm,visualstudio,visualstudiocode,git,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=angular,dotnetcore,aspnetcore,macos,windows,linux,webstorm,visualstudio,visualstudiocode,git,node
 
+# Custom
+.env
+
 ### Angular ###
 ## Angular ##
 # compiled output

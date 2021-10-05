@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Context\" />
     <Folder Include="Migrations\" />
     <Folder Include="Views\" />
     <Folder Include="Repositories\" />
