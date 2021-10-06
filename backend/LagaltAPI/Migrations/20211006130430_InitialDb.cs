@@ -56,7 +56,7 @@ namespace LagaltAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProfessionId = table.Column<int>(type: "int", nullable: true),
+                    ProfessionId = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Progress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -71,28 +71,28 @@ namespace LagaltAPI.Migrations
                         column: x => x.ProfessionId,
                         principalTable: "Professions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SkillUser",
+                name: "UserSkills",
                 columns: table => new
                 {
-                    SkillsId = table.Column<int>(type: "int", nullable: false),
-                    UsersId = table.Column<int>(type: "int", nullable: false)
+                    SkillId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SkillUser", x => new { x.SkillsId, x.UsersId });
+                    table.PrimaryKey("PK_UserSkills", x => new { x.SkillId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_SkillUser_Skills_SkillsId",
-                        column: x => x.SkillsId,
+                        name: "FK_UserSkills_Skills_SkillId",
+                        column: x => x.SkillId,
                         principalTable: "Skills",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SkillUser_Users_UsersId",
-                        column: x => x.UsersId,
+                        name: "FK_UserSkills_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -104,8 +104,8 @@ namespace LagaltAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: true),
-                    ProjectId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false),
                     PostedTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -117,13 +117,13 @@ namespace LagaltAPI.Migrations
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Messages_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,16 +157,6 @@ namespace LagaltAPI.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Messages",
-                columns: new[] { "Id", "Content", "PostedTime", "ProjectId", "UserId" },
-                values: new object[,]
-                {
-                    { 1, "Anyone else like submarines?", new DateTime(2021, 10, 2, 12, 30, 52, 0, DateTimeKind.Unspecified), null, null },
-                    { 2, "Yeah", new DateTime(2021, 10, 2, 12, 40, 33, 0, DateTimeKind.Unspecified), null, null },
-                    { 3, "Not sure yet. We will see", new DateTime(2021, 10, 3, 8, 20, 3, 0, DateTimeKind.Unspecified), null, null }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Professions",
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
@@ -175,18 +165,6 @@ namespace LagaltAPI.Migrations
                     { 2, "Film" },
                     { 3, "Game Development" },
                     { 4, "Web Development" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Projects",
-                columns: new[] { "Id", "Description", "Image", "ProfessionId", "Progress", "Source", "Title" },
-                values: new object[,]
-                {
-                    { 4, "It was better before", null, null, "Stalled", "https://github.com/ddevault/TrueCraft", "Minecraft Nostalgia" },
-                    { 3, "What could go wrong?", null, null, "Completed", "https://github.com/vocollapse/Blockinger", "Yet Another Tetris Game" },
-                    { 5, "I did indeed read it", "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png", null, "Stalled", "https://github.com/ddevault/RedditSharp", "Reddit API" },
-                    { 1, "I've always wanted to travel by submarine and I've also got to make new songs", "https://upload.wikimedia.org/wikipedia/commons/d/d8/Submarine_Vepr_by_Ilya_Kurganov_crop.jpg", null, "In Progress", null, "Writing an album on a Submarine" },
-                    { 2, "Some call them movies and some call them films. But what if both were correct?", null, null, "Founding", null, "The Cinematic Movie Film" }
                 });
 
             migrationBuilder.InsertData(
@@ -207,13 +185,60 @@ namespace LagaltAPI.Migrations
                 columns: new[] { "Id", "Description", "Hidden", "Image", "Portfolio", "UserName" },
                 values: new object[,]
                 {
-                    { 5, "Game dev, I guess", false, null, null, "Rob" },
                     { 1, "Looking for my friend, Mr. Tambourine", false, "https://upload.wikimedia.org/wikipedia/commons/0/02/Bob_Dylan_-_Azkena_Rock_Festival_2010_2.jpg", "https://en.wikipedia.org/wiki/Bob_Dylan_discography", "Bob" },
                     { 2, "Currently learning to fly", false, null, "https://en.wikipedia.org/wiki/Dave_Grohl#Career", "Grohl" },
                     { 3, null, true, "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg", null, "DoubleOh" },
                     { 4, null, false, null, "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/", "ManOfEgg" },
+                    { 5, "Game dev, I guess", false, null, null, "Rob" },
                     { 6, null, false, "https://avatars.githubusercontent.com/u/1310872", "https://git.sr.ht/~sircmpwn", "Drew" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Projects",
+                columns: new[] { "Id", "Description", "Image", "ProfessionId", "Progress", "Source", "Title" },
+                values: new object[,]
+                {
+                    { 1, "I've always wanted to travel by submarine and I've also got to make new songs", "https://upload.wikimedia.org/wikipedia/commons/d/d8/Submarine_Vepr_by_Ilya_Kurganov_crop.jpg", 1, "In Progress", null, "Writing an album on a Submarine" },
+                    { 2, "Some call them movies and some call them films. But what if both were correct?", null, 2, "Founding", null, "The Cinematic Movie Film" },
+                    { 3, "What could go wrong?", null, 3, "Completed", "https://github.com/vocollapse/Blockinger", "Yet Another Tetris Game" },
+                    { 4, "It was better before", null, 3, "Stalled", "https://github.com/ddevault/TrueCraft", "Minecraft Nostalgia" },
+                    { 5, "I did indeed read it", "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png", 4, "Stalled", "https://github.com/ddevault/RedditSharp", "Reddit API" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UserSkills",
+                columns: new[] { "SkillId", "UserId" },
+                values: new object[,]
+                {
+                    { 4, 5 },
+                    { 3, 5 },
+                    { 2, 5 },
+                    { 1, 5 },
+                    { 5, 4 },
+                    { 3, 3 },
+                    { 3, 4 },
+                    { 5, 5 },
+                    { 2, 2 },
+                    { 1, 2 },
+                    { 1, 1 },
+                    { 4, 4 },
+                    { 6, 5 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Messages",
+                columns: new[] { "Id", "Content", "PostedTime", "ProjectId", "UserId" },
+                values: new object[] { 1, "Anyone else like submarines?", new DateTime(2021, 10, 2, 12, 30, 52, 0, DateTimeKind.Unspecified), 1, 1 });
+
+            migrationBuilder.InsertData(
+                table: "Messages",
+                columns: new[] { "Id", "Content", "PostedTime", "ProjectId", "UserId" },
+                values: new object[] { 2, "Yeah", new DateTime(2021, 10, 2, 12, 40, 33, 0, DateTimeKind.Unspecified), 1, 2 });
+
+            migrationBuilder.InsertData(
+                table: "Messages",
+                columns: new[] { "Id", "Content", "PostedTime", "ProjectId", "UserId" },
+                values: new object[] { 3, "Not sure yet. We will see", new DateTime(2021, 10, 3, 8, 20, 3, 0, DateTimeKind.Unspecified), 1, 3 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_ProjectId",
@@ -231,14 +256,14 @@ namespace LagaltAPI.Migrations
                 column: "ProfessionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SkillUser_UsersId",
-                table: "SkillUser",
-                column: "UsersId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserProjects_ProjectID",
                 table: "UserProjects",
                 column: "ProjectID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSkills_UserId",
+                table: "UserSkills",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -247,16 +272,16 @@ namespace LagaltAPI.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
-                name: "SkillUser");
-
-            migrationBuilder.DropTable(
                 name: "UserProjects");
 
             migrationBuilder.DropTable(
-                name: "Skills");
+                name: "UserSkills");
 
             migrationBuilder.DropTable(
                 name: "Projects");
+
+            migrationBuilder.DropTable(
+                name: "Skills");
 
             migrationBuilder.DropTable(
                 name: "Users");

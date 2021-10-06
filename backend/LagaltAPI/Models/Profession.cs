@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace LagaltAPI.Models
 {
@@ -9,5 +10,7 @@ namespace LagaltAPI.Models
 
         [MaxLength(30), Required]
         public string Name { get; set; }
+
+        public ICollection<Project> Projects { get; set; }
     }
 }

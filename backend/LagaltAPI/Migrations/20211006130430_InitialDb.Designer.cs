@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LagaltAPI.Migrations
 {
     [DbContext(typeof(LagaltContext))]
-    [Migration("20211006112951_InitialDb")]
+    [Migration("20211006130430_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,10 +36,10 @@ namespace LagaltAPI.Migrations
                     b.Property<DateTime>("PostedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ProjectId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -55,19 +55,25 @@ namespace LagaltAPI.Migrations
                         {
                             Id = 1,
                             Content = "Anyone else like submarines?",
-                            PostedTime = new DateTime(2021, 10, 2, 12, 30, 52, 0, DateTimeKind.Unspecified)
+                            PostedTime = new DateTime(2021, 10, 2, 12, 30, 52, 0, DateTimeKind.Unspecified),
+                            ProjectId = 1,
+                            UserId = 1
                         },
                         new
                         {
                             Id = 2,
                             Content = "Yeah",
-                            PostedTime = new DateTime(2021, 10, 2, 12, 40, 33, 0, DateTimeKind.Unspecified)
+                            PostedTime = new DateTime(2021, 10, 2, 12, 40, 33, 0, DateTimeKind.Unspecified),
+                            ProjectId = 1,
+                            UserId = 2
                         },
                         new
                         {
                             Id = 3,
                             Content = "Not sure yet. We will see",
-                            PostedTime = new DateTime(2021, 10, 3, 8, 20, 3, 0, DateTimeKind.Unspecified)
+                            PostedTime = new DateTime(2021, 10, 3, 8, 20, 3, 0, DateTimeKind.Unspecified),
+                            ProjectId = 1,
+                            UserId = 3
                         });
                 });
 
@@ -126,7 +132,7 @@ namespace LagaltAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("ProfessionId")
+                    b.Property<int>("ProfessionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Progress")
@@ -155,6 +161,7 @@ namespace LagaltAPI.Migrations
                             Id = 1,
                             Description = "I've always wanted to travel by submarine and I've also got to make new songs",
                             Image = "https://upload.wikimedia.org/wikipedia/commons/d/d8/Submarine_Vepr_by_Ilya_Kurganov_crop.jpg",
+                            ProfessionId = 1,
                             Progress = "In Progress",
                             Title = "Writing an album on a Submarine"
                         },
@@ -162,6 +169,7 @@ namespace LagaltAPI.Migrations
                         {
                             Id = 2,
                             Description = "Some call them movies and some call them films. But what if both were correct?",
+                            ProfessionId = 2,
                             Progress = "Founding",
                             Title = "The Cinematic Movie Film"
                         },
@@ -169,6 +177,7 @@ namespace LagaltAPI.Migrations
                         {
                             Id = 3,
                             Description = "What could go wrong?",
+                            ProfessionId = 3,
                             Progress = "Completed",
                             Source = "https://github.com/vocollapse/Blockinger",
                             Title = "Yet Another Tetris Game"
@@ -177,6 +186,7 @@ namespace LagaltAPI.Migrations
                         {
                             Id = 4,
                             Description = "It was better before",
+                            ProfessionId = 3,
                             Progress = "Stalled",
                             Source = "https://github.com/ddevault/TrueCraft",
                             Title = "Minecraft Nostalgia"
@@ -186,6 +196,7 @@ namespace LagaltAPI.Migrations
                             Id = 5,
                             Description = "I did indeed read it",
                             Image = "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png",
+                            ProfessionId = 4,
                             Progress = "Stalled",
                             Source = "https://github.com/ddevault/RedditSharp",
                             Title = "Reddit API"
@@ -355,30 +366,101 @@ namespace LagaltAPI.Migrations
                     b.ToTable("UserProjects");
                 });
 
-            modelBuilder.Entity("SkillUser", b =>
+            modelBuilder.Entity("UserSkills", b =>
                 {
-                    b.Property<int>("SkillsId")
+                    b.Property<int>("SkillId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UsersId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("SkillsId", "UsersId");
+                    b.HasKey("SkillId", "UserId");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("SkillUser");
+                    b.ToTable("UserSkills");
+
+                    b.HasData(
+                        new
+                        {
+                            SkillId = 1,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            SkillId = 1,
+                            UserId = 2
+                        },
+                        new
+                        {
+                            SkillId = 2,
+                            UserId = 2
+                        },
+                        new
+                        {
+                            SkillId = 3,
+                            UserId = 3
+                        },
+                        new
+                        {
+                            SkillId = 3,
+                            UserId = 4
+                        },
+                        new
+                        {
+                            SkillId = 4,
+                            UserId = 4
+                        },
+                        new
+                        {
+                            SkillId = 5,
+                            UserId = 4
+                        },
+                        new
+                        {
+                            SkillId = 1,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            SkillId = 2,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            SkillId = 3,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            SkillId = 4,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            SkillId = 5,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            SkillId = 6,
+                            UserId = 5
+                        });
                 });
 
             modelBuilder.Entity("LagaltAPI.Models.Message", b =>
                 {
                     b.HasOne("LagaltAPI.Models.Project", "Project")
                         .WithMany("Messages")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LagaltAPI.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .WithMany("Messages")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Project");
 
@@ -388,8 +470,10 @@ namespace LagaltAPI.Migrations
             modelBuilder.Entity("LagaltAPI.Models.Project", b =>
                 {
                     b.HasOne("LagaltAPI.Models.Profession", "Profession")
-                        .WithMany()
-                        .HasForeignKey("ProfessionId");
+                        .WithMany("Projects")
+                        .HasForeignKey("ProfessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Profession");
                 });
@@ -413,19 +497,24 @@ namespace LagaltAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SkillUser", b =>
+            modelBuilder.Entity("UserSkills", b =>
                 {
                     b.HasOne("LagaltAPI.Models.Skill", null)
                         .WithMany()
-                        .HasForeignKey("SkillsId")
+                        .HasForeignKey("SkillId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LagaltAPI.Models.User", null)
                         .WithMany()
-                        .HasForeignKey("UsersId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("LagaltAPI.Models.Profession", b =>
+                {
+                    b.Navigation("Projects");
                 });
 
             modelBuilder.Entity("LagaltAPI.Models.Project", b =>
@@ -437,6 +526,8 @@ namespace LagaltAPI.Migrations
 
             modelBuilder.Entity("LagaltAPI.Models.User", b =>
                 {
+                    b.Navigation("Messages");
+
                     b.Navigation("UserProjects");
                 });
 #pragma warning restore 612, 618

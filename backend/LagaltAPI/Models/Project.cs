@@ -8,6 +8,8 @@ namespace LagaltAPI.Models
     {
         public int Id { get; set; }
 
+        public int ProfessionId { get; set; }
+
         public Profession Profession { get; set; }
 
         public ICollection<Message> Messages { get; set; }
