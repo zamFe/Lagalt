@@ -1,4 +1,10 @@
-<div>
-    <p>main-filter works!</p>
-    <app-main-filter-option></app-main-filter-option>
+<div class="d-flex">
+    <ul class="d-flex">
+        <app-main-filter-option *ngFor="let option of optionList"
+        [optionName]="option"
+        >
+        </app-main-filter-option>
+    </ul>
+    
+
 </div>
