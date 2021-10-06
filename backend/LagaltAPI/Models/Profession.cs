@@ -7,7 +7,7 @@ namespace LagaltAPI.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        public bool Name { get; set; }
+        [MaxLength(30), Required]
+        public string Name { get; set; }
     }
 }

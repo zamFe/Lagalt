@@ -12,7 +12,7 @@ namespace LagaltAPI.Models
 
         public Project Project { get; set; }
 
-        [Required]
+        [MaxLength(140), Required]
         public string Content { get; set; }
 
         public DateTime PostedTime { get; set; }

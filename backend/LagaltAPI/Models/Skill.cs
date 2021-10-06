@@ -8,8 +8,8 @@ namespace LagaltAPI.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        public bool Name { get; set; }
+        [MaxLength(50), Required]
+        public string Name { get; set; }
 
         public ICollection<User> Users { get; set; }
     }

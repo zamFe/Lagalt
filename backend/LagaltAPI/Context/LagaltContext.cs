@@ -1,41 +1,227 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LagaltAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using LagaltAPI.Models;
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace LagaltAPI.Context
 {
+    /// <summary>
+    /// Simple representation of a database session.
+    /// Data source is picked up from a ".env" file.
+    /// </summary>
     public class LagaltContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+
         public DbSet<Project> Projects { get; set; }
 
         public DbSet<UserProject> UserProjects { get; set; }
+
         public DbSet<Message> Messages { get; set; }
+
         public DbSet<Skill> Skills { get; set; }
+
         public DbSet<Profession> Professions { get; set; }
-
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //load data source from .env file
-            var root = Directory.GetCurrentDirectory();
-            var dotenv = Path.Combine(root, ".env");
-            DotEnv.Load(dotenv);
+            // Load data source from .env file
+            var rootDir = Directory.GetCurrentDirectory();
+            var dotEnv = Path.Combine(rootDir, ".env");
+            DotEnv.Load(dotEnv);
 
-            optionsBuilder.UseSqlServer("" +
-                $"Data Source={Environment.GetEnvironmentVariable("DATA_SOURCE")};" +
-                "Initial Catalog=LagaltCodeFirstDb;" +
-                "Integrated Security=True;"
+            optionsBuilder.UseSqlServer(""
+                + $"Data Source={Environment.GetEnvironmentVariable("DATA_SOURCE")};"
+                + "Initial Catalog=LagaltCodeFirstDb;"
+                + "Integrated Security=True;"
                 );
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var professions = new Profession[]
+            {
+                new Profession{Id = 1, Name = "Music"},
+                new Profession{Id = 2, Name = "Film"},
+                new Profession{Id = 3, Name = "Game Development"},
+                new Profession{Id = 4, Name = "Web Development"}
+            };
+
+            var skills = new Skill[]
+            {
+                new Skill{Id = 1, Name = "Guitar"},
+                new Skill{Id = 2, Name = "Drums"},
+                new Skill{Id = 3, Name = "Acting"},
+                new Skill{Id = 4, Name = "Unity"},
+                new Skill{Id = 5, Name = "Unit testing"},
+                new Skill{Id = 6, Name = "TypeScript"}
+            };
+
+            var users = new User[]
+            {
+                new User
+                {
+                    Id = 1,
+                    Hidden = false,
+                    // Skills = new List<Skill>(new Skill[] {skills[0]}),
+                    UserName = "Bob",
+                    Description = "Looking for my friend, Mr. Tambourine",
+                    Image = "https://upload.wikimedia.org/wikipedia/commons/0/02/Bob_Dylan_-_Azkena_Rock_Festival_2010_2.jpg",
+                    Portfolio = "https://en.wikipedia.org/wiki/Bob_Dylan_discography"
+                },
+                new User
+                {
+                    Id = 2,
+                    Hidden = false,
+                    // Skills = new List<Skill>(new Skill[] {skills[0], skills[1]}),
+                    UserName = "Grohl",
+                    Description = "Currently learning to fly",
+                    Portfolio = "https://en.wikipedia.org/wiki/Dave_Grohl#Career"
+                },
+                new User
+                {
+                    Id = 3,
+                    // Skills = new List<Skill>(new Skill[] {skills[2]}),
+                    UserName = "DoubleOh",
+                    Image = "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg"
+                },
+                new User
+                {
+                    Id = 4,
+                    Hidden = false,
+                    // Skills = new List<Skill>(new Skill[] {skills[2]}),
+                    UserName = "ManOfEgg",
+                    Portfolio = "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/"
+                },
+                new User
+                {
+                    Id = 5,
+                    Hidden = false,
+                    // Skills = new List<Skill>(new Skill[] {skills[3], skills[4]}),
+                    UserName = "Rob",
+                    Description = "Game dev, I guess"
+                },
+                new User{
+                    Id = 6,
+                    Hidden = false,
+                    // Skills = new List<Skill>(new Skill[] {skills[4]}),
+                    UserName = "Drew",
+                    Image = "https://avatars.githubusercontent.com/u/1310872",
+                    Portfolio = "https://git.sr.ht/~sircmpwn"
+                }
+            };
+
+            var projects = new Project[]
+            {
+                new Project
+                {
+                    Id = 1,
+                    // Profession = professions[0],
+                    Title = "Writing an album on a Submarine",
+                    Description = "I've always wanted to travel by submarine and I've also got to make new songs",
+                    Progress = "In Progress",
+                    Image = "https://upload.wikimedia.org/wikipedia/commons/d/d8/Submarine_Vepr_by_Ilya_Kurganov_crop.jpg"
+                },
+                new Project
+                {
+                    Id = 2,
+                    // Profession = professions[1],
+                    Title = "The Cinematic Movie Film",
+                    Description = "Some call them movies and some call them films. But what if both were correct?"
+                },
+                new Project
+                {
+                    Id = 3,
+                    // Profession = professions[2],
+                    Title = "Yet Another Tetris Game",
+                    Description = "What could go wrong?",
+                    Progress =  "Completed",
+                    Source = "https://github.com/vocollapse/Blockinger"
+                },
+                new Project
+                {
+                    Id = 4,
+                    // Profession = professions[2],
+                    Title = "Minecraft Nostalgia",
+                    Description = "It was better before",
+                    Progress = "Stalled",
+                    Source = "https://github.com/ddevault/TrueCraft"
+                },
+                new Project
+                {
+                    Id = 5,
+                    // Profession = professions[3],
+                    Title = "Reddit API",
+                    Description = "I did indeed read it",
+                    Progress = "Stalled",
+                    Image = "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png",
+                    Source = "https://github.com/ddevault/RedditSharp"
+                },
+            };
+
+            // TODO - Add more messages
+            var messages = new Message[]
+            {
+                // Submarine project messsages
+                new Message
+                {
+                    Id = 1,
+                    Content = "Anyone else like submarines?",
+                    PostedTime = new DateTime(2021, 10, 2, 12, 30, 52)
+                },
+                new Message
+                {
+                    Id = 2,
+                    Content = "Yeah",
+                    PostedTime = new DateTime(2021, 10, 2, 12, 40, 33)
+                },
+                new Message
+                {
+                    Id = 3,
+                    Content = "Not sure yet. We will see",
+                    PostedTime = new DateTime(2021, 10, 3, 8, 20, 03)
+                },
+            };
+
+            foreach (Profession p in professions)
+                modelBuilder.Entity<Profession>().HasData(p);
+            foreach (Skill s in skills)
+                modelBuilder.Entity<Skill>().HasData(s);
+            foreach (User u in users)
+                modelBuilder.Entity<User>().HasData(u);
+            foreach (Project p in projects)
+                modelBuilder.Entity<Project>().HasData(p);
+            foreach (Message m in messages)
+                modelBuilder.Entity<Message>().HasData(m);
+
+            // TODO - set profession for each project
+            ;
+
+            // TODO - set users for each project
+            ;
+
+            // TODO - set messages for each project
+            ;
+
+            // TODO - set projects for each user
+            ;
+
+            // TODO - set skills for each user
+            ;
+
+            // TODO - set users for each skill
+            ;
+
+            // TODO - set user for each message
+            ;
+
+            // TODO - set project for each message
+            ;
+
+            // TODO - add UserProject entries
+            ;
+
             modelBuilder.Entity<UserProject>()
                 .HasKey(up => new { up.UserID, up.ProjectID });
             modelBuilder.Entity<UserProject>()

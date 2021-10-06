@@ -14,13 +14,19 @@ namespace LagaltAPI.Models
 
         public ICollection<UserProject> UserProjects { get; set; }
 
-        [Required]
+        [MaxLength(40), Required]
+        public string Title { get; set; }
+
+        [MaxLength(300), Required]
         public string Description { get; set; }
 
+        [MaxLength(50), Required]
+        public string Progress { get; set; } = "Founding";
+
+        [MaxLength(100)]
         public string Image { get; set; }
 
+        [MaxLength(100)]
         public string Source { get; set; }
-
-        public string Progress { get; set; }
     }
 }
