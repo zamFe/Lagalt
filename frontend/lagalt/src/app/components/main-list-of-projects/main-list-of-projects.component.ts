@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 // TEMP MODEL OF PROJECT
-interface Project {
+export interface Project {
   id: number,
   name: string,
   type: string,           // could be enum instead possibly

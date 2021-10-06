@@ -1,13 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-
-// TEMP MODEL OF PROJECT
-interface Project {
-  id: number,
-  name: string,
-  type: string,           // could be enum instead possibly
-  thumbnail: string,      // only a background color for now
-  //members: string[]
-}
+import { Project } from '../main-list-of-projects/main-list-of-projects.component';
 
 @Component({
   selector: 'app-main-list-of-projects-item',
