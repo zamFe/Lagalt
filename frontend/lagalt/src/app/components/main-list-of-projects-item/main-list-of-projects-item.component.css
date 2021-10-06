@@ -1,0 +1,9 @@
+li {
+    margin: 1rem;
+    min-width: 168px;
+    min-height: 168px;
+}
+
+span {
+    opacity: 1;
+}
