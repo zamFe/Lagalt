@@ -12,7 +12,6 @@ import { MainListOfProjectsComponent } from './components/main-list-of-projects/
 import { MainFilterOptionComponent } from './components/main-filter-option/main-filter-option.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ProfilePage } from './pages/profile/profile.page';
-import { ProfileImageComponent } from './components/profile-image/profile-image.component';
 import { ProfileUserInfoComponent } from './components/profile-user-info/profile-user-info.component';
 import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
 import {ProjectPage} from "./pages/project/project.page";
@@ -35,7 +34,6 @@ import { ProjectStatusComponent } from './components/project-status/project-stat
     MainFilterOptionComponent,
     NavbarComponent,
     ProfilePage,
-    ProfileImageComponent,
     ProfileUserInfoComponent,
     ProfileSettingsComponent,
     ProjectPage,
