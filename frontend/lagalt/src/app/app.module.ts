@@ -12,7 +12,6 @@ import { MainListOfProjectsComponent } from './components/main-list-of-projects/
 import { MainFilterOptionComponent } from './components/main-filter-option/main-filter-option.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ProfilePage } from './pages/profile/profile.page';
-import { ProfileImageComponent } from './components/profile-image/profile-image.component';
 import { ProfileUserInfoComponent } from './components/profile-user-info/profile-user-info.component';
 import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
 import {ProjectPage} from "./pages/project/project.page";
@@ -21,6 +20,9 @@ import { ProjectDescriptionComponent } from './components/project-description/pr
 import { ProjectSettingsComponent } from './components/project-settings/project-settings.component';
 import { ProjectRequestAccessComponent } from './components/project-request-access/project-request-access.component';
 import { ProjectStatusComponent } from './components/project-status/project-status.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -35,7 +37,6 @@ import { ProjectStatusComponent } from './components/project-status/project-stat
     MainFilterOptionComponent,
     NavbarComponent,
     ProfilePage,
-    ProfileImageComponent,
     ProfileUserInfoComponent,
     ProfileSettingsComponent,
     ProjectPage,
@@ -43,11 +44,22 @@ import { ProjectStatusComponent } from './components/project-status/project-stat
     ProjectDescriptionComponent,
     ProjectSettingsComponent,
     ProjectRequestAccessComponent,
-    ProjectStatusComponent
+    ProjectStatusComponent,
+
+
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    MatSlideToggleModule,
+
+  ],
+  exports: [
+    MatSlideToggleModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
