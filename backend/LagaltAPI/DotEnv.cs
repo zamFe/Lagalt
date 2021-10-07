@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace LagaltAPI
 {
 
-    /* db.env format: */
+    /* .env format: */
     /* DATA_SOURCE=source */
 
     public static class DotEnv

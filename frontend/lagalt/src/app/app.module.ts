@@ -11,6 +11,17 @@ import { MainYourProjectsComponent } from './components/main-your-projects/main-
 import { MainListOfProjectsComponent } from './components/main-list-of-projects/main-list-of-projects.component';
 import { MainFilterOptionComponent } from './components/main-filter-option/main-filter-option.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { ProfilePage } from './pages/profile/profile.page';
+import { ProfileImageComponent } from './components/profile-image/profile-image.component';
+import { ProfileUserInfoComponent } from './components/profile-user-info/profile-user-info.component';
+import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
+import {ProjectPage} from "./pages/project/project.page";
+import { ProjectChatComponent } from './components/project-chat/project-chat.component';
+import { ProjectDescriptionComponent } from './components/project-description/project-description.component';
+import { ProjectSettingsComponent } from './components/project-settings/project-settings.component';
+import { ProjectRequestAccessComponent } from './components/project-request-access/project-request-access.component';
+import { ProjectStatusComponent } from './components/project-status/project-status.component';
+
 
 @NgModule({
   declarations: [
@@ -22,7 +33,17 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     MainYourProjectsComponent,
     MainListOfProjectsComponent,
     MainFilterOptionComponent,
-    NavbarComponent
+    NavbarComponent,
+    ProfilePage,
+    ProfileImageComponent,
+    ProfileUserInfoComponent,
+    ProfileSettingsComponent,
+    ProjectPage,
+    ProjectChatComponent,
+    ProjectDescriptionComponent,
+    ProjectSettingsComponent,
+    ProjectRequestAccessComponent,
+    ProjectStatusComponent
   ],
   imports: [
     BrowserModule,
