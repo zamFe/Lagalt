@@ -9,6 +9,7 @@ using LagaltAPI.Context;
 using LagaltAPI.Models;
 using AutoMapper;
 using LagaltAPI.Models.DTOs.User;
+using LagaltAPI.Repositories;
 
 namespace LagaltAPI
 {
@@ -16,12 +17,12 @@ namespace LagaltAPI
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly LagaltContext _context;
+        private readonly UserService _service;
         private readonly IMapper _mapper;
 
-        public UsersController(LagaltContext context, IMapper mapper)
+        public UsersController(UserService service, IMapper mapper)
         {
-            _context = context;
+            _service = service;
             _mapper = mapper;
         }
 
@@ -29,23 +30,26 @@ namespace LagaltAPI
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetUsers()
         {
-            return _mapper.Map<List<UserReadDTO>>(await _context.Users.ToListAsync());
+            return _mapper.Map<List<UserReadDTO>>(await _service.GetAllAsync());
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UserReadDTO>> GetUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-
-            if (user == null)
+            try
             {
-                return NotFound();
+                var user = await _service.GetByIdAsync(id);
+
+                if (user != null)
+                    return _mapper.Map<UserReadDTO>(user);
+                else
+                    return NotFound();
             }
-
-            return _mapper.Map<UserReadDTO>(user);
+            catch (ArgumentNullException) { return BadRequest(); }
+            catch (InvalidOperationException) { return NotFound(); }
         }
-
+        
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -56,16 +60,20 @@ namespace LagaltAPI
                 return BadRequest();
             }
 
+            if (!_service.EntityExists(id))
+            {
+                return NotFound();
+            }
+
             User domainUser = _mapper.Map<User>(user);
-            _context.Entry(domainUser).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _service.UpdateAsync(domainUser);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!_service.EntityExists(id))
                 {
                     return NotFound();
                 }
@@ -84,33 +92,27 @@ namespace LagaltAPI
         public async Task<ActionResult<UserCreateDTO>> PostUser(UserCreateDTO dtoUser)
         {
             User domainUser = _mapper.Map<User>(dtoUser);
-            _context.Users.Add(domainUser);
-            await _context.SaveChangesAsync();
+            await _service.AddAsync(domainUser);
 
             return CreatedAtAction("GetUser", 
                 new { id = domainUser.Id }, 
                 _mapper.Map<UserReadDTO>(domainUser));
         }
 
+        /* NOT CURRENTLY SUPPORTED */
+        /*
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
+            if (!_service.EntityExists(id)) {
                 return NotFound();
             }
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            await _service.DeleteAsync(id);
 
             return NoContent();
         }
-
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.Id == id);
-        }
+        */
     }
 }

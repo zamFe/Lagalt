@@ -228,17 +228,24 @@ namespace LagaltAPI.Migrations
             migrationBuilder.InsertData(
                 table: "Messages",
                 columns: new[] { "Id", "Content", "PostedTime", "ProjectId", "UserId" },
-                values: new object[] { 1, "Anyone else like submarines?", new DateTime(2021, 10, 2, 12, 30, 52, 0, DateTimeKind.Unspecified), 1, 1 });
+                values: new object[,]
+                {
+                    { 1, "Anyone else like submarines?", new DateTime(2021, 10, 2, 12, 30, 52, 0, DateTimeKind.Unspecified), 1, 1 },
+                    { 2, "Yeah", new DateTime(2021, 10, 2, 12, 40, 33, 0, DateTimeKind.Unspecified), 1, 2 },
+                    { 3, "Not sure yet. We will see", new DateTime(2021, 10, 3, 8, 20, 3, 0, DateTimeKind.Unspecified), 1, 3 }
+                });
 
             migrationBuilder.InsertData(
-                table: "Messages",
-                columns: new[] { "Id", "Content", "PostedTime", "ProjectId", "UserId" },
-                values: new object[] { 2, "Yeah", new DateTime(2021, 10, 2, 12, 40, 33, 0, DateTimeKind.Unspecified), 1, 2 });
-
-            migrationBuilder.InsertData(
-                table: "Messages",
-                columns: new[] { "Id", "Content", "PostedTime", "ProjectId", "UserId" },
-                values: new object[] { 3, "Not sure yet. We will see", new DateTime(2021, 10, 3, 8, 20, 3, 0, DateTimeKind.Unspecified), 1, 3 });
+                table: "UserProjects",
+                columns: new[] { "ProjectID", "UserID", "Administrator", "Application", "Applied", "Clicked", "Contributed", "Viewed" },
+                values: new object[,]
+                {
+                    { 1, 1, true, null, true, true, false, true },
+                    { 1, 2, false, "Plz i luv submarinezz!!!1!!1!!", true, true, false, true },
+                    { 1, 3, false, "Request Access", true, true, false, true },
+                    { 1, 4, false, null, false, false, false, true },
+                    { 1, 5, false, null, false, true, false, true }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_ProjectId",

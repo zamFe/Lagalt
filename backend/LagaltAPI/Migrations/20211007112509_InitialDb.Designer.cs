@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LagaltAPI.Migrations
 {
     [DbContext(typeof(LagaltContext))]
-    [Migration("20211006130430_InitialDb")]
+    [Migration("20211007112509_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -364,6 +364,60 @@ namespace LagaltAPI.Migrations
                     b.HasIndex("ProjectID");
 
                     b.ToTable("UserProjects");
+
+                    b.HasData(
+                        new
+                        {
+                            UserID = 1,
+                            ProjectID = 1,
+                            Administrator = true,
+                            Applied = true,
+                            Clicked = true,
+                            Contributed = false,
+                            Viewed = true
+                        },
+                        new
+                        {
+                            UserID = 2,
+                            ProjectID = 1,
+                            Administrator = false,
+                            Application = "Plz i luv submarinezz!!!1!!1!!",
+                            Applied = true,
+                            Clicked = true,
+                            Contributed = false,
+                            Viewed = true
+                        },
+                        new
+                        {
+                            UserID = 3,
+                            ProjectID = 1,
+                            Administrator = false,
+                            Application = "Request Access",
+                            Applied = true,
+                            Clicked = true,
+                            Contributed = false,
+                            Viewed = true
+                        },
+                        new
+                        {
+                            UserID = 4,
+                            ProjectID = 1,
+                            Administrator = false,
+                            Applied = false,
+                            Clicked = false,
+                            Contributed = false,
+                            Viewed = true
+                        },
+                        new
+                        {
+                            UserID = 5,
+                            ProjectID = 1,
+                            Administrator = false,
+                            Applied = false,
+                            Clicked = true,
+                            Contributed = false,
+                            Viewed = true
+                        });
                 });
 
             modelBuilder.Entity("UserSkills", b =>

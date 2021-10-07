@@ -186,47 +186,6 @@ namespace LagaltAPI.Context
                     PostedTime = new DateTime(2021, 10, 3, 8, 20, 03)
                 },
             };
-            
-            foreach (Profession p in professions)
-                modelBuilder.Entity<Profession>().HasData(p);
-            foreach (Skill s in skills)
-                modelBuilder.Entity<Skill>().HasData(s);
-            foreach (User u in users)
-                modelBuilder.Entity<User>().HasData(u);
-            foreach (Project p in projects)
-                modelBuilder.Entity<Project>().HasData(p);
-            foreach (Message m in messages)
-                modelBuilder.Entity<Message>().HasData(m);
-
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Skills)
-                .WithMany(s => s.Users)
-                .UsingEntity<Dictionary<string, object>>
-                (
-                    "UserSkills",
-                    r => r.HasOne<Skill>().WithMany().HasForeignKey("SkillId"),
-                    l => l.HasOne<User>().WithMany().HasForeignKey("UserId"),
-                    je =>
-                    {
-                        je.HasKey("SkillId", "UserId");
-                        je.HasData
-                        (
-                            new { UserId = 1, SkillId = 1 },
-                            new { UserId = 2, SkillId = 1 },
-                            new { UserId = 2, SkillId = 2 },
-                            new { UserId = 3, SkillId = 3 },
-                            new { UserId = 4, SkillId = 3 },
-                            new { UserId = 4, SkillId = 4 },
-                            new { UserId = 4, SkillId = 5 },
-                            new { UserId = 5, SkillId = 1 },
-                            new { UserId = 5, SkillId = 2 },
-                            new { UserId = 5, SkillId = 3 },
-                            new { UserId = 5, SkillId = 4 },
-                            new { UserId = 5, SkillId = 5 },
-                            new { UserId = 5, SkillId = 6 }
-                        );
-                    }
-                );
 
             // TODO - add UserProject entries
             var userProjects = new UserProject[]
@@ -272,6 +231,49 @@ namespace LagaltAPI.Context
                     Clicked = true
                 }
             };
+
+            foreach (Profession p in professions)
+                modelBuilder.Entity<Profession>().HasData(p);
+            foreach (Skill s in skills)
+                modelBuilder.Entity<Skill>().HasData(s);
+            foreach (User u in users)
+                modelBuilder.Entity<User>().HasData(u);
+            foreach (Project p in projects)
+                modelBuilder.Entity<Project>().HasData(p);
+            foreach (Message m in messages)
+                modelBuilder.Entity<Message>().HasData(m);
+            foreach (UserProject up in userProjects)
+                modelBuilder.Entity<UserProject>().HasData(up);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Skills)
+                .WithMany(s => s.Users)
+                .UsingEntity<Dictionary<string, object>>
+                (
+                    "UserSkills",
+                    r => r.HasOne<Skill>().WithMany().HasForeignKey("SkillId"),
+                    l => l.HasOne<User>().WithMany().HasForeignKey("UserId"),
+                    je =>
+                    {
+                        je.HasKey("SkillId", "UserId");
+                        je.HasData
+                        (
+                            new { UserId = 1, SkillId = 1 },
+                            new { UserId = 2, SkillId = 1 },
+                            new { UserId = 2, SkillId = 2 },
+                            new { UserId = 3, SkillId = 3 },
+                            new { UserId = 4, SkillId = 3 },
+                            new { UserId = 4, SkillId = 4 },
+                            new { UserId = 4, SkillId = 5 },
+                            new { UserId = 5, SkillId = 1 },
+                            new { UserId = 5, SkillId = 2 },
+                            new { UserId = 5, SkillId = 3 },
+                            new { UserId = 5, SkillId = 4 },
+                            new { UserId = 5, SkillId = 5 },
+                            new { UserId = 5, SkillId = 6 }
+                        );
+                    }
+                );
 
             modelBuilder.Entity<UserProject>()
                 .HasKey(up => new { up.UserID, up.ProjectID });
