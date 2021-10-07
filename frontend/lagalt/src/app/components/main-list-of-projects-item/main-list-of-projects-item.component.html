@@ -1,0 +1,18 @@
+<li class="projectItem col text-center border d-flex flex-column">
+  <div class="row-sm-4 py-2 row">
+    <span class="col-sm-8 align-self-center h4">{{project.type}}</span>
+    <div class="d-flex col col-sm-4">
+      <span class="row-sm-6 align-self-center">
+        skills needed:
+      </span>
+      <ul class="row-sm-6">
+        <li *ngFor="let item of skills">
+            {{item}}
+        </li>
+      </ul>
+      </div>
+    </div>
+  <div class="row-sm-8 py-5" [ngStyle]="{'background-color': project.thumbnail}">
+    <span>{{project.name}}</span>
+  </div>
+</li>

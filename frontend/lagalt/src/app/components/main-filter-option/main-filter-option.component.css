@@ -1,0 +1,17 @@
+/* css to make div act as button with mouse hover, focus etc.*/
+
+.filterOption {
+    background-color: #83e0ff;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 0.1rem;
+    cursor: pointer;
+}
+
+.filterOption:hover {
+    background-color: #b6edff;
+}
+
+.filterOption:active {
+    background-color: #969ea0;
+}
