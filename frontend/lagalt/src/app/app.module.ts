@@ -13,15 +13,13 @@ import { MainListOfProjectsItemComponent } from './components/main-list-of-proje
 import { ProfilePage } from './pages/profile/profile.page';
 import { ProfileUserInfoComponent } from './components/profile-user-info/profile-user-info.component';
 import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
-import {ProjectPage} from "./pages/project/project.page";
+import { ProjectPage } from "./pages/project/project.page";
 import { ProjectChatComponent } from './components/project-chat/project-chat.component';
-import { ProjectDescriptionComponent } from './components/project-description/project-description.component';
-import { ProjectSettingsComponent } from './components/project-settings/project-settings.component';
-import { ProjectRequestAccessComponent } from './components/project-request-access/project-request-access.component';
-import { ProjectStatusComponent } from './components/project-status/project-status.component';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 
 
@@ -40,11 +38,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ProfileUserInfoComponent,
     ProfileSettingsComponent,
     ProjectPage,
-    ProjectChatComponent,
-    ProjectDescriptionComponent,
-    ProjectSettingsComponent,
-    ProjectRequestAccessComponent,
-    ProjectStatusComponent,
+    ProjectChatComponent
   ],
   imports: [
     BrowserModule,
