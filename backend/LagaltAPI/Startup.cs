@@ -32,6 +32,7 @@ namespace LagaltAPI
 
             services.AddControllers();
             services.AddScoped(typeof(UserService));
+            services.AddScoped(typeof(ProjectService));
             services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<LagaltContext>();
             services.AddSwaggerGen(c =>

@@ -9,6 +9,7 @@ using LagaltAPI.Context;
 using LagaltAPI.Models;
 using AutoMapper;
 using LagaltAPI.Models.DTOs.Project;
+using LagaltAPI.Repositories;
 
 namespace LagaltAPI.Controllers
 {
@@ -16,12 +17,12 @@ namespace LagaltAPI.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly LagaltContext _context;
+        private readonly ProjectService _service;
         private readonly IMapper _mapper;
 
-        public ProjectsController(LagaltContext context, IMapper mapper)
+        public ProjectsController(ProjectService service, IMapper mapper)
         {
-            _context = context;
+            _service = service;
             _mapper = mapper;
         }
 
@@ -29,21 +30,24 @@ namespace LagaltAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjects()
         {
-            return _mapper.Map<List<ProjectReadDTO>>(await _context.Projects.ToListAsync());
+            return _mapper.Map<List<ProjectReadDTO>>(await _service.GetAllAsync());
         }
 
         // GET: api/Projects/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProjectReadDTO>> GetProject(int id)
         {
-            var project = await _context.Projects.FindAsync(id);
-
-            if (project == null)
+            try
             {
-                return NotFound();
-            }
+                var project = await _service.GetByIdAsync(id);
 
-            return _mapper.Map<ProjectReadDTO>(project);
+                if (project != null)
+                    return _mapper.Map<ProjectReadDTO>(project);
+                else
+                    return NotFound();
+            }
+            catch (ArgumentNullException) { return BadRequest(); }
+            catch (InvalidOperationException) { return NotFound(); }
         }
 
         // PUT: api/Projects/5
@@ -56,16 +60,20 @@ namespace LagaltAPI.Controllers
                 return BadRequest();
             }
 
+            if (!_service.EntityExists(id))
+            {
+                return NotFound();
+            }
+
             Project domainProject = _mapper.Map<Project>(project);
-            _context.Entry(domainProject).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _service.UpdateAsync(domainProject);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProjectExists(id))
+                if (!_service.EntityExists(id))
                 {
                     return NotFound();
                 }
@@ -81,17 +89,18 @@ namespace LagaltAPI.Controllers
         // POST: api/Projects
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ProjectCreateDTO>> PostProject(ProjectCreateDTO project)
+        public async Task<ActionResult<ProjectCreateDTO>> PostProject(ProjectCreateDTO dtoProject)
         {
-            Project domainProject = _mapper.Map<Project>(project);
-            _context.Projects.Add(domainProject);
-            await _context.SaveChangesAsync();
+            Project domainProject = _mapper.Map<Project>(dtoProject);
+            await _service.AddAsync(domainProject);
 
             return CreatedAtAction("GetProject", 
                 new { id = domainProject.Id }, 
                 _mapper.Map<ProjectReadDTO>(domainProject));
         }
 
+        /* NOT CURRENTLY SUPPORTED */
+        /*
         // DELETE: api/Projects/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
@@ -107,10 +116,6 @@ namespace LagaltAPI.Controllers
 
             return NoContent();
         }
-
-        private bool ProjectExists(int id)
-        {
-            return _context.Projects.Any(e => e.Id == id);
-        }
+        */
     }
 }
