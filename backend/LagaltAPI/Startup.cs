@@ -2,18 +2,10 @@ using LagaltAPI.Context;
 using LagaltAPI.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LagaltAPI
 {
@@ -33,6 +25,7 @@ namespace LagaltAPI
             services.AddControllers();
             services.AddScoped(typeof(UserService));
             services.AddScoped(typeof(ProjectService));
+            services.AddScoped(typeof(SkillService));
             services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<LagaltContext>();
             services.AddSwaggerGen(c =>

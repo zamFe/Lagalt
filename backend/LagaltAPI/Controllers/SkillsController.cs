@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using LagaltAPI.Context;
 using LagaltAPI.Models;
 using LagaltAPI.Models.DTOs.Skill;
+using LagaltAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LagaltAPI.Controllers
@@ -14,32 +14,43 @@ namespace LagaltAPI.Controllers
     [ApiController]
     public class SkillsController : ControllerBase
     {
-        private readonly LagaltContext _context;
         private readonly IMapper _mapper;
+        private readonly SkillService _service;
 
-        public SkillsController(LagaltContext context, IMapper mapper)
+        public SkillsController(IMapper mapper, SkillService service)
         {
-            _context = context;
             _mapper = mapper;
+            _service = service;
         }
 
         // GET: api/Skills
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SkillReadDTO>>> GetSkills()
         {
-            return _mapper.Map<List<SkillReadDTO>>(await _context.Skills.ToListAsync());
+            return _mapper.Map<List<SkillReadDTO>>(await _service.GetAllAsync());
         }
 
         // GET: api/Skills/5
         [HttpGet("{id}")]
         public async Task<ActionResult<SkillReadDTO>> GetSkill(int id)
         {
-            var skill = await _context.Skills.FindAsync(id);
+            try
+            {
+                var skillDomain = await _service.GetByIdAsync(id);
 
-            if (skill == null)
+                if (skillDomain != null)
+                    return _mapper.Map<SkillReadDTO>(skillDomain);
+                else
+                    return NotFound();
+            }
+            catch (ArgumentNullException)
+            {
+                return BadRequest();
+            }
+            catch (InvalidOperationException)
+            {
                 return NotFound();
-
-            return _mapper.Map<SkillReadDTO>(skill);
+            }
         }
 
         // PUT: api/Skills/5
@@ -50,16 +61,18 @@ namespace LagaltAPI.Controllers
             if (id != skillDTO.Id)
                 return BadRequest();
 
-            Skill domainSkill = _mapper.Map<Skill>(skillDTO);
-            _context.Entry(domainSkill).State = EntityState.Modified;
+            if (!_service.EntityExists(id))
+                return NotFound();
+
+            var skillDomain = _mapper.Map<Skill>(skillDTO);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _service.UpdateAsync(skillDomain);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SkillExists(id))
+                if (!_service.EntityExists(id))
                     return NotFound();
                 else
                     throw;
@@ -73,37 +86,31 @@ namespace LagaltAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<SkillCreateDTO>> PostSkill(SkillCreateDTO skillDTO)
         {
-            Skill skillDomain = _mapper.Map<Skill>(skillDTO);
-            _context.Skills.Add(skillDomain);
-            await _context.SaveChangesAsync();
+            var skillDomain = _mapper.Map<Skill>(skillDTO);
+            await _service.AddAsync(skillDomain);
 
-            return CreatedAtAction("GetSkill",
+            return CreatedAtAction("GetUser",
                 new { id = skillDomain.Id },
                 _mapper.Map<SkillReadDTO>(skillDomain));
         }
 
         /* TODO - Decide whether to support deleting skills
          * 
-        // DELETE: api/Skills/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSkill(int id)
-        {
-            var skill = await _context.Skills.FindAsync(id);
-            if (skill == null)
-            {
-                return NotFound();
-            }
-
-            _context.Skills.Remove(skill);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-        */
-
-        private bool SkillExists(int id)
-        {
-            return _context.Skills.Any(e => e.Id == id);
-        }
+         * // DELETE: api/Skills/5
+         * [HttpDelete("{id}")]
+         * public async Task<IActionResult> DeleteSkill(int id)
+         * {
+         *    var skill = await _context.Skills.FindAsync(id);
+         *    if (skill == null)
+         *    {
+         *        return NotFound();
+         *    }
+         *
+         *    _context.Skills.Remove(skill);
+         *    await _context.SaveChangesAsync();
+         * 
+         *   return NoContent();
+         * }
+         */
     }
 }
