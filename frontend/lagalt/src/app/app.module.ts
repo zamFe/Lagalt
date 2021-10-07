@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import {FormsModule} from "@angular/forms";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -7,10 +8,10 @@ import { MainPage } from './pages/main/main.page';
 import { MainSearchComponent } from './components/main-search/main-search.component';
 import { MainFilterComponent } from './components/main-filter/main-filter.component';
 import { MainLoginComponent } from './components/main-login/main-login.component';
-import { MainYourProjectsComponent } from './components/main-your-projects/main-your-projects.component';
 import { MainListOfProjectsComponent } from './components/main-list-of-projects/main-list-of-projects.component';
 import { MainFilterOptionComponent } from './components/main-filter-option/main-filter-option.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { MainListOfProjectsItemComponent } from './components/main-list-of-projects-item/main-list-of-projects-item.component';
 import { ProfilePage } from './pages/profile/profile.page';
 import { ProfileUserInfoComponent } from './components/profile-user-info/profile-user-info.component';
 import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
@@ -25,6 +26,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,10 +34,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MainSearchComponent,
     MainFilterComponent,
     MainLoginComponent,
-    MainYourProjectsComponent,
     MainListOfProjectsComponent,
     MainFilterOptionComponent,
     NavbarComponent,
+    MainListOfProjectsItemComponent
     ProfilePage,
     ProfileUserInfoComponent,
     ProfileSettingsComponent,
@@ -45,8 +47,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ProjectSettingsComponent,
     ProjectRequestAccessComponent,
     ProjectStatusComponent,
-
-
   ],
   imports: [
     BrowserModule,
@@ -55,7 +55,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FormsModule,
     BrowserAnimationsModule,
     MatSlideToggleModule,
-
   ],
   exports: [
     MatSlideToggleModule,

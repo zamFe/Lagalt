@@ -6,10 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./main-filter.component.css']
 })
 export class MainFilterComponent implements OnInit {
-
+  public optionList: string[] = [];
   constructor() { }
 
   ngOnInit(): void {
+    this.optionList = ["best", "new", "all"]
   }
 
 }
