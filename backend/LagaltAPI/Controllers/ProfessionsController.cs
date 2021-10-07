@@ -9,6 +9,7 @@ using LagaltAPI.Context;
 using LagaltAPI.Models;
 using AutoMapper;
 using LagaltAPI.Models.DTOs.Profession;
+using LagaltAPI.Repositories;
 
 namespace LagaltAPI.Controllers
 {
@@ -16,101 +17,94 @@ namespace LagaltAPI.Controllers
     [ApiController]
     public class ProfessionsController : ControllerBase
     {
-        private readonly LagaltContext _context;
         private readonly IMapper _mapper;
+        private readonly ProfessionService _service;
 
-        public ProfessionsController(LagaltContext context, IMapper mapper)
+        public ProfessionsController(IMapper mapper, ProfessionService service)
         {
-            _context = context;
             _mapper = mapper;
+            _service = service;
         }
 
         // GET: api/Professions
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProfessionReadDTO>>> GetProfessions()
         {
-            return _mapper.Map<List<ProfessionReadDTO>>(await _context.Professions.ToListAsync());
+            return _mapper.Map<List<ProfessionReadDTO>>(await _service.GetAllAsync());
         }
 
         // GET: api/Professions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProfessionReadDTO>> GetProfession(int id)
         {
-            var profession = await _context.Professions.FindAsync(id);
-
-            if (profession == null)
+            try
             {
-                return NotFound();
+                var professionDomain = await _service.GetByIdAsync(id);
+
+                if (professionDomain != null)
+                    return _mapper.Map<ProfessionReadDTO>(professionDomain);
+                else
+                    return NotFound();
             }
-
-            return _mapper.Map<ProfessionReadDTO>(profession);
-        }
-
-        /* PUT, POST and DELETE are disabled until support for more professions is added */
-
-        /*
-        // PUT: api/Professions/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProfession(int id, Profession profession)
-        {
-            if (id != profession.Id)
+            catch (ArgumentNullException)
             {
                 return BadRequest();
             }
-
-            _context.Entry(profession).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProfessionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Professions
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Profession>> PostProfession(Profession profession)
-        {
-            _context.Professions.Add(profession);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetProfession", new { id = profession.Id }, profession);
-        }
-
-        // DELETE: api/Professions/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProfession(int id)
-        {
-            var profession = await _context.Professions.FindAsync(id);
-            if (profession == null)
+            catch (InvalidOperationException)
             {
                 return NotFound();
             }
-
-            _context.Professions.Remove(profession);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool ProfessionExists(int id)
-        {
-            return _context.Professions.Any(e => e.Id == id);
-        }
+        /* PUT, POST and DELETE are disabled until support for more professions is added
+         *
+        * // PUT: api/Professions/5
+        * // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        * [HttpPut("{id}")]
+        * public async Task<IActionResult> PutProfession(int id, Profession profession)
+        * {
+        *     if (id != profession.Id)
+        *         return BadRequest();
+        *
+        *     _context.Entry(profession).State = EntityState.Modified;
+        *
+        *     try
+        *         await _context.SaveChangesAsync();
+        *     catch (DbUpdateConcurrencyException)
+        *     {
+        *         if (!ProfessionExists(id))
+        *             return NotFound();
+        *         else
+        *             throw;
+        *     }
+        *
+        *     return NoContent();
+        * }
+        * 
+        * // POST: api/Professions
+        * // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        * [HttpPost]
+        * public async Task<ActionResult<Profession>> PostProfession(Profession profession)
+        * {
+        *     _context.Professions.Add(profession);
+        *     await _context.SaveChangesAsync();
+        *
+        *     return CreatedAtAction("GetProfession", new { id = profession.Id }, profession);
+        * }
+        *
+        * // DELETE: api/Professions/5
+        * [HttpDelete("{id}")]
+        * public async Task<IActionResult> DeleteProfession(int id)
+        * {
+        *     var profession = await _context.Professions.FindAsync(id);
+        *    if (profession == null)
+        *         return NotFound();
+        * 
+        *     _context.Professions.Remove(profession);
+        *    await _context.SaveChangesAsync();
+        * 
+        *     return NoContent();
+        * }
         */
     }
 }
