@@ -1,8 +1,49 @@
-<main>
-  <div>
+  <div class ="container">
+    <div class ="mx-auto">
+      <h3 class ="text-center">profile works!</h3>
+    </div>
+    <div class ="mx-auto">
+      <form #addSkillForm="ngForm" (ngSubmit)="addSkill(addSkillForm)">
+        <input
+        ngModel
+        class="form-control"
+        placeholder="Add your skill here..."
+        #username="ngModel"
+        name = "skills"
+        id = "skills"
+        required> <br/>
+        <button class="btn btn-success form-control"
+        type="submit">Add your skill</button>
+        <ul>
+          <li *ngFor="let skill of skills">{{skill}}</li>
+        </ul>
+
+    </form>
+    </div>
     <div>
-      <h3>profile works!</h3>
+      <form [formGroup] = "textAreaForm">
+        <div  class="sub-heading">
+          <h5>
+            Describe yourself
+          </h5>
+        </div>
+        <textarea class ="text-area" formControlName="textArea"></textarea>
+     </form>
+     <div class="sub-heading">
+        <h5>
+          This is how textArea Will be stored:
+          {{textAreaForm.get("textArea")!.value | json}}
+        </h5>
+      </div>
+    </div>
+
+    <div>
+      <mat-slide-toggle
+       [(ngModel)]="isChecked"
+        class="example-margin"
+       (change) = "changed()"
+        >Hidden mode: {{isChecked}}
+      </mat-slide-toggle>
     </div>
   </div>
-</main>
 

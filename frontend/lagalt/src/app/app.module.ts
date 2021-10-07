@@ -20,6 +20,9 @@ import { ProjectDescriptionComponent } from './components/project-description/pr
 import { ProjectSettingsComponent } from './components/project-settings/project-settings.component';
 import { ProjectRequestAccessComponent } from './components/project-request-access/project-request-access.component';
 import { ProjectStatusComponent } from './components/project-status/project-status.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -41,11 +44,22 @@ import { ProjectStatusComponent } from './components/project-status/project-stat
     ProjectDescriptionComponent,
     ProjectSettingsComponent,
     ProjectRequestAccessComponent,
-    ProjectStatusComponent
+    ProjectStatusComponent,
+
+
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    MatSlideToggleModule,
+
+  ],
+  exports: [
+    MatSlideToggleModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
