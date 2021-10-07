@@ -18,7 +18,7 @@ const routes: Routes = [
   {
     path : 'profile',
     component : ProfilePage,
-  }
+  },
   {
     path : 'project',
     component : ProjectPage,
