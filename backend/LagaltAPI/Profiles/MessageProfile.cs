@@ -8,9 +8,24 @@ namespace LagaltAPI.Profiles
     {
         public MessageProfile()
         {
-            CreateMap<Message, MessageCreateDTO>().ReverseMap();
-            CreateMap<Message, MessageEditDTO>().ReverseMap();
-            CreateMap<Message, MessageReadDTO>().ReverseMap();
+            CreateMap<Message, MessageCreateDTO>()
+                .ForMember(mdto => mdto.User, opt => opt
+                .MapFrom(m => m.UserId))
+                .ForMember(mdto => mdto.Project, opt => opt
+                .MapFrom(m => m.ProjectId))
+                .ReverseMap();
+            CreateMap<Message, MessageEditDTO>()
+                .ForMember(mdto => mdto.User, opt => opt
+                .MapFrom(m => m.UserId))
+                .ForMember(mdto => mdto.Project, opt => opt
+                .MapFrom(m => m.ProjectId))
+                .ReverseMap();
+            CreateMap<Message, MessageReadDTO>()
+                .ForMember(mdto => mdto.User, opt => opt
+                .MapFrom(m => m.UserId))
+                .ForMember(mdto => mdto.Project, opt => opt
+                .MapFrom(m => m.ProjectId))
+                .ReverseMap();
         }
     }
 }

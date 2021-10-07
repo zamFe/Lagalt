@@ -2,8 +2,10 @@
 using LagaltAPI.Context;
 using LagaltAPI.Models;
 using LagaltAPI.Models.DTOs.Message;
+using LagaltAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,12 +16,12 @@ namespace LagaltAPI.Controllers
     [ApiController]
     public class MessagesController : ControllerBase
     {
-        private readonly LagaltContext _context;
+        private readonly MessageService _service;
         private readonly IMapper _mapper;
 
-        public MessagesController(LagaltContext context, IMapper mapper)
+        public MessagesController(MessageService service, IMapper mapper)
         {
-            _context = context;
+            _service = service;
             _mapper = mapper;
         }
 
@@ -27,19 +29,24 @@ namespace LagaltAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MessageReadDTO>>> GetMessages()
         {
-            return _mapper.Map<List<MessageReadDTO>>(await _context.Messages.ToListAsync());
+            return _mapper.Map<List<MessageReadDTO>>(await _service.GetAllAsync());
         }
 
         // GET: api/Messages/5
         [HttpGet("{id}")]
         public async Task<ActionResult<MessageReadDTO>> GetMessage(int id)
         {
-            var message = await _context.Messages.FindAsync(id);
+            try
+            {
+                var message = await _service.GetByIdAsync(id);
 
-            if (message == null)
-                return NotFound();
-
-            return _mapper.Map<MessageReadDTO>(message);
+                if (message != null)
+                    return _mapper.Map<MessageReadDTO>(message);
+                else
+                    return NotFound();
+            }
+            catch (ArgumentNullException) { return BadRequest(); }
+            catch (InvalidOperationException) { return NotFound(); }
         }
 
         /* TODO - decide whether to support editing messages
@@ -73,16 +80,18 @@ namespace LagaltAPI.Controllers
         // POST: api/Messages
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Message>> PostMessage(Message message)
+        public async Task<ActionResult<Message>> PostMessage(Message dtoMessage)
         {
-            _context.Messages.Add(message);
-            await _context.SaveChangesAsync();
+            Message domainMessage = _mapper.Map<Message>(dtoMessage);
+            await _service.AddAsync(domainMessage);
 
-            return CreatedAtAction("GetMessage", new { id = message.Id }, message);
+            return CreatedAtAction("GetMessage", 
+                new { id = domainMessage.Id }, 
+                _mapper.Map<MessageReadDTO>(domainMessage));
         }
 
-        /* TODO - decide whether to support deleting messages
-         * 
+        /* NOT CURRENTLY SUPPORTED */
+        /* 
         // DELETE: api/Messages/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMessage(int id)
