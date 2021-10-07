@@ -12,15 +12,11 @@ import { MainListOfProjectsComponent } from './components/main-list-of-projects/
 import { MainFilterOptionComponent } from './components/main-filter-option/main-filter-option.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ProfilePage } from './pages/profile/profile.page';
-import { ProfileImageComponent } from './components/profile-image/profile-image.component';
 import { ProfileUserInfoComponent } from './components/profile-user-info/profile-user-info.component';
 import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
 import {ProjectPage} from "./pages/project/project.page";
 import { ProjectChatComponent } from './components/project-chat/project-chat.component';
-import { ProjectDescriptionComponent } from './components/project-description/project-description.component';
-import { ProjectSettingsComponent } from './components/project-settings/project-settings.component';
-import { ProjectRequestAccessComponent } from './components/project-request-access/project-request-access.component';
-import { ProjectStatusComponent } from './components/project-status/project-status.component';
+
 
 
 @NgModule({
@@ -35,15 +31,10 @@ import { ProjectStatusComponent } from './components/project-status/project-stat
     MainFilterOptionComponent,
     NavbarComponent,
     ProfilePage,
-    ProfileImageComponent,
     ProfileUserInfoComponent,
     ProfileSettingsComponent,
     ProjectPage,
-    ProjectChatComponent,
-    ProjectDescriptionComponent,
-    ProjectSettingsComponent,
-    ProjectRequestAccessComponent,
-    ProjectStatusComponent
+    ProjectChatComponent
   ],
   imports: [
     BrowserModule,
