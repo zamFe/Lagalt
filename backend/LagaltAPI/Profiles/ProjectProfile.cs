@@ -13,6 +13,8 @@ namespace LagaltAPI.Profiles
         public ProjectProfile()
         {
             CreateMap<Project, ProjectReadDTO>()
+                .ForMember(pdto => pdto.Profession, opt => opt
+                .MapFrom(p => p.ProfessionId))
                 .ForMember(pdto => pdto.Messages, opt => opt
                 .MapFrom(p => p.Messages.Select(m => m.Id).ToList()))
                 .ForMember(pdto => pdto.Users, opt => opt
