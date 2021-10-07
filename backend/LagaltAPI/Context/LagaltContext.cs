@@ -29,7 +29,10 @@ namespace LagaltAPI.Context
             // Load data source from .env file
             var rootDir = Directory.GetCurrentDirectory();
             var dotEnv = Path.Combine(rootDir, ".env");
-            DotEnv.Load(dotEnv);
+            if (File.Exists(dotEnv))
+                DotEnv.Load(dotEnv);
+            else
+                throw new Exception(".env not found!");
 
             optionsBuilder.UseSqlServer(""
                 + $"Data Source={Environment.GetEnvironmentVariable("DATA_SOURCE")};"

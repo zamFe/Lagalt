@@ -9,11 +9,9 @@ namespace LagaltAPI.Models
     {
         // Required to make a linking table
         public int UserID { get; set; }
-
         public User User { get; set; }
 
         public int ProjectID { get; set; }
-
         public Project Project { get; set; }
 
         // Additional values beyond mandatory ones

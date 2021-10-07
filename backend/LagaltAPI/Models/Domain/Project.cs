@@ -6,14 +6,17 @@ namespace LagaltAPI.Models
     /// <summary>Simple data model representing a project at Lagalt</summary>
     public class Project
     {
+        //PK
         public int Id { get; set; }
 
+        //FK Profession
         public int ProfessionId { get; set; }
-
         public Profession Profession { get; set; }
 
+        //Many-to-One Relation
         public ICollection<Message> Messages { get; set; }
 
+        //Many-to-Many Relation
         public ICollection<UserProject> UserProjects { get; set; }
 
         [MaxLength(40), Required]
