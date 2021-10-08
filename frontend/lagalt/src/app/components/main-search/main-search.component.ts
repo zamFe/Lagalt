@@ -1,14 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Project } from '../main-list-of-projects/main-list-of-projects.component';
+import { Project } from "../../models/project.model";
 
-let projectInit: Project[] = [
-  {id: 1, name: "test1", type: "Music", thumbnail: "red"},
-  {id: 2, name: "test2", type: "Game Dev", thumbnail: "blue"},
-  {id: 3, name: "test3", type: "Web Dev", thumbnail: "green"},
-  {id: 4, name: "test4", type: "Film", thumbnail: "yellow"},
+// let projectInit: Project[] = [
+//   {id: 1, name: "test1", type: "Music", thumbnail: "red"},
+//   {id: 2, name: "test2", type: "Game Dev", thumbnail: "blue"},
+//   {id: 3, name: "test3", type: "Web Dev", thumbnail: "green"},
+//   {id: 4, name: "test4", type: "Film", thumbnail: "yellow"},
 
-]
+// ]
+let projectInit: Project[] = [{
+  id: 0,
+  profession: 0,
+  title: '',
+  image: '',
+  skills: []
+}]
 
 @Component({
   selector: 'app-main-search',
@@ -29,7 +36,7 @@ export class MainSearchComponent implements OnInit {
   searchForProject(searchProjectForm : NgForm) : void{
 
     this.specificProject = this.dummyProjectList.filter(project => {
-      return project.name.includes(searchProjectForm.value.projectName)
+      return project.title.includes(searchProjectForm.value.projectName)
     })
   }
 }

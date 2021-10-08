@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Project } from '../main-list-of-projects/main-list-of-projects.component';
+import { Project } from "../../models/project.model";
 
 let skillsList = [
   "python",
@@ -15,9 +15,10 @@ let skillsList = [
 export class MainListOfProjectsItemComponent implements OnInit {
   @Input() project: Project = {
     id: 0,
-    name: '',
-    type: '',
-    thumbnail: 'white'
+    profession: 0,
+    title: '',
+    image: '',
+    skills: []
   };
   public skills: string[] = []
   constructor() { }
