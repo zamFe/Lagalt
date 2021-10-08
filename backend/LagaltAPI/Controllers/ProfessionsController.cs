@@ -16,6 +16,7 @@ namespace LagaltAPI.Controllers
         private readonly IMapper _mapper;
         private readonly ProfessionService _service;
 
+        // Constructor.
         public ProfessionsController(IMapper mapper, ProfessionService service)
         {
             _mapper = mapper;

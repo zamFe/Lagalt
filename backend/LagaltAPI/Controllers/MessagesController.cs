@@ -68,7 +68,9 @@ namespace LagaltAPI.Controllers
         }
 
         /// <summary> Adds a new message entry to the database. </summary>
-        /// <param name="dtoMessage"> A create-specific DTO representing the new message. </param>
+        /// <param name="dtoMessage">
+        ///     A creation-specific DTO representing the new message.
+        /// </param>
         /// <returns>
         ///     A read-specific DTO of the message just added to the database on success,
         ///     or BadRequest on failure.
