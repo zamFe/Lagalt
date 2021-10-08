@@ -24,8 +24,12 @@ namespace LagaltAPI.Context
 
         public DbSet<Profession> Professions { get; set; }
 
+        public LagaltContext(DbContextOptions options) : base(options) { }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
         {
+            /*
             // Load data source from .env file
             var rootDir = Directory.GetCurrentDirectory();
             var dotEnv = Path.Combine(rootDir, ".env");
@@ -38,7 +42,7 @@ namespace LagaltAPI.Context
                 + $"Data Source={Environment.GetEnvironmentVariable("DATA_SOURCE")};"
                 + "Initial Catalog=LagaltCodeFirstDb;"
                 + "Integrated Security=True;"
-                );
+                );*/
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

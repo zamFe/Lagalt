@@ -2,6 +2,7 @@ using LagaltAPI.Context;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,7 +30,8 @@ namespace LagaltAPI
             services.AddScoped(typeof(SkillService));
             services.AddScoped(typeof(UserService));
             services.AddAutoMapper(typeof(Startup));
-            services.AddDbContext<LagaltContext>();
+            services.AddEntityFrameworkNpgsql().AddDbContext<LagaltContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LagaltAPI", Version = "v1" });
