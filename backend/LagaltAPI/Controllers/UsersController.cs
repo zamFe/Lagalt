@@ -9,7 +9,7 @@ using LagaltAPI.Context;
 using LagaltAPI.Models;
 using AutoMapper;
 using LagaltAPI.Models.DTOs.User;
-using LagaltAPI.Repositories;
+using LagaltAPI.Services;
 
 namespace LagaltAPI
 {

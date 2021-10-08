@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LagaltAPI.Repositories
+namespace LagaltAPI.Services
 {
     public class MessageService : IService<Message>
     {
@@ -21,6 +21,12 @@ namespace LagaltAPI.Repositories
         public async Task<IEnumerable<Message>> GetAllAsync()
         {
             return await _context.Messages
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Message>> GetByProjectIdAsync(int pId) {
+            return await _context.Messages
+                .Where(m => m.ProjectId == pId)
                 .ToListAsync();
         }
 

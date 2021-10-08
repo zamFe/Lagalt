@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using LagaltAPI.Models;
 using LagaltAPI.Models.DTOs.Project;
-using LagaltAPI.Repositories;
+using LagaltAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;

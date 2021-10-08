@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using LagaltAPI.Models;
 using LagaltAPI.Models.DTOs.Message;
-using LagaltAPI.Repositories;
+using LagaltAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -33,6 +33,16 @@ namespace LagaltAPI.Controllers
             return _mapper.Map<List<MessageReadDTO>>(await _service.GetAllAsync());
         }
 
+        /// <summary> Fetches messages from the database based on project id. </summary>
+        /// <param name="id"> The id of the project to retrieve messages from. </param>
+        /// <returns> An enumerable containing read-specific DTOs of the messages. </returns>
+        // GET: api/Messages/Project/5
+        [HttpGet("Project/{id}")]
+        public async Task<ActionResult<IEnumerable<MessageReadDTO>>> GetProjectMessages(int id)
+        {
+            return _mapper.Map<List<MessageReadDTO>>(await _service.GetByProjectIdAsync(id));
+        }
+
         /// <summary> Fetches a message from the database based on id. </summary>
         /// <param name="id"> The id of the message to retrieve. </param>
         /// <returns>
@@ -55,6 +65,24 @@ namespace LagaltAPI.Controllers
             catch (InvalidOperationException) {
                 return NotFound();
             }
+        }
+
+        /// <summary> Adds a new message entry to the database. </summary>
+        /// <param name="dtoMessage"> A create-specific DTO representing the new message. </param>
+        /// <returns>
+        ///     A read-specific DTO of the message just added to the database on success,
+        ///     or BadRequest on failure.
+        /// </returns>
+        // POST: api/Messages
+        [HttpPost]
+        public async Task<ActionResult<MessageReadDTO>> PostMessage(MessageCreateDTO dtoMessage)
+        {
+            var domainMessage = _mapper.Map<Message>(dtoMessage);
+            await _service.AddAsync(domainMessage);
+
+            return CreatedAtAction("GetMessage", 
+                new { id = domainMessage.Id }, 
+                _mapper.Map<MessageReadDTO>(domainMessage));
         }
 
         /* TODO - Decide whether or not editing messages will be supported.
@@ -83,24 +111,6 @@ namespace LagaltAPI.Controllers
          *    return NoContent();
          * }
          */
-
-        /// <summary> Adds a new message entry to the database. </summary>
-        /// <param name="dtoMessage"> A create-specific DTO representing the new message. </param>
-        /// <returns>
-        ///     A read-specific DTO of the message just added to the database on success,
-        ///     or BadRequest on failure.
-        /// </returns>
-        // POST: api/Messages
-        [HttpPost]
-        public async Task<ActionResult<MessageReadDTO>> PostMessage(MessageCreateDTO dtoMessage)
-        {
-            var domainMessage = _mapper.Map<Message>(dtoMessage);
-            await _service.AddAsync(domainMessage);
-
-            return CreatedAtAction("GetMessage", 
-                new { id = domainMessage.Id }, 
-                _mapper.Map<MessageReadDTO>(domainMessage));
-        }
 
         /* TODO - Decide whether or not deleting messages will be supported.
          * 

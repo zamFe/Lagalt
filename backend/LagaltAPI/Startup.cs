@@ -1,5 +1,5 @@
 using LagaltAPI.Context;
-using LagaltAPI.Repositories;
+using LagaltAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

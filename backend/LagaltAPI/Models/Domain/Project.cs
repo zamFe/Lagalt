@@ -13,11 +13,10 @@ namespace LagaltAPI.Models
         public int ProfessionId { get; set; }
         public Profession Profession { get; set; }
 
-        //Many-to-One Relation
+        //Many-to-One Relations
         public ICollection<Message> Messages { get; set; }
-
-        //Many-to-Many Relation
         public ICollection<UserProject> UserProjects { get; set; }
+        public ICollection<Skill> Skills { get; set; }
 
         [MaxLength(40), Required]
         public string Title { get; set; }

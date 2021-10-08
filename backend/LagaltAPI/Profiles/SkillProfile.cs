@@ -13,15 +13,9 @@ namespace LagaltAPI.Profiles
                 .ForMember(sdto => sdto.Users, opt => opt
                 .MapFrom(s => s.Users.Select(u => u.Id).ToList()))
                 .ReverseMap();
-
             CreateMap<Skill, SkillEditDTO>()
-                .ForMember(sdto => sdto.Users, opt => opt
-                .MapFrom(s => s.Users.Select(u => u.Id).ToList()))
                 .ReverseMap();
-
             CreateMap<Skill, SkillReadDTO>()
-                .ForMember(sdto => sdto.Users, opt => opt
-                .MapFrom(s => s.Users.Select(u => u.Id).ToList()))
                 .ReverseMap();
 
         }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using LagaltAPI.Models.DTOs.Profession;
-using LagaltAPI.Repositories;
+using LagaltAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
