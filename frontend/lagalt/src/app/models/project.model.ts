@@ -14,9 +14,9 @@ export interface ProjectDetailed {
   title: string,
   image: string,
   skills: number[],
-  messages: string[],
-  users: Object[],      // change to User[] when model is made
+  messages: number[],
+  users: number[],
   description: string,
   progress: string,
-  source: string
+  source: string | null
 }

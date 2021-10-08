@@ -15,7 +15,7 @@ import { ProfileUserInfoComponent } from './components/profile-user-info/profile
 import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
 import { ProjectPage } from "./pages/project/project.page";
 import { ProjectChatComponent } from './components/project-chat/project-chat.component';
-
+import { HttpClientModule} from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -47,6 +47,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FormsModule,
     BrowserAnimationsModule,
     MatSlideToggleModule,
+    HttpClientModule,
   ],
   exports: [
     MatSlideToggleModule,
