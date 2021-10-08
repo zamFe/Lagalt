@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-main-login',
@@ -12,4 +13,7 @@ export class MainLoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onSubmit(loginForm: NgForm): void {
+    console.log(loginForm.value)
+  }
 }

@@ -1,0 +1,13 @@
+.projectItem {
+    margin: 1rem;
+    min-width: 168px;
+    min-height: 168px;
+}
+
+ul {
+  list-style: none ;
+}
+
+span {
+    opacity: 1;
+}
