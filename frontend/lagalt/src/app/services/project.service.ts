@@ -1,22 +1,16 @@
 import { Injectable} from "@angular/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Project } from "../models/project.model";
+import { Project, ProjectDetailed } from "../models/project.model";
 import { finalize, map, retry, switchMap, tap } from "rxjs/operators";
 
 const apiURL = "";
+const apiFetchProjects = "";
 
 @Injectable({
     providedIn: 'root'
 })
 export class ProjectService {
 
-    private test: Project = {
-        id: 0,
-        profession: 0,
-        title: "",
-        image: "",
-        skills: []
-    }
     private projects: Project[] = [];
     private error: string = "";
 
@@ -24,11 +18,18 @@ export class ProjectService {
     }
 
     public fetchProjects() {
-
-
-        // this.http.get(apiURL).pipe(
-
-        // )
+        this.http.get<ProjectDetailed>(apiFetchProjects).pipe(
+            map(element => {
+                let tempProject: Project = {
+                    id: element.id,
+                    profession: element.profession,
+                    title: element.title,
+                    image: element.image,
+                    skills: element.skills
+                }
+                this.projects.push(tempProject)
+            })
+        )
+        console.log(this.projects);
     }
-
 }

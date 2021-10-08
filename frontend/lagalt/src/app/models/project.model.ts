@@ -9,9 +9,13 @@ export interface Project {
 }
 
 export interface ProjectDetailed {
-  project: Project,
+  id: number,
+  profession: number,
+  title: string,
+  image: string,
+  skills: number[],
   messages: string[],
-  users: object[],      // change to User[] when model is made
+  users: Object[],      // change to User[] when model is made
   description: string,
   progress: string,
   source: string
