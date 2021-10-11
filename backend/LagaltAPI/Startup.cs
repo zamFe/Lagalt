@@ -77,7 +77,10 @@ namespace LagaltAPI
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "LagaltAPI v1");
-                c.RoutePrefix = string.Empty;
+                if (!env.IsDevelopment())
+                {
+                    c.RoutePrefix = string.Empty;
+                }
             });
 
             app.UseHttpsRedirection();
