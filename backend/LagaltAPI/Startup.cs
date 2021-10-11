@@ -11,10 +11,6 @@ using Npgsql;
 using System;
 using System.IO;
 using System.Reflection;
-=========
-using Npgsql;
-using System;
->>>>>>>>> Temporary merge branch 2
 
 namespace LagaltAPI
 {
