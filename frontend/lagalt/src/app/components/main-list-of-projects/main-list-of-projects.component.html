@@ -1,6 +1,6 @@
 <div>
     <ul class="d-flex flex-wrap flex-column">
-        <app-main-list-of-projects-item *ngFor="let item of dummyProjectList"
+        <app-main-list-of-projects-item *ngFor="let item of projects$ | async"
         [project]="item">
         </app-main-list-of-projects-item>
     </ul>

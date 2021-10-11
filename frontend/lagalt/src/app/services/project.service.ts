@@ -1,36 +1,51 @@
 import { Injectable} from "@angular/core";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Project, ProjectDetailed } from "../models/project.model";
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { finalize, map, retry, switchMap, tap } from "rxjs/operators";
+import { environment } from "src/environments/environment";
 
-const apiURL = "";
-const apiFetchProjects = "https://localhost:44348/api/Projects";
+const API_URL = environment.apiUrl;
+
 @Injectable({
     providedIn: 'root'
 })
 export class ProjectService {
 
-    private projects: Project[] = [];
-    private error: string = "";
+    // Private store varaibles
+    private readonly _projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
 
     constructor(private readonly http : HttpClient) {
     }
-
-    public async fetchProjects() {
-        console.log(await this.http.get("https://localhost:44348/api/Messages").toPromise())
-        return await this.http.get<ProjectDetailed[]>(apiFetchProjects).toPromise()
-        // return this.http.get<ProjectDetailed>(apiFetchProjects).pipe(
-        //     map(element => {
-        //         let tempProject: Project = {
-        //             id: element.id,
-        //             profession: element.profession,
-        //             title: element.title,
-        //             image: element.image,
-        //             skills: element.skills
-        //         }
-        //         console.log(tempProject);
-
-        //     })
-        // )
+    
+    // State CRUD functions
+    public getProjects$(): Observable<Project[]> {
+        return this._projects$.asObservable()
     }
+
+    public setProjects(projects: Project[]): void {
+        this._projects$.next(projects)
+    }
+
+    public addProject(project: Project): void {
+        const projects = [...this._projects$.getValue(), project]
+        this.setProjects(projects)
+    }
+
+    public removeProject(project: Project): void {
+        const projects = this._projects$.getValue().filter(p => p.id !== project.id);
+        this.setProjects(projects)
+    }
+
+    // API CRUD calls
+    public getProjects(): Subscription {
+
+        //set professions as enum in storage here.
+        return this.http.get<Project[]>(`${API_URL}Projects`)
+            .subscribe((projects: Project[]) => {
+                this.setProjects(projects)
+            });
+    }
+
+    // post, put/id, get/id
 }
