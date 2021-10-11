@@ -17,13 +17,12 @@ namespace LagaltAPI
     public class Startup
     {
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        private readonly IConfiguration _configuration;
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime.
         // Use this method to add services to the container.
@@ -40,7 +39,6 @@ namespace LagaltAPI
             });
 
             services.AddDbContext<LagaltContext>();
-
             services.AddScoped(typeof(MessageService));
             services.AddScoped(typeof(ProjectService));
             services.AddScoped(typeof(ProfessionService));
@@ -49,13 +47,10 @@ namespace LagaltAPI
             services.AddAutoMapper(typeof(Startup));
             services.AddEntityFrameworkNpgsql().AddDbContext<LagaltContext>(options =>
             {
-                //options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 string connStr;
                 if(env == "Development") //if dev, get local connection
-                {
-                    connStr = Configuration.GetConnectionString("DefaultConnection");
-                }
+                    connStr = _configuration.GetConnectionString("DefaultConnection");
                 else //else, get url from Heroku
                 {
                     var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
@@ -103,9 +98,7 @@ namespace LagaltAPI
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "LagaltAPI v1");
                 if (!env.IsDevelopment())
-                {
                     c.RoutePrefix = string.Empty;
-                }
             });
 
             app.UseHttpsRedirection();

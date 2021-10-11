@@ -13,43 +13,23 @@ namespace LagaltAPI.Context
     /// </summary>
     public class LagaltContext : DbContext
     {
+        private readonly IConfiguration _configuration;
+
         public DbSet<User> Users { get; set; }
-
         public DbSet<Project> Projects { get; set; }
-
         public DbSet<UserProject> UserProjects { get; set; }
-
         public DbSet<Message> Messages { get; set; }
-
         public DbSet<Skill> Skills { get; set; }
-
         public DbSet<Profession> Professions { get; set; }
-
-        private IConfiguration Configuration { get; }
-
+        
         public LagaltContext(DbContextOptions options, IConfiguration configuration) : base(options)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-
         {
-            /*
-            // Load data source from .env file
-            var rootDir = Directory.GetCurrentDirectory();
-            var dotEnv = Path.Combine(rootDir, ".env");
-            if (File.Exists(dotEnv))
-                DotEnv.Load(dotEnv);
-            else
-                throw new Exception(".env not found!");
-
-            optionsBuilder.UseSqlServer(""
-                + $"Data Source={Environment.GetEnvironmentVariable("DATA_SOURCE")};"
-                + "Initial Catalog=LagaltCodeFirstDb;"
-                + "Integrated Security=True;"
-                );*/
-            optionsBuilder.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+            optionsBuilder.UseNpgsql(_configuration.GetConnectionString("DefaultConnection"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

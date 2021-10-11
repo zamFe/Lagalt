@@ -15,11 +15,7 @@ namespace LagaltAPI
     public class Program
     {
         public static void Main(string[] args)
-        {
-            var root = Directory.GetCurrentDirectory();
-            var dotenv = Path.Combine(root, ".env");
-            DotEnv.Load(dotenv);
-            
+        {   
             var config =
                 new ConfigurationBuilder()
                 .AddEnvironmentVariables()
