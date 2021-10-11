@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LagaltAPI.Repositories
+namespace LagaltAPI.Services
 {
     public class ProjectService : IService<Project>
     {
@@ -23,6 +23,7 @@ namespace LagaltAPI.Repositories
             return await _context.Projects
                 .Include(p => p.Messages)
                 .Include(p => p.UserProjects)
+                .Include(p => p.Skills)
                 .ToListAsync();
         }
 
@@ -31,6 +32,7 @@ namespace LagaltAPI.Repositories
             return await _context.Projects
                 .Include(p => p.Messages)
                 .Include(p => p.UserProjects)
+                .Include(p => p.Skills)
                 .Where(p => p.Id == Id)
                 .FirstAsync();
         }

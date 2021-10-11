@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace LagaltAPI.Models.DTOs.User
+﻿namespace LagaltAPI.Models.DTOs.User
 {
     public class UserReadDTO
     {
@@ -14,6 +9,5 @@ namespace LagaltAPI.Models.DTOs.User
         public string Portfolio { get; set; }
         public int[] Skills { get; set; }
         public int [] Projects { get; set; }
-        public int[] Messages { get; set; }
     }
 }

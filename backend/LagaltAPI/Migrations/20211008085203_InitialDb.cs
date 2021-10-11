@@ -127,6 +127,30 @@ namespace LagaltAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProjectSkills",
+                columns: table => new
+                {
+                    SkillId = table.Column<int>(type: "int", nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectSkills", x => new { x.SkillId, x.ProjectId });
+                    table.ForeignKey(
+                        name: "FK_ProjectSkills_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectSkills_Skills_SkillId",
+                        column: x => x.SkillId,
+                        principalTable: "Skills",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserProjects",
                 columns: table => new
                 {
@@ -236,6 +260,19 @@ namespace LagaltAPI.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "ProjectSkills",
+                columns: new[] { "ProjectId", "SkillId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 1, 2 },
+                    { 2, 3 },
+                    { 3, 4 },
+                    { 4, 5 },
+                    { 5, 6 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "UserProjects",
                 columns: new[] { "ProjectID", "UserID", "Administrator", "Application", "Applied", "Clicked", "Contributed", "Viewed" },
                 values: new object[,]
@@ -263,6 +300,11 @@ namespace LagaltAPI.Migrations
                 column: "ProfessionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjectSkills_ProjectId",
+                table: "ProjectSkills",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserProjects_ProjectID",
                 table: "UserProjects",
                 column: "ProjectID");
@@ -277,6 +319,9 @@ namespace LagaltAPI.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Messages");
+
+            migrationBuilder.DropTable(
+                name: "ProjectSkills");
 
             migrationBuilder.DropTable(
                 name: "UserProjects");

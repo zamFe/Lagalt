@@ -418,6 +418,53 @@ namespace LagaltAPI.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ProjectSkills", b =>
+                {
+                    b.Property<int>("SkillId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SkillId", "ProjectId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectSkills");
+
+                    b.HasData(
+                        new
+                        {
+                            SkillId = 1,
+                            ProjectId = 1
+                        },
+                        new
+                        {
+                            SkillId = 2,
+                            ProjectId = 1
+                        },
+                        new
+                        {
+                            SkillId = 3,
+                            ProjectId = 2
+                        },
+                        new
+                        {
+                            SkillId = 4,
+                            ProjectId = 3
+                        },
+                        new
+                        {
+                            SkillId = 5,
+                            ProjectId = 4
+                        },
+                        new
+                        {
+                            SkillId = 6,
+                            ProjectId = 5
+                        });
+                });
+
             modelBuilder.Entity("UserSkills", b =>
                 {
                     b.Property<int>("SkillId")
@@ -547,6 +594,21 @@ namespace LagaltAPI.Migrations
                     b.Navigation("Project");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ProjectSkills", b =>
+                {
+                    b.HasOne("LagaltAPI.Models.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LagaltAPI.Models.Skill", null)
+                        .WithMany()
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("UserSkills", b =>

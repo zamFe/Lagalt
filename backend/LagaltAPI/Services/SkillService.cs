@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LagaltAPI.Repositories
+namespace LagaltAPI.Services
 {
     public class SkillService : IService<Skill>
     {

@@ -12,7 +12,8 @@ namespace LagaltAPI.Models
         [MaxLength(50), Required]
         public string Name { get; set; }
 
-        //Many-to-Many Relation
+        //Many-to-Many Relations
         public ICollection<User> Users { get; set; }
+        public ICollection<Project> Projects { get; set; }
     }
 }

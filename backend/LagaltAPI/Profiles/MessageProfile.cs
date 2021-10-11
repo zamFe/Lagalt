@@ -15,16 +15,10 @@ namespace LagaltAPI.Profiles
                 .MapFrom(m => m.ProjectId))
                 .ReverseMap();
             CreateMap<Message, MessageEditDTO>()
-                .ForMember(mdto => mdto.User, opt => opt
-                .MapFrom(m => m.UserId))
-                .ForMember(mdto => mdto.Project, opt => opt
-                .MapFrom(m => m.ProjectId))
                 .ReverseMap();
             CreateMap<Message, MessageReadDTO>()
                 .ForMember(mdto => mdto.User, opt => opt
                 .MapFrom(m => m.UserId))
-                .ForMember(mdto => mdto.Project, opt => opt
-                .MapFrom(m => m.ProjectId))
                 .ReverseMap();
         }
     }

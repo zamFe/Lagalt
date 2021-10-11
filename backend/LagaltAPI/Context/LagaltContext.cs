@@ -275,6 +275,29 @@ namespace LagaltAPI.Context
                     }
                 );
 
+            modelBuilder.Entity<Project>()
+                .HasMany(u => u.Skills)
+                .WithMany(s => s.Projects)
+                .UsingEntity<Dictionary<string, object>>
+                (
+                    "ProjectSkills",
+                    r => r.HasOne<Skill>().WithMany().HasForeignKey("SkillId"),
+                    l => l.HasOne<Project>().WithMany().HasForeignKey("ProjectId"),
+                    je =>
+                    {
+                        je.HasKey("SkillId", "ProjectId");
+                        je.HasData
+                        (
+                            new { ProjectId = 1, SkillId = 1 },
+                            new { ProjectId = 1, SkillId = 2 },
+                            new { ProjectId = 2, SkillId = 3 },
+                            new { ProjectId = 3, SkillId = 4 },
+                            new { ProjectId = 4, SkillId = 5 },
+                            new { ProjectId = 5, SkillId = 6 }
+                        );
+                    }
+                );
+
             modelBuilder.Entity<UserProject>()
                 .HasKey(up => new { up.UserID, up.ProjectID });
             modelBuilder.Entity<UserProject>()
