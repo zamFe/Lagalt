@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LagaltAPI;
 
 namespace LagaltAPI
 {
@@ -18,20 +19,16 @@ namespace LagaltAPI
             var root = Directory.GetCurrentDirectory();
             var dotenv = Path.Combine(root, ".env");
             DotEnv.Load(dotenv);
-
+            
             var config =
                 new ConfigurationBuilder()
                 .AddEnvironmentVariables()
                 .Build();
 
-            //CreateWebHostBuilder(args).Build().Run();     //For Testing
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build()
+                .MigrateDatabase() // from custom extension in 'Extensions.cs'
+                .Run();
         }
-
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseSetting("https_port", "5000")
-                .UseStartup<Startup>();
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)

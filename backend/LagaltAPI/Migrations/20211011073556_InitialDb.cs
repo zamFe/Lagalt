@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace LagaltAPI.Migrations
 {
@@ -11,9 +12,9 @@ namespace LagaltAPI.Migrations
                 name: "Professions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -24,9 +25,9 @@ namespace LagaltAPI.Migrations
                 name: "Skills",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,13 +38,13 @@ namespace LagaltAPI.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Hidden = table.Column<bool>(type: "bit", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Portfolio = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Hidden = table.Column<bool>(type: "boolean", nullable: false),
+                    UserName = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Description = table.Column<string>(type: "character varying(140)", maxLength: 140, nullable: true),
+                    Image = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Portfolio = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -54,14 +55,14 @@ namespace LagaltAPI.Migrations
                 name: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProfessionId = table.Column<int>(type: "int", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    Progress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Source = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProfessionId = table.Column<int>(type: "integer", nullable: false),
+                    Title = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
+                    Description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    Progress = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Image = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Source = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -78,8 +79,8 @@ namespace LagaltAPI.Migrations
                 name: "UserSkills",
                 columns: table => new
                 {
-                    SkillId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    SkillId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -102,12 +103,12 @@ namespace LagaltAPI.Migrations
                 name: "Messages",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    ProjectId = table.Column<int>(type: "int", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false),
-                    PostedTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    ProjectId = table.Column<int>(type: "integer", nullable: false),
+                    Content = table.Column<string>(type: "character varying(140)", maxLength: 140, nullable: false),
+                    PostedTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -130,8 +131,8 @@ namespace LagaltAPI.Migrations
                 name: "ProjectSkills",
                 columns: table => new
                 {
-                    SkillId = table.Column<int>(type: "int", nullable: false),
-                    ProjectId = table.Column<int>(type: "int", nullable: false)
+                    SkillId = table.Column<int>(type: "integer", nullable: false),
+                    ProjectId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -154,14 +155,14 @@ namespace LagaltAPI.Migrations
                 name: "UserProjects",
                 columns: table => new
                 {
-                    UserID = table.Column<int>(type: "int", nullable: false),
-                    ProjectID = table.Column<int>(type: "int", nullable: false),
-                    Viewed = table.Column<bool>(type: "bit", nullable: false),
-                    Clicked = table.Column<bool>(type: "bit", nullable: false),
-                    Applied = table.Column<bool>(type: "bit", nullable: false),
-                    Contributed = table.Column<bool>(type: "bit", nullable: false),
-                    Administrator = table.Column<bool>(type: "bit", nullable: false),
-                    Application = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true)
+                    UserID = table.Column<int>(type: "integer", nullable: false),
+                    ProjectID = table.Column<int>(type: "integer", nullable: false),
+                    Viewed = table.Column<bool>(type: "boolean", nullable: false),
+                    Clicked = table.Column<bool>(type: "boolean", nullable: false),
+                    Applied = table.Column<bool>(type: "boolean", nullable: false),
+                    Contributed = table.Column<bool>(type: "boolean", nullable: false),
+                    Administrator = table.Column<bool>(type: "boolean", nullable: false),
+                    Application = table.Column<string>(type: "character varying(140)", maxLength: 140, nullable: true)
                 },
                 constraints: table =>
                 {

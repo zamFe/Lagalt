@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace LagaltAPI
 {
@@ -31,7 +32,29 @@ namespace LagaltAPI
             services.AddScoped(typeof(UserService));
             services.AddAutoMapper(typeof(Startup));
             services.AddEntityFrameworkNpgsql().AddDbContext<LagaltContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            {
+                //options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                string connStr;
+                if(env == "Development")
+                {
+                    connStr = Configuration.GetConnectionString("DefaultConnection");
+                }
+                else
+                {
+                    var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+                    var pgUserPass = connUrl.Split("@")[0];
+                    var pgHostPortDb = connUrl.Split("@")[1];
+                    var pgHostPort = pgHostPortDb.Split("/")[0];
+                    var pgDb = pgHostPortDb.Split("/")[1];
+                    var pgUser = pgUserPass.Split(":")[0];
+                    var pgPass = pgUserPass.Split(":")[1];
+                    var pgHost = pgHostPort.Split(":")[0];
+                    var pgPort = pgHostPort.Split(":")[1];
+                    connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb}";
+                }
+                options.UseNpgsql(connStr);
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LagaltAPI", Version = "v1" });
