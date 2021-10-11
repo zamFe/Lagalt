@@ -14,6 +14,7 @@ namespace LagaltAPI
 {
     public class Program
     {
+        //test
         public static void Main(string[] args)
         {
             var root = Directory.GetCurrentDirectory();
@@ -26,7 +27,7 @@ namespace LagaltAPI
                 .Build();
 
             CreateHostBuilder(args).Build()
-                .MigrateDatabase() // from custom extension in 'Extensions.cs'
+                .MigrateDatabase() // from custom extension in 'Extensions.cs' 
                 .Run();
         }
 
