@@ -38,7 +38,6 @@ namespace LagaltAPI
                                   builder => builder.WithOrigins("http://localhost:4200"));
             });
 
-            services.AddDbContext<LagaltContext>();
             services.AddScoped(typeof(MessageService));
             services.AddScoped(typeof(ProjectService));
             services.AddScoped(typeof(ProfessionService));
@@ -69,6 +68,7 @@ namespace LagaltAPI
                         TrustServerCertificate = true
                     };
                     connStr = pgsqlBuilder.ToString();
+                    Environment.SetEnvironmentVariable("CONNECTION_STRING", connStr);
                 }
                 options.UseNpgsql(connStr);
             });

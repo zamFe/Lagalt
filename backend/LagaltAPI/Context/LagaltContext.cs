@@ -36,6 +36,10 @@ namespace LagaltAPI.Context
                 DotEnv.Load(dotEnv);
                 optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
             }
+            else
+            {
+                optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
