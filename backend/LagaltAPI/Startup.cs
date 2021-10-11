@@ -53,7 +53,7 @@ namespace LagaltAPI
                     var pgPort = pgHostPort.Split(":")[1];
                     connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb}";
                 }
-                options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL");
+                options.UseNpgsql(Environment.GetEnvironmentVariable("DATABASE_URL"));
             });
             services.AddSwaggerGen(c =>
             {
