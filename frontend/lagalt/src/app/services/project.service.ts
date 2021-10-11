@@ -14,17 +14,24 @@ export class ProjectService {
 
     // Private store varaibles
     private readonly _projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
+    private readonly _renderProjects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
 
     constructor(private readonly http : HttpClient) {
     }
-    
+
     // State CRUD functions
     public getProjects$(): Observable<Project[]> {
         return this._projects$.asObservable()
     }
+    public getRenderProjects$(): Observable<Project[]> {
+      return this._renderProjects$.asObservable()
+    }
 
     public setProjects(projects: Project[]): void {
         this._projects$.next(projects)
+    }
+    public setRenderProjects(projects: Project[]): void {
+        this._renderProjects$.next(projects)
     }
 
     public addProject(project: Project): void {
@@ -44,6 +51,7 @@ export class ProjectService {
         return this.http.get<Project[]>(`${API_URL}Projects`)
             .subscribe((projects: Project[]) => {
                 this.setProjects(projects)
+                this.setRenderProjects(projects)
             });
     }
 

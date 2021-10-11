@@ -17,7 +17,7 @@ export class MainListOfProjectsComponent implements OnInit {
   }
 
   get projects$(): Observable<Project[]> {
-    return this.projectService.getProjects$();
+    return this.projectService.getRenderProjects$();
   }
 
 }
