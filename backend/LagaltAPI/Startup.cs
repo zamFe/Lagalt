@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using System;
 
 namespace LagaltAPI
@@ -36,6 +37,7 @@ namespace LagaltAPI
                 //options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 string connStr;
+                NpgsqlConnectionStringBuilder pgsqlBuilder = new();
                 if(env == "Development")
                 {
                     connStr = Configuration.GetConnectionString("DefaultConnection");
@@ -47,6 +49,18 @@ namespace LagaltAPI
                     var pgUserPass = connUrl.Split("@")[0];
                     var pgHostPortDb = connUrl.Split("@")[1];
                     var pgHostPort = pgHostPortDb.Split("/")[0];
+
+                    pgsqlBuilder = new NpgsqlConnectionStringBuilder
+                    {
+                        Host = pgHostPort.Split(":")[0],
+                        Port = Int32.Parse(pgHostPort.Split(":")[1]),
+                        Username = pgUserPass.Split(":")[1].Split("//")[1],
+                        Password = pgUserPass.Split(":")[2],
+                        Database = pgHostPortDb.Split("/")[1],
+                        SslMode = SslMode.Require,
+                        TrustServerCertificate = true
+                    };
+                    /*
                     var pgDb = pgHostPortDb.Split("/")[1];
                     var pgUser = pgUserPass.Split(":")[1].Split("//")[1];
                     var pgPass = pgUserPass.Split(":")[2];
@@ -54,8 +68,9 @@ namespace LagaltAPI
                     var pgPort = pgHostPort.Split(":")[1];
                     connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
                     Console.WriteLine(connStr);
+                    */
                 }
-                options.UseNpgsql(connStr);
+                options.UseNpgsql(pgsqlBuilder.ToString());
             });
             services.AddSwaggerGen(c =>
             {
