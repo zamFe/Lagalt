@@ -1,5 +1,6 @@
 ﻿using LagaltAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +25,12 @@ namespace LagaltAPI.Context
 
         public DbSet<Profession> Professions { get; set; }
 
-        public LagaltContext(DbContextOptions options) : base(options) { }
+        private IConfiguration Configuration { get; }
+
+        public LagaltContext(DbContextOptions options, IConfiguration configuration) : base(options)
+        {
+            Configuration = configuration;
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
@@ -43,6 +49,7 @@ namespace LagaltAPI.Context
                 + "Initial Catalog=LagaltCodeFirstDb;"
                 + "Integrated Security=True;"
                 );*/
+            optionsBuilder.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

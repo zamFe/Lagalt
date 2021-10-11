@@ -18,6 +18,7 @@ namespace LagaltAPI.Controllers
         private readonly IMapper _mapper;
         private readonly ProjectService _service;
 
+        // Constructor.
         public ProjectsController(IMapper mapper, ProjectService service)
         {
             _mapper = mapper;
@@ -63,16 +64,20 @@ namespace LagaltAPI.Controllers
         //        Would this replace GetProjects?
 
 
-        /// <summary> Replaces the specified project in the database with the provided DTO. </summary>
-        /// <param name="id"> The id of the project to replace. </param>
-        /// <param name="project"> A edit-specific DTO of the new version of the project. </param>
+        /// <summary>
+        ///     Updates the specified project in the database to match the provided DTO.
+        /// </summary>
+        /// <param name="id"> The id of the project to update. </param>
+        /// <param name="dtoProject">
+        ///     An edit-specific DTO containing the updated version of the project.
+        /// </param>
         /// <returns>
-        ///     NoContent on successful deletion,
+        ///     NoContent on successful database update,
         ///     BadRequest if the provided id and the id of the project do not match,
         ///     or NotFound if the provided id does not match any projects in the database.
         /// </returns>
         /// <exception cref="DbUpdateConcurrencyException">
-        ///     Thrown when the project is found in the database but not able to be deleted.
+        ///     Thrown when the project is found in the database but not able to be updated.
         /// </exception>
         // PUT: api/Projects/5
         [HttpPut("{id}")]
@@ -102,7 +107,9 @@ namespace LagaltAPI.Controllers
         }
 
         /// <summary> Adds a new project entry to the database. </summary>
-        /// <param name="dtoMessage"> A create-specific DTO representing the new project. </param>
+        /// <param name="dtoProject">
+        ///     A creation-specific DTO representing the new project.
+        /// </param>
         /// <returns>
         ///     A read-specific DTO of the message just added to the database on success,
         ///     or BadRequest on failure.
