@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LagaltAPI.Context;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace LagaltAPI
 {
@@ -21,6 +22,8 @@ namespace LagaltAPI
                 {
                     var services = scope.ServiceProvider;
                     var dbContext = services.GetRequiredService<LagaltContext>();
+
+                    dbContext.Database.Migrate();
                 }
             }
             return webHost;

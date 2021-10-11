@@ -37,7 +37,6 @@ namespace LagaltAPI
                 //options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 string connStr;
-                NpgsqlConnectionStringBuilder pgsqlBuilder = new();
                 if(env == "Development")
                 {
                     connStr = Configuration.GetConnectionString("DefaultConnection");
@@ -50,7 +49,7 @@ namespace LagaltAPI
                     var pgHostPortDb = connUrl.Split("@")[1];
                     var pgHostPort = pgHostPortDb.Split("/")[0];
 
-                    pgsqlBuilder = new NpgsqlConnectionStringBuilder
+                    var pgsqlBuilder = new NpgsqlConnectionStringBuilder
                     {
                         Host = pgHostPort.Split(":")[0],
                         Port = Int32.Parse(pgHostPort.Split(":")[1]),
@@ -60,17 +59,9 @@ namespace LagaltAPI
                         SslMode = SslMode.Require,
                         TrustServerCertificate = true
                     };
-                    /*
-                    var pgDb = pgHostPortDb.Split("/")[1];
-                    var pgUser = pgUserPass.Split(":")[1].Split("//")[1];
-                    var pgPass = pgUserPass.Split(":")[2];
-                    var pgHost = pgHostPort.Split(":")[0];
-                    var pgPort = pgHostPort.Split(":")[1];
-                    connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
-                    Console.WriteLine(connStr);
-                    */
+                    connStr = pgsqlBuilder.ToString();
                 }
-                options.UseNpgsql(pgsqlBuilder.ToString());
+                options.UseNpgsql(connStr);
             });
             services.AddSwaggerGen(c =>
             {
