@@ -44,7 +44,6 @@ namespace LagaltAPI
                 else
                 {
                     var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-                    Console.WriteLine(Environment.GetEnvironmentVariable("DATABASE_URL"));
                     var pgUserPass = connUrl.Split("@")[0];
                     var pgHostPortDb = connUrl.Split("@")[1];
                     var pgHostPort = pgHostPortDb.Split("/")[0];
