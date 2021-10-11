@@ -43,6 +43,7 @@ namespace LagaltAPI
                 else
                 {
                     var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+                    Console.WriteLine(Environment.GetEnvironmentVariable("DATABASE_URL"));
                     var pgUserPass = connUrl.Split("@")[0];
                     var pgHostPortDb = connUrl.Split("@")[1];
                     var pgHostPort = pgHostPortDb.Split("/")[0];
@@ -51,7 +52,7 @@ namespace LagaltAPI
                     var pgPass = pgUserPass.Split(":")[1];
                     var pgHost = pgHostPort.Split(":")[0];
                     var pgPort = pgHostPort.Split(":")[1];
-                    connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb}";
+                    connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
                     Console.WriteLine(connStr);
                 }
                 options.UseNpgsql(connStr);
