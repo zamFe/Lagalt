@@ -17,7 +17,8 @@ export class ProjectService {
     }
 
     public async fetchProjects() {
-      return await this.http.get<ProjectDetailed[]>(apiFetchProjects).toPromise()
+        console.log(await this.http.get("https://localhost:44348/api/Messages").toPromise())
+        return await this.http.get<ProjectDetailed[]>(apiFetchProjects).toPromise()
         // return this.http.get<ProjectDetailed>(apiFetchProjects).pipe(
         //     map(element => {
         //         let tempProject: Project = {
