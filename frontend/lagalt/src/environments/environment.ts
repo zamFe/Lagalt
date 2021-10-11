@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: "https://localhost:44348/api/"
+  apiUrl: "https://lagalt-api-f.herokuapp.com/api/"
 };
 
