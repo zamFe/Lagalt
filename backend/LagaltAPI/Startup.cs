@@ -50,7 +50,7 @@ namespace LagaltAPI
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 string connStr;
                 if(env == "Development") //if dev, get local connection
-                    connStr = _configuration.GetConnectionString("DefaultConnection");
+                    connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
                 else //else, get url from Heroku
                 {
                     var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");

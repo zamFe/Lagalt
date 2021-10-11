@@ -29,7 +29,14 @@ namespace LagaltAPI.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(_configuration.GetConnectionString("DefaultConnection"));
+            var rootDir = Directory.GetCurrentDirectory();
+            var dotEnv = Path.Combine(rootDir, ".env");
+            if (File.Exists(dotEnv))
+                DotEnv.Load(dotEnv);
+            else
+                throw new Exception(".env not found!");
+
+            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
