@@ -32,11 +32,12 @@ namespace LagaltAPI.Context
             var rootDir = Directory.GetCurrentDirectory();
             var dotEnv = Path.Combine(rootDir, ".env");
             if (File.Exists(dotEnv))
+            {
                 DotEnv.Load(dotEnv);
+                optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
+            }
             else
                 throw new Exception(".env not found!");
-
-            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
