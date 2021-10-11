@@ -14,7 +14,6 @@ namespace LagaltAPI
 {
     public class Program
     {
-        //test
         public static void Main(string[] args)
         {
             var root = Directory.GetCurrentDirectory();
