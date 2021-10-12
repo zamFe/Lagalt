@@ -1,5 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Project } from "../../models/project.model";
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { SkillsService } from 'src/app/services/skill.service';
+import { Skill } from 'src/app/models/skill.model'
+import { Project } from 'src/app/models/project.model';
+
 
 let skillsList = [
   "python",
@@ -25,11 +29,22 @@ export class MainListOfProjectsItemComponent implements OnInit {
     progress: '',
     source: '',
   };
-  public skills: string[] = []
-  constructor() { }
+
+  public skills: Skill[] = []
+  constructor(private readonly skillsService: SkillsService) { 
+
+  }
 
   ngOnInit(): void {
-    this.skills = skillsList
+    this.skills$.subscribe(data => {
+      this.skills = data
+    })
+  }
+
+
+
+  get skills$(): Observable<Skill[]> {
+    return this.skillsService.getSkills$();
   }
 
 
