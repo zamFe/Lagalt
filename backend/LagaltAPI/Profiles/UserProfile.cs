@@ -7,11 +7,12 @@ namespace LagaltAPI.Profiles
 {
     public class UserProfile : Profile
     {
+        // Constructor.
         public UserProfile()
         {
             CreateMap<User, UserReadDTO>()
                 .ForMember(udto => udto.Skills, opt => opt
-                .MapFrom(u => u.Skills.Select(s => s.Id).ToList()))
+                .MapFrom(u => u.Skills.ToList()))
                 .ForMember(udto => udto.Projects, opt => opt
                 .MapFrom(u => u.UserProjects.Select(up => up.ProjectID).ToList()))
                 .ReverseMap();
