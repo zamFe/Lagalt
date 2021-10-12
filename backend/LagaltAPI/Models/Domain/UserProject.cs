@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace LagaltAPI.Models.Domain
+﻿namespace LagaltAPI.Models.Domain
 {
     /// <summary>
     ///     Data model for linking users and projects plus additional data
@@ -24,8 +22,5 @@ namespace LagaltAPI.Models.Domain
         public bool Contributed { get; set; } = false;
 
         public bool Administrator { get; set; } = false;
-
-        [MaxLength(140)]
-        public string Application { get; set; }
     }
 }

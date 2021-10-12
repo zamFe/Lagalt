@@ -9,14 +9,17 @@ namespace LagaltAPI.Models.Domain
         // Private key.
         public int Id { get; set; }
 
+        // Collection navigation property for relationship with messages.
+        public ICollection<Application> Applications { get; set; }
+
+        // Collection navigation property for relationship with messages.
+        public ICollection<Message> Messages { get; set; }
+
         // Collection navigation property for relationship with skills.
         public ICollection<Skill> Skills { get; set; }
 
         // Collection navigation property for relationship with projects.
         public ICollection<UserProject> UserProjects { get; set; }
-
-        // Collection navigation property for relationship with messages.
-        public ICollection<Message> Messages { get; set; }
 
         // Data.
         public bool Hidden { get; set; } = true;

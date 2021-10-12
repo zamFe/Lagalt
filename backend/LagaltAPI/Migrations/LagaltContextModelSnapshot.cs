@@ -19,7 +19,63 @@ namespace LagaltAPI.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("LagaltAPI.Models.Message", b =>
+            modelBuilder.Entity("LagaltAPI.Models.Domain.Application", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<bool>("Accepted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Motivation")
+                        .IsRequired()
+                        .HasMaxLength(140)
+                        .HasColumnType("character varying(140)");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Applications");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Accepted = true,
+                            Motivation = "I also love submarines",
+                            ProjectId = 1,
+                            UserId = 2
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Accepted = true,
+                            Motivation = "Trying to figure out if i like submarines",
+                            ProjectId = 1,
+                            UserId = 3
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Accepted = false,
+                            Motivation = "What's a submarine?",
+                            ProjectId = 1,
+                            UserId = 5
+                        });
+                });
+
+            modelBuilder.Entity("LagaltAPI.Models.Domain.Message", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,7 +131,7 @@ namespace LagaltAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LagaltAPI.Models.Profession", b =>
+            modelBuilder.Entity("LagaltAPI.Models.Domain.Profession", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -114,7 +170,7 @@ namespace LagaltAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LagaltAPI.Models.Project", b =>
+            modelBuilder.Entity("LagaltAPI.Models.Domain.Project", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -201,7 +257,7 @@ namespace LagaltAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LagaltAPI.Models.Skill", b =>
+            modelBuilder.Entity("LagaltAPI.Models.Domain.Skill", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -250,7 +306,7 @@ namespace LagaltAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LagaltAPI.Models.User", b =>
+            modelBuilder.Entity("LagaltAPI.Models.Domain.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -330,7 +386,7 @@ namespace LagaltAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LagaltAPI.Models.UserProject", b =>
+            modelBuilder.Entity("LagaltAPI.Models.Domain.UserProject", b =>
                 {
                     b.Property<int>("UserID")
                         .HasColumnType("integer");
@@ -340,10 +396,6 @@ namespace LagaltAPI.Migrations
 
                     b.Property<bool>("Administrator")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("Application")
-                        .HasMaxLength(140)
-                        .HasColumnType("character varying(140)");
 
                     b.Property<bool>("Applied")
                         .HasColumnType("boolean");
@@ -379,7 +431,6 @@ namespace LagaltAPI.Migrations
                             UserID = 2,
                             ProjectID = 1,
                             Administrator = false,
-                            Application = "Plz i luv submarinezz!!!1!!1!!",
                             Applied = true,
                             Clicked = true,
                             Contributed = false,
@@ -390,7 +441,6 @@ namespace LagaltAPI.Migrations
                             UserID = 3,
                             ProjectID = 1,
                             Administrator = false,
-                            Application = "Request Access",
                             Applied = true,
                             Clicked = true,
                             Contributed = false,
@@ -547,15 +597,34 @@ namespace LagaltAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LagaltAPI.Models.Message", b =>
+            modelBuilder.Entity("LagaltAPI.Models.Domain.Application", b =>
                 {
-                    b.HasOne("LagaltAPI.Models.Project", "Project")
+                    b.HasOne("LagaltAPI.Models.Domain.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LagaltAPI.Models.Domain.User", "User")
+                        .WithMany("Applications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LagaltAPI.Models.Domain.Message", b =>
+                {
+                    b.HasOne("LagaltAPI.Models.Domain.Project", "Project")
                         .WithMany("Messages")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LagaltAPI.Models.User", "User")
+                    b.HasOne("LagaltAPI.Models.Domain.User", "User")
                         .WithMany("Messages")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -566,9 +635,9 @@ namespace LagaltAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LagaltAPI.Models.Project", b =>
+            modelBuilder.Entity("LagaltAPI.Models.Domain.Project", b =>
                 {
-                    b.HasOne("LagaltAPI.Models.Profession", "Profession")
+                    b.HasOne("LagaltAPI.Models.Domain.Profession", "Profession")
                         .WithMany("Projects")
                         .HasForeignKey("ProfessionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -577,15 +646,15 @@ namespace LagaltAPI.Migrations
                     b.Navigation("Profession");
                 });
 
-            modelBuilder.Entity("LagaltAPI.Models.UserProject", b =>
+            modelBuilder.Entity("LagaltAPI.Models.Domain.UserProject", b =>
                 {
-                    b.HasOne("LagaltAPI.Models.Project", "Project")
+                    b.HasOne("LagaltAPI.Models.Domain.Project", "Project")
                         .WithMany("UserProjects")
                         .HasForeignKey("ProjectID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LagaltAPI.Models.User", "User")
+                    b.HasOne("LagaltAPI.Models.Domain.User", "User")
                         .WithMany("UserProjects")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -598,13 +667,13 @@ namespace LagaltAPI.Migrations
 
             modelBuilder.Entity("ProjectSkills", b =>
                 {
-                    b.HasOne("LagaltAPI.Models.Project", null)
+                    b.HasOne("LagaltAPI.Models.Domain.Project", null)
                         .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LagaltAPI.Models.Skill", null)
+                    b.HasOne("LagaltAPI.Models.Domain.Skill", null)
                         .WithMany()
                         .HasForeignKey("SkillId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -613,33 +682,35 @@ namespace LagaltAPI.Migrations
 
             modelBuilder.Entity("UserSkills", b =>
                 {
-                    b.HasOne("LagaltAPI.Models.Skill", null)
+                    b.HasOne("LagaltAPI.Models.Domain.Skill", null)
                         .WithMany()
                         .HasForeignKey("SkillId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LagaltAPI.Models.User", null)
+                    b.HasOne("LagaltAPI.Models.Domain.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LagaltAPI.Models.Profession", b =>
+            modelBuilder.Entity("LagaltAPI.Models.Domain.Profession", b =>
                 {
                     b.Navigation("Projects");
                 });
 
-            modelBuilder.Entity("LagaltAPI.Models.Project", b =>
+            modelBuilder.Entity("LagaltAPI.Models.Domain.Project", b =>
                 {
                     b.Navigation("Messages");
 
                     b.Navigation("UserProjects");
                 });
 
-            modelBuilder.Entity("LagaltAPI.Models.User", b =>
+            modelBuilder.Entity("LagaltAPI.Models.Domain.User", b =>
                 {
+                    b.Navigation("Applications");
+
                     b.Navigation("Messages");
 
                     b.Navigation("UserProjects");
