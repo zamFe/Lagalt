@@ -6,6 +6,19 @@ import { finalize, map, retry, switchMap, tap } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 
 const API_URL = `${environment.apiUrl}Projects`;
+const defaultProject: Project = {
+    id: 0,
+    profession: 0,
+    title: "",
+    image: "",
+    skills: [],
+    messages: [],
+    users: [],
+    description: "",
+    progress: "",
+    source: null
+}
+
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +28,7 @@ export class ProjectService {
     // Private store varaibles
     private readonly _projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
     private readonly _renderProjects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
+    private readonly _project$: BehaviorSubject<Project> = new BehaviorSubject<Project>(defaultProject);
 
     constructor(private readonly http : HttpClient) {
     }
@@ -24,7 +38,10 @@ export class ProjectService {
         return this._projects$.asObservable()
     }
     public getRenderProjects$(): Observable<Project[]> {
-      return this._renderProjects$.asObservable()
+        return this._renderProjects$.asObservable()
+    }
+    public getProject$(): Observable<Project> {
+        return this._project$.asObservable()
     }
 
     public setProjects(projects: Project[]): void {
@@ -32,6 +49,9 @@ export class ProjectService {
     }
     public setRenderProjects(projects: Project[]): void {
         this._renderProjects$.next(projects)
+    }
+    public setProject(project: Project): void {
+        this._project$.next(project)
     }
 
     public addProject(project: Project): void {
@@ -58,21 +78,21 @@ export class ProjectService {
     public getProjectById(id: number): Subscription {
         return this.http.get<Project>(`${API_URL}/${id}`)
             .subscribe((project: Project) => {
-
+                this.setProject(project)
             });
     }
 
-    public postProject(project: Project): Subscription {
-        return this.http.post<Project>(API_URL, project)
-            .subscribe((response) => {
-                console.log("response:")
-                console.log(response)
-                this.addProject(project)
-                console.log("project added to state:")
-                console.log(this._projects$)
-                console.log("project added to API go check")
-            });
-    }
+    // public postProject(project: Project): Subscription {
+    //     return this.http.post<Project>(API_URL, project)
+    //         .subscribe((response) => {
+    //             console.log("response:")
+    //             console.log(response)
+    //             this.addProject(project)
+    //             console.log("project added to state:")
+    //             console.log(this._projects$)
+    //             console.log("project added to API go check")
+    //         });
+    // }
 
     // post, put/id, get/id
 }

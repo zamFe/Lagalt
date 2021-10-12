@@ -1,38 +1,36 @@
 <div>
   <div class="project-details">
     <div class="project-industry">
-      <h4>{{projectIndusty}}</h4>
+      <h4>{{(project$ | async)?.profession}}</h4>
     </div>
 
     <div  class="project-name">
-      <h1>{{projectName}}</h1>
+      <h1>{{(project$ | async)?.title}}</h1>
     </div>
     
     <div class="project-info">
       <section>
         <span>
           <p>
-            Project created by: {{userName}} <br>
-            Date created: {{date}}
+            Project created by: {{"userName"}} <br>
+            Date created: {{"date"}}
           </p>
         </span>
 
         <h3>
-          Status: {{projectStatus}}
+          Status: {{(project$ | async)?.progress}}
         </h3>
         <div class="project-image">
-          <img src = {{projectImage}}
-            alt="project logo"
-          />
+          <img src="{{(project$ | async)?.image}}" alt="project logo"/>
         </div>
         <div>
-          Skills needed: {{skillsNeeded}}
+          Skills needed: {{(project$ | async)?.skills}}
         </div>
       </section>
       <br />
       <section class="project-description">
         <h3>Project description</h3>
-        <h5>{{projecDescription}}</h5>
+        <h5>{{(project$ | async)?.description}}</h5>
       </section>
 
       <div class="projcet-apply-button">
@@ -45,7 +43,11 @@
       </div>
 
       <div class="project-tags">
-        <span> {{projectTags}}</span>
+        <span> {{"projectTags"}}</span>
+      </div>
+
+      <div class="project-source">
+        <span> {{(project$ | async)?.source}}</span>
       </div>
     </div>
   </div>

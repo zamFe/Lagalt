@@ -12,6 +12,7 @@ export class MainPage implements OnInit {
 
   ngOnInit(): void {
     this.projectService.getProjects();
+    
   }
 
 }
