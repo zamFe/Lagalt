@@ -1,6 +1,5 @@
 ﻿using LagaltAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,13 +7,12 @@ using System.IO;
 namespace LagaltAPI.Context
 {
     /// <summary>
-    /// Simple representation of a database session.
-    /// Data source is picked up from a ".env" file.
+    ///     Simple representation of a database session.
+    ///     Data source is picked up from an environment variable
+    ///     or a local ".env" file.
     /// </summary>
     public class LagaltContext : DbContext
     {
-        private readonly IConfiguration _configuration;
-
         public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<UserProject> UserProjects { get; set; }
@@ -22,10 +20,8 @@ namespace LagaltAPI.Context
         public DbSet<Skill> Skills { get; set; }
         public DbSet<Profession> Professions { get; set; }
         
-        public LagaltContext(DbContextOptions options, IConfiguration configuration) : base(options)
-        {
-            _configuration = configuration;
-        }
+        // Constructor.
+        public LagaltContext(DbContextOptions options) : base(options) {}
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -37,9 +33,7 @@ namespace LagaltAPI.Context
                 optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
             }
             else
-            {
                 optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -68,7 +62,7 @@ namespace LagaltAPI.Context
                 {
                     Id = 1,
                     Hidden = false,
-                    UserName = "Bob",
+                    Username = "Bob",
                     Description = "Looking for my friend, Mr. Tambourine",
                     Image = "https://upload.wikimedia.org/wikipedia/commons/0/02/Bob_Dylan_-_Azkena_Rock_Festival_2010_2.jpg",
                     Portfolio = "https://en.wikipedia.org/wiki/Bob_Dylan_discography"
@@ -77,34 +71,34 @@ namespace LagaltAPI.Context
                 {
                     Id = 2,
                     Hidden = false,
-                    UserName = "Grohl",
+                    Username = "Grohl",
                     Description = "Currently learning to fly",
                     Portfolio = "https://en.wikipedia.org/wiki/Dave_Grohl#Career"
                 },
                 new User
                 {
                     Id = 3,
-                    UserName = "DoubleOh",
+                    Username = "DoubleOh",
                     Image = "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg"
                 },
                 new User
                 {
                     Id = 4,
                     Hidden = false,
-                    UserName = "ManOfEgg",
+                    Username = "ManOfEgg",
                     Portfolio = "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/"
                 },
                 new User
                 {
                     Id = 5,
                     Hidden = false,
-                    UserName = "Rob",
+                    Username = "Rob",
                     Description = "Game dev, I guess"
                 },
                 new User{
                     Id = 6,
                     Hidden = false,
-                    UserName = "Drew",
+                    Username = "Drew",
                     Image = "https://avatars.githubusercontent.com/u/1310872",
                     Portfolio = "https://git.sr.ht/~sircmpwn"
                 }
@@ -188,7 +182,6 @@ namespace LagaltAPI.Context
                 },
             };
 
-            // TODO - add UserProject entries
             var userProjects = new UserProject[]
             {
                 new UserProject

@@ -15,10 +15,12 @@ namespace LagaltAPI.Profiles
                 .ForMember(udto => udto.Projects, opt => opt
                 .MapFrom(u => u.UserProjects.Select(up => up.ProjectID).ToList()))
                 .ReverseMap();
+
             CreateMap<User, UserEditDTO>()
                 .ForMember(udto => udto.Skills, opt => opt
                 .MapFrom(u => u.Skills.Select(s => s.Id).ToList()))
                 .ReverseMap();
+
             CreateMap<User, UserCreateDTO>()
                 .ForMember(udto => udto.Skills, opt => opt
                 .MapFrom(u => u.Skills.Select(s => s.Id).ToList()))

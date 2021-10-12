@@ -120,21 +120,5 @@ namespace LagaltAPI
                 new { id = domainUser.Id }, 
                 _mapper.Map<UserReadDTO>(domainUser));
         }
-
-        /* TODO - Decide whether or not deleting users will be supported.
-         *
-         * // DELETE: api/Users/5
-         * [HttpDelete("{id}")]
-         * public async Task<IActionResult> DeleteUser(int id)
-         * {
-         *     if (!_service.EntityExists(id)) {
-         *         return NotFound();
-         *     }
-         * 
-         *    await _service.DeleteAsync(id);
-         * 
-         *    return NoContent();
-         * }
-         */
     }
 }

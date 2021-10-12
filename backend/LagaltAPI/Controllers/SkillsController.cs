@@ -4,7 +4,6 @@ using LagaltAPI.Models.DTOs.Skill;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -34,30 +33,10 @@ namespace LagaltAPI.Controllers
             return _mapper.Map<List<SkillReadDTO>>(await _service.GetAllAsync());
         }
 
-        /// <summary> Fetches a skill from the database based on id. </summary>
-        /// <param name="id"> The id of the skill to retrieve. </param>
-        /// <returns>
-        ///     A read-specific DTO of the skill if it is found in the database.
-        ///     If it is not, then NotFound is returned instead.
-        /// </returns>
-        // GET: api/Skills/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<SkillReadDTO>> GetSkill(int id)
-        {
-            try
-            {
-                var domainSkill = await _service.GetByIdAsync(id);
 
-                if (domainSkill != null)
-                    return _mapper.Map<SkillReadDTO>(domainSkill);
-                else
-                    return NotFound();
-            }
-            catch (InvalidOperationException)
-            {
-                return NotFound();
-            }
-        }
+        // TODO - Add support for getting a range of skills (offset + limit).
+        //        Would this replace GetSkills?
+
 
         /// <summary>
         ///     Updates the specified skill in the database to match the provided DTO.
@@ -118,24 +97,5 @@ namespace LagaltAPI.Controllers
                 new { id = domainSkill.Id },
                 _mapper.Map<SkillReadDTO>(domainSkill));
         }
-
-        /* TODO - Decide whether or not deleting skills will be supported.
-         * 
-         * // DELETE: api/Skills/5
-         * [HttpDelete("{id}")]
-         * public async Task<IActionResult> DeleteSkill(int id)
-         * {
-         *    var skill = await _context.Skills.FindAsync(id);
-         *    if (skill == null)
-         *    {
-         *        return NotFound();
-         *    }
-         *
-         *    _context.Skills.Remove(skill);
-         *    await _context.SaveChangesAsync();
-         * 
-         *   return NoContent();
-         * }
-         */
     }
 }
