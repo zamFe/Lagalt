@@ -23,16 +23,16 @@ namespace LagaltAPI.Services
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Message>> GetByProjectIdAsync(int pId) {
+        public async Task<IEnumerable<Message>> GetByProjectIdAsync(int id) {
             return await _context.Messages
-                .Where(m => m.ProjectId == pId)
+                .Where(m => m.ProjectId == id)
                 .ToListAsync();
         }
 
-        public async Task<Message> GetByIdAsync(int Id)
+        public async Task<Message> GetByIdAsync(int id)
         {
             return await _context.Messages
-                .Where(m => m.Id == Id)
+                .Where(m => m.Id == id)
                 .FirstAsync();
         }
 

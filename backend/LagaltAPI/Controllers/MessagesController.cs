@@ -3,6 +3,7 @@ using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Message;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,6 +22,31 @@ namespace LagaltAPI.Controllers
         {
             _mapper = mapper;
             _service = service;
+        }
+
+        /// <summary> Fetches a message from the database based on id. </summary>
+        /// <param name="id"> The id of the message to retrieve. </param>
+        /// <returns>
+        ///     A read-specific DTO of the message if it is found in the database.
+        ///     If it is not, then NotFound is returned instead.
+        /// </returns>
+        // GET: api/Messages/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<MessageReadDTO>> GetMessage(int id)
+        {
+            try
+            {
+                var domainMessage = await _service.GetByIdAsync(id);
+
+                if (domainMessage != null)
+                    return _mapper.Map<MessageReadDTO>(domainMessage);
+                else
+                    return NotFound();
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
+            }
         }
 
         /// <summary> Fetches messages from the database based on project id. </summary>
@@ -46,7 +72,7 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<MessageReadDTO>> PostMessage(MessageCreateDTO dtoMessage)
         {
             var domainMessage = _mapper.Map<Message>(dtoMessage);
-            await _service.AddAsync(domainMessage);
+            domainMessage = await _service.AddAsync(domainMessage);
 
             return CreatedAtAction("GetMessage", 
                 new { id = domainMessage.Id }, 
