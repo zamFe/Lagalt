@@ -16,13 +16,7 @@ namespace LagaltAPI
 {
     public class Startup
     {
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-        private readonly IConfiguration _configuration;
-
-        public Startup(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+        private readonly string _clientOrigin = "Client Origin";
 
         // This method gets called by the runtime.
         // Use this method to add services to the container.
@@ -34,7 +28,7 @@ namespace LagaltAPI
 
             services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
+                options.AddPolicy(name: _clientOrigin,
                                   builder => builder.WithOrigins("http://localhost:4200"));
             });
 
@@ -43,24 +37,27 @@ namespace LagaltAPI
             services.AddScoped(typeof(ProfessionService));
             services.AddScoped(typeof(SkillService));
             services.AddScoped(typeof(UserService));
+
             services.AddAutoMapper(typeof(Startup));
+
             services.AddEntityFrameworkNpgsql().AddDbContext<LagaltContext>(options =>
             {
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 string connStr;
-                if (env == "Development") //if dev, get local connection
+                if (env == "Development")
                 {
-                    var root = Directory.GetCurrentDirectory();
-                    var dotenv = Path.Combine(root, ".env");
-                    DotEnv.Load(dotenv);
+                    // Use local connection while developing.
+                    var dotEnv = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+                    DotEnv.Load(dotEnv);
                     _ =
                         new ConfigurationBuilder()
                         .AddEnvironmentVariables()
                         .Build();
                     connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
                 }
-                else //else, get url from Heroku
+                else
                 {
+                    // Use Heroku while deployed.
                     var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
                     var pgUserPass = connUrl.Split("@")[0];
                     var pgHostPortDb = connUrl.Split("@")[1];
@@ -113,14 +110,11 @@ namespace LagaltAPI
             app.UseHttpsRedirection();
             app.UseRouting();
 
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors(_clientOrigin);
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }
