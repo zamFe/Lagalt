@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LagaltAPI.Migrations
 {
     [DbContext(typeof(LagaltContext))]
-    [Migration("20211011073556_InitialDb")]
+    [Migration("20211012083431_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -274,7 +274,7 @@ namespace LagaltAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
@@ -291,7 +291,7 @@ namespace LagaltAPI.Migrations
                             Hidden = false,
                             Image = "https://upload.wikimedia.org/wikipedia/commons/0/02/Bob_Dylan_-_Azkena_Rock_Festival_2010_2.jpg",
                             Portfolio = "https://en.wikipedia.org/wiki/Bob_Dylan_discography",
-                            UserName = "Bob"
+                            Username = "Bob"
                         },
                         new
                         {
@@ -299,28 +299,28 @@ namespace LagaltAPI.Migrations
                             Description = "Currently learning to fly",
                             Hidden = false,
                             Portfolio = "https://en.wikipedia.org/wiki/Dave_Grohl#Career",
-                            UserName = "Grohl"
+                            Username = "Grohl"
                         },
                         new
                         {
                             Id = 3,
                             Hidden = true,
                             Image = "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg",
-                            UserName = "DoubleOh"
+                            Username = "DoubleOh"
                         },
                         new
                         {
                             Id = 4,
                             Hidden = false,
                             Portfolio = "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/",
-                            UserName = "ManOfEgg"
+                            Username = "ManOfEgg"
                         },
                         new
                         {
                             Id = 5,
                             Description = "Game dev, I guess",
                             Hidden = false,
-                            UserName = "Rob"
+                            Username = "Rob"
                         },
                         new
                         {
@@ -328,7 +328,7 @@ namespace LagaltAPI.Migrations
                             Hidden = false,
                             Image = "https://avatars.githubusercontent.com/u/1310872",
                             Portfolio = "https://git.sr.ht/~sircmpwn",
-                            UserName = "Drew"
+                            Username = "Drew"
                         });
                 });
 

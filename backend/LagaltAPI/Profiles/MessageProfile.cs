@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LagaltAPI.Models;
+using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Message;
 
 namespace LagaltAPI.Profiles
@@ -14,8 +14,7 @@ namespace LagaltAPI.Profiles
                 .ForMember(mdto => mdto.Project, opt => opt
                 .MapFrom(m => m.ProjectId))
                 .ReverseMap();
-            CreateMap<Message, MessageEditDTO>()
-                .ReverseMap();
+
             CreateMap<Message, MessageReadDTO>()
                 .ForMember(mdto => mdto.User, opt => opt
                 .MapFrom(m => m.UserId))

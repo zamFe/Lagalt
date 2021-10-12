@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LagaltAPI.Models;
+using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Project;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -125,22 +125,5 @@ namespace LagaltAPI.Controllers
                 new { id = domainProject.Id }, 
                 _mapper.Map<ProjectReadDTO>(domainProject));
         }
-
-        /* TODO - Decide whether or not deleting projects will be supported.
-         *
-         * // DELETE: api/Projects/5
-         * [HttpDelete("{id}")]
-         * public async Task<IActionResult> DeleteProject(int id)
-         * {
-         *     var project = await _context.Projects.FindAsync(id);
-         *     if (project == null)
-         *         return NotFound();
-         * 
-         *     _context.Projects.Remove(project);
-         *     await _context.SaveChangesAsync();
-         * 
-         *     return NoContent();
-         * }
-         */
     }
 }

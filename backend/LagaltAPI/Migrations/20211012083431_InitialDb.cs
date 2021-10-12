@@ -41,7 +41,7 @@ namespace LagaltAPI.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Hidden = table.Column<bool>(type: "boolean", nullable: false),
-                    UserName = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Username = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     Description = table.Column<string>(type: "character varying(140)", maxLength: 140, nullable: true),
                     Image = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     Portfolio = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
@@ -207,7 +207,7 @@ namespace LagaltAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Description", "Hidden", "Image", "Portfolio", "UserName" },
+                columns: new[] { "Id", "Description", "Hidden", "Image", "Portfolio", "Username" },
                 values: new object[,]
                 {
                     { 1, "Looking for my friend, Mr. Tambourine", false, "https://upload.wikimedia.org/wikipedia/commons/0/02/Bob_Dylan_-_Azkena_Rock_Festival_2010_2.jpg", "https://en.wikipedia.org/wiki/Bob_Dylan_discography", "Bob" },
