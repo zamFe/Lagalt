@@ -4,7 +4,6 @@ import { Project } from "../../models/project.model";
 import { ProjectService } from "../../services/project.service"
 import { Observable, Subscription } from 'rxjs';
 
-
 @Component({
   selector: 'app-main-search',
   templateUrl: './main-search.component.html',
@@ -21,7 +20,6 @@ export class MainSearchComponent implements OnInit {
   }
 
   searchForProject(searchProjectForm : NgForm) : void{
-
     let searchResults : Project[] = []
     this.projectService.getProjects$().subscribe(data => {
       searchResults = data.filter(p => p.title.includes(searchProjectForm.value.searchInput))

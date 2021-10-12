@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { finalize, map, retry, switchMap, tap } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 
-const API_URL = environment.apiUrl;
+const API_URL = `${environment.apiUrl}Projects`;
 
 @Injectable({
     providedIn: 'root'
@@ -48,10 +48,29 @@ export class ProjectService {
     public getProjects(): Subscription {
 
         //set professions as enum in storage here.
-        return this.http.get<Project[]>(`${API_URL}Projects`)
+        return this.http.get<Project[]>(API_URL)
             .subscribe((projects: Project[]) => {
                 this.setProjects(projects)
                 this.setRenderProjects(projects)
+            });
+    }
+
+    public getProjectById(id: number): Subscription {
+        return this.http.get<Project>(`${API_URL}/${id}`)
+            .subscribe((project: Project) => {
+
+            });
+    }
+
+    public postProject(project: Project): Subscription {
+        return this.http.post<Project>(API_URL, project)
+            .subscribe((response) => {
+                console.log("response:")
+                console.log(response)
+                this.addProject(project)
+                console.log("project added to state:")
+                console.log(this._projects$)
+                console.log("project added to API go check")
             });
     }
 

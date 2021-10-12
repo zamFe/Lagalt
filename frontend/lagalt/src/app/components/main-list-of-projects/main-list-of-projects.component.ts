@@ -13,7 +13,6 @@ export class MainListOfProjectsComponent implements OnInit {
   constructor(private readonly projectService: ProjectService) { }
 
   ngOnInit(): void {
-    this.projectService.getProjects();
   }
 
   get projects$(): Observable<Project[]> {
