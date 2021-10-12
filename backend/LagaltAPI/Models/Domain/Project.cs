@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace LagaltAPI.Models
+namespace LagaltAPI.Models.Domain
 {
     /// <summary> Simple data model representing a project at Lagalt </summary>
     public class Project

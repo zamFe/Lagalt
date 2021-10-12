@@ -1,5 +1,5 @@
 ﻿using LagaltAPI.Context;
-using LagaltAPI.Models;
+using LagaltAPI.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;

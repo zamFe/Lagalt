@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LagaltAPI.Models;
+using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.User;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Mvc;

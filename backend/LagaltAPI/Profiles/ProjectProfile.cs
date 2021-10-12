@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LagaltAPI.Models;
+using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Project;
 using System.Linq;
 
