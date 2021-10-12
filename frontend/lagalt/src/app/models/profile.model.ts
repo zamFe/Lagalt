@@ -1,9 +1,11 @@
-export interface Profile {
+export interface User {
   id : number,
-  skills : [],
-  accomplishments : [],
+  username: string,
   description : string,
-
+  image: string,
+  portfolio : string,
+  skills : [],
+  projects : [],
 }
 
 

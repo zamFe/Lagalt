@@ -1,6 +1,6 @@
 import { Injectable} from "@angular/core";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
-import { Project, ProjectDetailed } from "../models/project.model";
+import { Project } from "../models/project.model";
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { finalize, map, retry, switchMap, tap } from "rxjs/operators";
 import { environment } from "src/environments/environment";

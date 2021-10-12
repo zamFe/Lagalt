@@ -18,7 +18,12 @@ export class MainListOfProjectsItemComponent implements OnInit {
     profession: 0,
     title: '',
     image: '',
-    skills: []
+    skills: [],
+    messages: [],
+    users: [],
+    description: '',
+    progress: '',
+    source: '',
   };
   public skills: string[] = []
   constructor() { }
