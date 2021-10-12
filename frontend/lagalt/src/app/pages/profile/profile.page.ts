@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Profile } from 'src/app/models/profile.model'
+import { User } from 'src/app/models/profile.model'
 import { NgForm, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
