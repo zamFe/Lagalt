@@ -100,6 +100,34 @@ namespace LagaltAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Application",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProjectId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    Accepted = table.Column<bool>(type: "boolean", nullable: false),
+                    Motivation = table.Column<string>(type: "character varying(140)", maxLength: 140, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Application", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Application_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Application_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
@@ -161,8 +189,7 @@ namespace LagaltAPI.Migrations
                     Clicked = table.Column<bool>(type: "boolean", nullable: false),
                     Applied = table.Column<bool>(type: "boolean", nullable: false),
                     Contributed = table.Column<bool>(type: "boolean", nullable: false),
-                    Administrator = table.Column<bool>(type: "boolean", nullable: false),
-                    Application = table.Column<string>(type: "character varying(140)", maxLength: 140, nullable: true)
+                    Administrator = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -251,6 +278,16 @@ namespace LagaltAPI.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Application",
+                columns: new[] { "Id", "Accepted", "Motivation", "ProjectId", "UserId" },
+                values: new object[,]
+                {
+                    { 1, true, "I also love submarines", 1, 2 },
+                    { 2, true, "I also love submarines", 1, 3 },
+                    { 3, false, "What's a submarine?", 1, 5 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Messages",
                 columns: new[] { "Id", "Content", "PostedTime", "ProjectId", "UserId" },
                 values: new object[,]
@@ -265,25 +302,35 @@ namespace LagaltAPI.Migrations
                 columns: new[] { "ProjectId", "SkillId" },
                 values: new object[,]
                 {
-                    { 1, 1 },
-                    { 1, 2 },
-                    { 2, 3 },
                     { 3, 4 },
-                    { 4, 5 },
-                    { 5, 6 }
+                    { 2, 3 },
+                    { 1, 2 },
+                    { 1, 1 },
+                    { 5, 6 },
+                    { 4, 5 }
                 });
 
             migrationBuilder.InsertData(
                 table: "UserProjects",
-                columns: new[] { "ProjectID", "UserID", "Administrator", "Application", "Applied", "Clicked", "Contributed", "Viewed" },
+                columns: new[] { "ProjectID", "UserID", "Administrator", "Applied", "Clicked", "Contributed", "Viewed" },
                 values: new object[,]
                 {
-                    { 1, 1, true, null, true, true, false, true },
-                    { 1, 2, false, "Plz i luv submarinezz!!!1!!1!!", true, true, false, true },
-                    { 1, 3, false, "Request Access", true, true, false, true },
-                    { 1, 4, false, null, false, false, false, true },
-                    { 1, 5, false, null, false, true, false, true }
+                    { 1, 4, false, false, false, false, true },
+                    { 1, 2, false, true, true, false, true },
+                    { 1, 1, true, true, true, false, true },
+                    { 1, 5, false, false, true, false, true },
+                    { 1, 3, false, true, true, false, true }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Application_ProjectId",
+                table: "Application",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Application_UserId",
+                table: "Application",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_ProjectId",
@@ -318,6 +365,9 @@ namespace LagaltAPI.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Application");
+
             migrationBuilder.DropTable(
                 name: "Messages");
 

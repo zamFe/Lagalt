@@ -45,6 +45,8 @@ namespace LagaltAPI.Context
                 new Profession{Id = 3, Name = "Game Development"},
                 new Profession{Id = 4, Name = "Web Development"}
             };
+            foreach (Profession p in professions)
+                modelBuilder.Entity<Profession>().HasData(p);
 
             var skills = new Skill[]
             {
@@ -55,6 +57,8 @@ namespace LagaltAPI.Context
                 new Skill{Id = 5, Name = "Unit testing"},
                 new Skill{Id = 6, Name = "TypeScript"}
             };
+            foreach (Skill s in skills)
+                modelBuilder.Entity<Skill>().HasData(s);
 
             var users = new User[]
             {
@@ -103,6 +107,8 @@ namespace LagaltAPI.Context
                     Portfolio = "https://git.sr.ht/~sircmpwn"
                 }
             };
+            foreach (User u in users)
+                modelBuilder.Entity<User>().HasData(u);
 
             var projects = new Project[]
             {
@@ -151,8 +157,10 @@ namespace LagaltAPI.Context
                     Source = "https://github.com/ddevault/RedditSharp"
                 },
             };
+            foreach (Project p in projects)
+                modelBuilder.Entity<Project>().HasData(p);
 
-            // TODO - Add more messages
+            // TODO - Add more messages.
             var messages = new Message[]
             {
                 // Submarine project messsages
@@ -181,6 +189,39 @@ namespace LagaltAPI.Context
                     PostedTime = new DateTime(2021, 10, 3, 8, 20, 03)
                 },
             };
+            foreach (Message m in messages)
+                modelBuilder.Entity<Message>().HasData(m);
+
+            // TODO - Add more applications.
+            var applications = new Application[]
+            {
+                new Application
+                {
+                    Id = 1,
+                    ProjectId = projects[0].Id,
+                    UserId = users[1].Id,
+                    Accepted = true,
+                    Motivation = "I also love submarines",
+                },
+                new Application
+                {
+                    Id = 2,
+                    ProjectId = projects[0].Id,
+                    UserId = users[2].Id,
+                    Accepted = true,
+                    Motivation = "I also love submarines",
+                },
+                new Application
+                {
+                    Id = 3,
+                    ProjectId = projects[0].Id,
+                    UserId = users[4].Id,
+                    Accepted = false,
+                    Motivation = "What's a submarine?",
+                },
+            };
+            foreach (Application a in applications)
+                modelBuilder.Entity<Application>().HasData(a);
 
             var userProjects = new UserProject[]
             {
@@ -199,8 +240,7 @@ namespace LagaltAPI.Context
                     ProjectID = 1,
                     Viewed = true,
                     Clicked = true,
-                    Applied = true,
-                    Application = "Plz i luv submarinezz!!!1!!1!!"
+                    Applied = true
                 },
                 new UserProject
                 {
@@ -208,8 +248,7 @@ namespace LagaltAPI.Context
                     ProjectID = 1,
                     Viewed = true,
                     Clicked = true,
-                    Applied = true,
-                    Application = "Request Access"
+                    Applied = true
                 },
                 new UserProject
                 {
@@ -224,18 +263,7 @@ namespace LagaltAPI.Context
                     Viewed = true,
                     Clicked = true
                 }
-            };
-
-            foreach (Profession p in professions)
-                modelBuilder.Entity<Profession>().HasData(p);
-            foreach (Skill s in skills)
-                modelBuilder.Entity<Skill>().HasData(s);
-            foreach (User u in users)
-                modelBuilder.Entity<User>().HasData(u);
-            foreach (Project p in projects)
-                modelBuilder.Entity<Project>().HasData(p);
-            foreach (Message m in messages)
-                modelBuilder.Entity<Message>().HasData(m);
+            };            
             foreach (UserProject up in userProjects)
                 modelBuilder.Entity<UserProject>().HasData(up);
 
