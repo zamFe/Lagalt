@@ -32,6 +32,7 @@ namespace LagaltAPI
                                   builder => builder.WithOrigins("http://localhost:4200"));
             });
 
+            services.AddScoped(typeof(ApplicationService));
             services.AddScoped(typeof(MessageService));
             services.AddScoped(typeof(ProjectService));
             services.AddScoped(typeof(ProfessionService));
