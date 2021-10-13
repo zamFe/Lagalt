@@ -7,6 +7,7 @@ namespace LagaltAPI.Models.DTOs.Project
         public int Id { get; set; }
         public int Profession { get; set; }
         public int[] Users { get; set; }
+        public int[] Administrators { get; set; }
         public SkillReadDTO[] Skills { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

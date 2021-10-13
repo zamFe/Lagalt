@@ -15,11 +15,11 @@ namespace LagaltAPI.Models.Domain
         // Collection navigation property for relationship with messages.
         public ICollection<Message> Messages { get; set; }
 
+        // Collection navigation property for relationship with projects.
+        public ICollection<Project> Projects { get; set; }
+
         // Collection navigation property for relationship with skills.
         public ICollection<Skill> Skills { get; set; }
-
-        // Collection navigation property for relationship with projects.
-        public ICollection<UserProject> UserProjects { get; set; }
 
         // Data.
         public bool Hidden { get; set; } = true;
@@ -35,5 +35,14 @@ namespace LagaltAPI.Models.Domain
 
         [MaxLength(100)]
         public string Portfolio { get; set; }
+
+        // Account history.
+        public int[] Viewed { get; set; }
+
+        public int[] Clicked { get; set; }
+
+        public int[] AppliedTo { get; set; }
+
+        public int[] ContributedTo { get; set; }
     }
 }

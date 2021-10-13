@@ -21,7 +21,7 @@ namespace LagaltAPI.Services
         {
             return await _context.Projects
                 .Include(p => p.Messages)
-                .Include(p => p.UserProjects)
+                .Include(p => p.Users)
                 .Include(p => p.Skills)
                 .ToListAsync();
         }
@@ -30,7 +30,7 @@ namespace LagaltAPI.Services
         {
             return await _context.Projects
                 .Include(p => p.Messages)
-                .Include(p => p.UserProjects)
+                .Include(p => p.Users)
                 .Include(p => p.Skills)
                 .Where(p => p.Id == Id)
                 .FirstAsync();
