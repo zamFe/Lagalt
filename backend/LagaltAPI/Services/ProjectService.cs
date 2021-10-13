@@ -7,60 +7,53 @@ using System.Threading.Tasks;
 
 namespace LagaltAPI.Services
 {
-    public class ProjectService : IService<Project>
+    public class ProjectService
     {
-
         private readonly LagaltContext _context;
 
+        // Constructor.
         public ProjectService(LagaltContext context)
         {
             _context = context;
         }
 
+        public bool EntityExists(int projectId)
+        {
+            return _context.Projects.Any(project => project.Id == projectId);
+        }
+
+        public async Task<Project> AddAsync(Project newProject)
+        {
+            _context.Projects.Add(newProject);
+            await _context.SaveChangesAsync();
+            return newProject;
+        }
+
         public async Task<IEnumerable<Project>> GetAllAsync()
         {
             return await _context.Projects
-                .Include(p => p.Messages)
-                .Include(p => p.Users)
-                .Include(p => p.Skills)
-                .Include(p => p.Profession)
+                .Include(project => project.Messages)
+                .Include(project => project.Users)
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
                 .ToListAsync();
         }
 
-        public async Task<Project> GetByIdAsync(int Id)
+        public async Task<Project> GetByIdAsync(int projectId)
         {
             return await _context.Projects
-                .Include(p => p.Messages)
-                .Include(p => p.Users)
-                .Include(p => p.Skills)
-                .Include(p => p.Profession)
-                .Where(p => p.Id == Id)
+                .Include(project => project.Messages)
+                .Include(project => project.Users)
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .Where(project => project.Id == projectId)
                 .FirstAsync();
         }
 
-        public async Task<Project> AddAsync(Project entity)
+        public async Task UpdateAsync(Project updatedProject)
         {
-            _context.Projects.Add(entity);
+            _context.Entry(updatedProject).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return entity;
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var user = await _context.Projects.FindAsync(id);
-            _context.Projects.Remove(user);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(Project entity)
-        {
-            _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        public bool EntityExists(int id)
-        {
-            return _context.Projects.Any(p => p.Id == id);
         }
     }
 }

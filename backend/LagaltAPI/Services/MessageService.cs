@@ -7,63 +7,38 @@ using System.Threading.Tasks;
 
 namespace LagaltAPI.Services
 {
-    public class MessageService : IService<Message>
+    public class MessageService
     {
-
         private readonly LagaltContext _context;
 
+        // Constructor.
         public MessageService(LagaltContext context)
         {
             _context = context;
         }
 
-        public async Task<IEnumerable<Message>> GetAllAsync()
+        public async Task<Message> AddAsync(Message newMessage)
         {
-            return await _context.Messages
-                .Include(m => m.User)
-                .ToListAsync();
+            _context.Messages.Add(newMessage);
+            await _context.SaveChangesAsync();
+            newMessage.User = await _context.Users.FindAsync(newMessage.UserId);
+            return newMessage;
         }
 
-        public async Task<IEnumerable<Message>> GetByProjectIdAsync(int id) {
-            return await _context.Messages
-                .Include(m => m.User)
-                .Where(m => m.ProjectId == id)
-                .ToListAsync();
-        }
-
-        public async Task<Message> GetByIdAsync(int id)
+        public async Task<Message> GetByIdAsync(int messageId)
         {
             return await _context.Messages
-                .Include(m => m.User)
-                .Where(m => m.Id == id)
+                .Include(message => message.User)
+                .Where(message => message.Id == messageId)
                 .FirstAsync();
         }
 
-        public async Task<Message> AddAsync(Message entity)
+        public async Task<IEnumerable<Message>> GetByProjectIdAsync(int projectId)
         {
-            _context.Messages.Add(entity);
-            await _context.SaveChangesAsync();
-            entity.User = await _context.Users.FindAsync(entity.UserId);
-            return entity;
+            return await _context.Messages
+                .Include(message => message.User)
+                .Where(message => message.ProjectId == projectId)
+                .ToListAsync();
         }
-
-        public async Task DeleteAsync(int id)
-        {
-            var message = await _context.Messages.FindAsync(id);
-            _context.Messages.Remove(message);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(Message entity)
-        {
-            _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        public bool EntityExists(int id)
-        {
-            return _context.Messages.Any(m => m.Id == id);
-        }
-
     }
 }

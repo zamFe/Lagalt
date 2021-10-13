@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LagaltAPI.Services
 {
-    public class UserService : IService<User>
+    public class UserService
     {
         private readonly LagaltContext _context;
 
@@ -17,49 +17,42 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
+        public bool EntityExists(int userId)
+        {
+            return _context.Users.Any(user => user.Id == userId);
+        }
+
+        public async Task<User> AddAsync(User newUser)
+        {
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+            return newUser;
+        }
+
         public async Task<IEnumerable<User>> GetAllAsync()
         {
             return await _context.Users
-                .Include(u => u.Messages)
-                .Include(u => u.Skills)
-                .Include(u => u.Projects)
+                .Include(user => user.Messages)
+                .Include(user => user.Skills)
+                .Include(user => user.Projects)
                 .ToListAsync();
         }
 
-        public async Task<User> GetByIdAsync(int Id)
+        public async Task<User> GetByIdAsync(int userId)
         {
             return await _context.Users
-                .Include(u => u.Messages)
-                .Include(u => u.Skills)
-                .Include(u => u.Projects)
-                .Where(u => u.Id == Id)
+                .Include(user => user.Messages)
+                .Include(user => user.Skills)
+                .Include(user => user.Projects)
+                .Where(user => user.Id == userId)
                 .FirstAsync();
         }
 
-        public async Task<User> AddAsync(User entity)
+        public async Task UpdateAsync(User updatedUser)
         {
-            _context.Users.Add(entity);
-            await _context.SaveChangesAsync();
-            return entity;
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var user = await _context.Users.FindAsync(id);
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(User entity)
-        {
-            _context.Entry(entity).State = EntityState.Modified;
+            _context.Entry(updatedUser).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-        }
-
-        public bool EntityExists(int id)
-        {
-            return _context.Users.Any(u => u.Id == id);
         }
     }
 }
