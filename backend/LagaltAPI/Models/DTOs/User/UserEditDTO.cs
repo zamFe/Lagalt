@@ -8,5 +8,9 @@
         public string Image { get; set; }
         public string Portfolio { get; set; }
         public int[] Skills { get; set; }
+        public int[] Viewed { get; set; }
+        public int[] Clicked { get; set; }
+        public int[] AppliedTo { get; set; }
+        public int[] ContributedTo { get; set; }
     }
 }

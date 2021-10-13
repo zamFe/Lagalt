@@ -19,7 +19,6 @@ namespace LagaltAPI.Context
         public DbSet<Project> Projects { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<UserProject> UserProjects { get; set; }
         
         // Constructor.
         public LagaltContext(DbContextOptions options) : base(options) {}
@@ -39,6 +38,8 @@ namespace LagaltAPI.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // TODO - Fix seeding.
+
             var professions = new Profession[]
             {
                 new Profession{Id = 1, Name = "Music"},
@@ -70,7 +71,10 @@ namespace LagaltAPI.Context
                     Username = "Bob",
                     Description = "Looking for my friend, Mr. Tambourine",
                     Image = "https://upload.wikimedia.org/wikipedia/commons/0/02/Bob_Dylan_-_Azkena_Rock_Festival_2010_2.jpg",
-                    Portfolio = "https://en.wikipedia.org/wiki/Bob_Dylan_discography"
+                    Portfolio = "https://en.wikipedia.org/wiki/Bob_Dylan_discography",
+                    Viewed = new int[] { 1 },
+                    Clicked = new int[] { 1 },
+                    ContributedTo = new int[] { 1 }
                 },
                 new User
                 {
@@ -78,34 +82,50 @@ namespace LagaltAPI.Context
                     Hidden = false,
                     Username = "Grohl",
                     Description = "Currently learning to fly",
-                    Portfolio = "https://en.wikipedia.org/wiki/Dave_Grohl#Career"
+                    Portfolio = "https://en.wikipedia.org/wiki/Dave_Grohl#Career",
+                    Viewed = new int[] { 1 },
+                    Clicked = new int[] { 1 },
+                    AppliedTo = new int[] { 1 },
+                    ContributedTo = new int[] { 1 }
                 },
                 new User
                 {
                     Id = 3,
                     Username = "DoubleOh",
-                    Image = "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg"
+                    Image = "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg",
+                    Viewed = new int[] { 1 },
+                    Clicked = new int[] { 1 },
+                    AppliedTo = new int[] { 1 }
                 },
                 new User
                 {
                     Id = 4,
                     Hidden = false,
                     Username = "ManOfEgg",
-                    Portfolio = "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/"
+                    Portfolio = "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/",
+                    Viewed = new int[] { 2 },
+                    Clicked = new int[] { 2 },
+                    ContributedTo = new int[] { 2 }
                 },
                 new User
                 {
                     Id = 5,
                     Hidden = false,
                     Username = "Rob",
-                    Description = "Game dev, I guess"
+                    Description = "Game dev, I guess",
+                    Viewed = new int[] { 3 },
+                    Clicked = new int[] { 3 },
+                    ContributedTo = new int[] { 3 }
                 },
                 new User{
                     Id = 6,
                     Hidden = false,
                     Username = "Drew",
                     Image = "https://avatars.githubusercontent.com/u/1310872",
-                    Portfolio = "https://git.sr.ht/~sircmpwn"
+                    Portfolio = "https://git.sr.ht/~sircmpwn",
+                    Viewed = new int[] { 4 },
+                    Clicked = new int[] { 4 },
+                    ContributedTo = new int[] { 4 }
                 }
             };
             foreach (User u in users)
@@ -117,6 +137,7 @@ namespace LagaltAPI.Context
                 {
                     Id = 1,
                     ProfessionId = professions[0].Id,
+                    Administrators = new int[] {1},
                     Title = "Writing an album on a Submarine",
                     Description = "I've always wanted to travel by submarine and I've also got to make new songs",
                     Progress = "In Progress",
@@ -126,6 +147,7 @@ namespace LagaltAPI.Context
                 {
                     Id = 2,
                     ProfessionId = professions[1].Id,
+                    Administrators = new int[] {4},
                     Title = "The Cinematic Movie Film",
                     Description = "Some call them movies and some call them films. But what if both were correct?"
                 },
@@ -133,6 +155,7 @@ namespace LagaltAPI.Context
                 {
                     Id = 3,
                     ProfessionId = professions[2].Id,
+                    Administrators = new int[] {5},
                     Title = "Yet Another Tetris Game",
                     Description = "What could go wrong?",
                     Progress =  "Completed",
@@ -142,6 +165,7 @@ namespace LagaltAPI.Context
                 {
                     Id = 4,
                     ProfessionId = professions[2].Id,
+                    Administrators = new int[] {6},
                     Title = "Minecraft Nostalgia",
                     Description = "It was better before",
                     Progress = "Stalled",
@@ -161,7 +185,6 @@ namespace LagaltAPI.Context
             foreach (Project p in projects)
                 modelBuilder.Entity<Project>().HasData(p);
 
-            // TODO - Add more messages.
             var messages = new Message[]
             {
                 // Submarine project messsages
@@ -193,7 +216,6 @@ namespace LagaltAPI.Context
             foreach (Message m in messages)
                 modelBuilder.Entity<Message>().HasData(m);
 
-            // TODO - Add more applications.
             var applications = new Application[]
             {
                 new Application
@@ -223,50 +245,6 @@ namespace LagaltAPI.Context
             };
             foreach (Application a in applications)
                 modelBuilder.Entity<Application>().HasData(a);
-
-            var userProjects = new UserProject[]
-            {
-                new UserProject
-                {
-                    UserID = 1,
-                    ProjectID = 1,
-                    Viewed = true,
-                    Clicked = true,
-                    Applied = true,
-                    Administrator = true
-                },
-                new UserProject
-                {
-                    UserID = 2,
-                    ProjectID = 1,
-                    Viewed = true,
-                    Clicked = true,
-                    Applied = true
-                },
-                new UserProject
-                {
-                    UserID = 3,
-                    ProjectID = 1,
-                    Viewed = true,
-                    Clicked = true,
-                    Applied = true
-                },
-                new UserProject
-                {
-                    UserID = 4,
-                    ProjectID = 1,
-                    Viewed = true,
-                },
-                new UserProject
-                {
-                    UserID = 5,
-                    ProjectID = 1,
-                    Viewed = true,
-                    Clicked = true
-                }
-            };            
-            foreach (UserProject up in userProjects)
-                modelBuilder.Entity<UserProject>().HasData(up);
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Skills)
@@ -299,7 +277,7 @@ namespace LagaltAPI.Context
                 );
 
             modelBuilder.Entity<Project>()
-                .HasMany(u => u.Skills)
+                .HasMany(p => p.Skills)
                 .WithMany(s => s.Projects)
                 .UsingEntity<Dictionary<string, object>>
                 (
@@ -321,16 +299,28 @@ namespace LagaltAPI.Context
                     }
                 );
 
-            modelBuilder.Entity<UserProject>()
-                .HasKey(up => new { up.UserID, up.ProjectID });
-            modelBuilder.Entity<UserProject>()
-                .HasOne(up => up.User)
-                .WithMany(u => u.UserProjects)
-                .HasForeignKey(up => up.UserID);
-            modelBuilder.Entity<UserProject>()
-                .HasOne(up => up.Project)
-                .WithMany(p => p.UserProjects)
-                .HasForeignKey(up => up.ProjectID);
+            modelBuilder.Entity<Project>()
+                .HasMany(p => p.Users)
+                .WithMany(u => u.Projects)
+                .UsingEntity<Dictionary<string, object>>
+                (
+                    "ProjectUsers",
+                    r => r.HasOne<User>().WithMany().HasForeignKey("UserId"),
+                    l => l.HasOne<Project>().WithMany().HasForeignKey("ProjectId"),
+                    je =>
+                    {
+                        je.HasKey("UserId", "ProjectId");
+                        je.HasData
+                        (
+                            new { ProjectId = 1, UserId = 1 },
+                            new { ProjectId = 1, UserId = 2 },
+                            new { ProjectId = 1, UserId = 3 },
+                            new { ProjectId = 2, UserId = 4 },
+                            new { ProjectId = 3, UserId = 5 },
+                            new { ProjectId = 4, UserId = 6 }
+                        );
+                    }
+                );
         }
     }
 }

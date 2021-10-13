@@ -13,7 +13,7 @@ namespace LagaltAPI.Profiles
                 .ForMember(pdto => pdto.Profession, opt => opt
                 .MapFrom(p => p.ProfessionId))
                 .ForMember(pdto => pdto.Users, opt => opt
-                .MapFrom(p => p.UserProjects.Select(up => up.UserID).ToList()))
+                .MapFrom(p => p.Users.Select(up => up.Id).ToList()))
                 .ForMember(pdto => pdto.Skills, opt => opt
                 .MapFrom(p => p.Skills.ToList()))
                 .ReverseMap();
@@ -22,7 +22,7 @@ namespace LagaltAPI.Profiles
                 .ForMember(pdto => pdto.Profession, opt => opt
                 .MapFrom(p => p.ProfessionId))
                 .ForMember(pdto => pdto.Users, opt => opt
-                .MapFrom(p => p.UserProjects.Select(up => up.UserID).ToList()))
+                .MapFrom(p => p.Users.Select(up => up.Id).ToList()))
                 .ForMember(pdto => pdto.Skills, opt => opt
                 .MapFrom(p => p.Skills.Select(s => s.Id).ToList()))
                 .ReverseMap();
@@ -31,7 +31,7 @@ namespace LagaltAPI.Profiles
                 .ForMember(pdto => pdto.Profession, opt => opt
                 .MapFrom(p => p.ProfessionId))
                 .ForMember(pdto => pdto.Users, opt => opt
-                .MapFrom(p => p.UserProjects.Select(up => up.UserID).ToList()))
+                .MapFrom(p => p.Users.Select(up => up.Id).ToList()))
                 .ForMember(pdto => pdto.Skills, opt => opt
                 .MapFrom(p => p.Skills.Select(s => s.Id).ToList()))
                 .ReverseMap();

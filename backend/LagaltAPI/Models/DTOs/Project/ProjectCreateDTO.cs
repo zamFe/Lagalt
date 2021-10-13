@@ -4,6 +4,7 @@
     {
         public int Profession { get; set; }
         public int[] Users { get; set; }
+        public int[] Administrators { get; set; }
         public int[] Skills { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
