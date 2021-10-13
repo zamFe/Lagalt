@@ -13,7 +13,7 @@ export class MainListOfProjectsComponent implements OnInit, OnDestroy {
   private projects$: Subscription;
   public projects: Project[] = [];
   constructor(private readonly projectService: ProjectService) {
-    this.projects$ = this.projectService.projects$.subscribe((projects: Project[]) => {
+    this.projects$ = this.projectService.renderProjects$.subscribe((projects: Project[]) => {
       this.projects = projects
     })
   }
