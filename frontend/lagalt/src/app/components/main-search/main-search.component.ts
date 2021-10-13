@@ -11,7 +11,13 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class MainSearchComponent implements OnInit {
 
-  constructor(private readonly projectService : ProjectService) { }
+  private projects$: Subscription;
+  public projects: Project[] = [];
+  constructor(private readonly projectService : ProjectService) {
+    this.projects$ = this.projectService.projects$.subscribe((projects: Project[]) => {
+      this.projects = projects
+    })
+  }
 
   public specificProject = [];
 
@@ -21,14 +27,11 @@ export class MainSearchComponent implements OnInit {
 
   searchForProject(searchProjectForm : NgForm) : void{
     let searchResults : Project[] = []
-    this.projectService.getProjects$().subscribe(data => {
+    this.projectService.projects$.subscribe(data => {
       searchResults = data.filter(p => p.title.includes(searchProjectForm.value.searchInput))
     })
     this.projectService.setRenderProjects(searchResults)
 
 
-  }
-  get projects$(): Observable<Project[]> {
-    return this.projectService.getRenderProjects$();
   }
 }

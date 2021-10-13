@@ -1,22 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Project } from "../../models/project.model";
 import { ProjectService } from 'src/app/services/project.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main-list-of-projects',
   templateUrl: './main-list-of-projects.component.html',
   styleUrls: ['./main-list-of-projects.component.css']
 })
-export class MainListOfProjectsComponent implements OnInit {
+export class MainListOfProjectsComponent implements OnInit, OnDestroy {
 
-  constructor(private readonly projectService: ProjectService) { }
+  private projects$: Subscription;
+  public projects: Project[] = [];
+  constructor(private readonly projectService: ProjectService) {
+    this.projects$ = this.projectService.projects$.subscribe((projects: Project[]) => {
+      this.projects = projects
+    })
+  }
+
 
   ngOnInit(): void {
   }
-
-  get projects$(): Observable<Project[]> {
-    return this.projectService.getRenderProjects$();
+  
+  ngOnDestroy(): void {
+    this.projects$.unsubscribe();
   }
 
 }

@@ -1,15 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SkillsService } from 'src/app/services/skill.service';
+import { SkillService } from 'src/app/services/skill.service';
 import { Skill } from 'src/app/models/skill.model'
 import { Project } from 'src/app/models/project.model';
-
-
-let skillsList = [
-  "python",
-  "drummer",
-  "superhero",
-]
 
 @Component({
   selector: 'app-main-list-of-projects-item',
@@ -31,7 +24,7 @@ export class MainListOfProjectsItemComponent implements OnInit {
   };
 
   public skills: Skill[] = []
-  constructor(private readonly skillsService: SkillsService) { 
+  constructor(private readonly skillsService: SkillService) { 
 
   }
 

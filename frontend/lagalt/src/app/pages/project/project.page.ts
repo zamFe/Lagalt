@@ -22,15 +22,28 @@ export class ProjectPage implements OnInit {
   // projecDescription: string = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
   // projectTags: string[] = ['#test', '#lagalt']
 
+  private project$: Subscription
+  public project: Project = {
+    id: 0,
+    profession: 0,
+    title: '',
+    image: '',
+    skills: [],
+    messages: [],
+    users: [],
+    description: '',
+    progress: '',
+    source: null
+  };
   constructor(private readonly projectService: ProjectService) { 
+    this.project$ = this.projectService.project$.subscribe((project: Project) => {
+      this.project = project;
+    })
   }
 
   ngOnInit(): void {
     this.projectService.getProjectById(5)
   }
 
-  get project$(): Observable<Project> {
-    return this.projectService.getProject$();
-  }
 
 }

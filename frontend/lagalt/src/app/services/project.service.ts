@@ -26,41 +26,32 @@ const defaultProject: Project = {
 export class ProjectService {
 
     // Private store varaibles
-    private readonly _projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
-    private readonly _renderProjects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
-    private readonly _project$: BehaviorSubject<Project> = new BehaviorSubject<Project>(defaultProject);
+    public readonly projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
+    public readonly renderProjects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
+    public readonly project$: BehaviorSubject<Project> = new BehaviorSubject<Project>(defaultProject);
 
     constructor(private readonly http : HttpClient) {
     }
 
     // State CRUD functions
-    public getProjects$(): Observable<Project[]> {
-        return this._projects$.asObservable()
-    }
-    public getRenderProjects$(): Observable<Project[]> {
-        return this._renderProjects$.asObservable()
-    }
-    public getProject$(): Observable<Project> {
-        return this._project$.asObservable()
-    }
 
     public setProjects(projects: Project[]): void {
-        this._projects$.next(projects)
+        this.projects$.next(projects)
     }
     public setRenderProjects(projects: Project[]): void {
-        this._renderProjects$.next(projects)
+        this.renderProjects$.next(projects)
     }
     public setProject(project: Project): void {
-        this._project$.next(project)
+        this.project$.next(project)
     }
 
     public addProject(project: Project): void {
-        const projects = [...this._projects$.getValue(), project]
+        const projects = [...this.projects$.getValue(), project]
         this.setProjects(projects)
     }
 
     public removeProject(project: Project): void {
-        const projects = this._projects$.getValue().filter(p => p.id !== project.id);
+        const projects = this.projects$.getValue().filter(p => p.id !== project.id);
         this.setProjects(projects)
     }
 
