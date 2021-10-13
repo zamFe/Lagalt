@@ -1,5 +1,15 @@
+// import User model
+
 export interface Project {
-  id : number,
-  projectName : string,
-  projectDescription : string,
+  id: number,
+  profession: number,
+  title: string,
+  image: string,
+  skills: number[]
+  messages: number[],
+  users: number[],
+  description: string,
+  progress: string,
+  source: string | null
 }
+

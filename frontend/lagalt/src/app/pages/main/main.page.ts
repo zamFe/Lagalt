@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ProjectService } from 'src/app/services/project.service';
+import { SkillService } from 'src/app/services/skill.service';
 
 @Component({
   selector: 'app-main',
@@ -7,9 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainPage implements OnInit {
 
-  constructor() { }
+  constructor(private readonly projectService: ProjectService, private readonly skillsService: SkillService) { }
 
   ngOnInit(): void {
+    this.projectService.getProjects();
+    this.skillsService.getSkills();
   }
 
 }

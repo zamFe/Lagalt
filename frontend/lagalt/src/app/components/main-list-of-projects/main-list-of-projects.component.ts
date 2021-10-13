@@ -1,34 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-
-// TEMP MODEL OF PROJECT
-export interface Project {
-  id: number,
-  name: string,
-  type: string,           // could be enum instead possibly
-  thumbnail: string,      // only a background color for now
-  //members: string[]
-}
-
-let projectInit: Project[] = [
-  {id: 1, name: "test1", type: "Music", thumbnail: "red"},
-  {id: 2, name: "test2", type: "Game Dev", thumbnail: "blue"},
-  {id: 3, name: "test3", type: "Web Dev", thumbnail: "green"},
-  {id: 4, name: "test4", type: "Film", thumbnail: "yellow"},
-  
-]
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Project } from "../../models/project.model";
+import { ProjectService } from 'src/app/services/project.service';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main-list-of-projects',
   templateUrl: './main-list-of-projects.component.html',
   styleUrls: ['./main-list-of-projects.component.css']
 })
-export class MainListOfProjectsComponent implements OnInit {
+export class MainListOfProjectsComponent implements OnInit, OnDestroy {
 
-  public dummyProjectList: Project[] = []
-  constructor() { }
+  private projects$: Subscription;
+  public projects: Project[] = [];
+  constructor(private readonly projectService: ProjectService) {
+    this.projects$ = this.projectService.projects$.subscribe((projects: Project[]) => {
+      this.projects = projects
+    })
+  }
+
 
   ngOnInit(): void {
-    this.dummyProjectList = projectInit;
+  }
+  
+  ngOnDestroy(): void {
+    this.projects$.unsubscribe();
   }
 
 }

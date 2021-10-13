@@ -7,17 +7,12 @@
             class="form-control"
             placeholder="Search for a specific project here..."
             #username="ngModel"
-            name = "projectName"
-            id = "projectName"
+            name = "searchInput"
+            id = "searchInput"
             required> <br/>
             <button class="btn btn-success form-control"
             type="submit">Search</button>
         </form>
-        <br>
-        <ul class="d-flex flex-wrap">
-          <app-main-list-of-projects-item *ngFor="let item of specificProject"
-          [project]="item">
-          </app-main-list-of-projects-item>
-      </ul>
+
     </div>
 </div>

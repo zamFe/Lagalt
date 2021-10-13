@@ -15,8 +15,8 @@ import { ProfileUserInfoComponent } from './components/profile-user-info/profile
 import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
 import { ProjectPage } from "./pages/project/project.page";
 import { ProjectChatComponent } from './components/project-chat/project-chat.component';
+import { HttpClientModule} from "@angular/common/http";
 import { ProjectApplyPopUpComponent } from './components/project-apply-pop-up/project-apply-pop-up.component';
-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -50,6 +50,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     BrowserAnimationsModule,
     MatSlideToggleModule,
+    HttpClientModule,
     NgbModule,
   ],
   exports: [
