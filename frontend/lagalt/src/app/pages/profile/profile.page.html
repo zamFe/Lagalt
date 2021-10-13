@@ -1,7 +1,7 @@
 <div class ="container" style="margin-top: 30px;">
   <div class ="row" style="margin-bottom: 20px;">
     <h3 class ="col-sm-8 text-center">
-      Hello {{(userById$ | async)?.userName}}
+      Hello {{user.userName}}
     </h3>
     <div class ="col-sm-4">
       <mat-slide-toggle
@@ -30,7 +30,7 @@
             Your current list of skills are:
           </h5>
           <ul>
-            <li *ngFor="let skill of skills">{{skill}}</li>
+            <li *ngFor="let skill of user.skills">{{skill}}</li>
           </ul>
         </div>
       </form>
@@ -53,7 +53,7 @@
             Your current description is:
           </h5>
           <div>
-            {{description}}
+            {{user.description}}
           </div>
         </div>
       </form>
