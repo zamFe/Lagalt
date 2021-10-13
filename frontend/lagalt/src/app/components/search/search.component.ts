@@ -5,11 +5,11 @@ import { ProjectService } from "../../services/project.service"
 import { Observable, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-main-search',
-  templateUrl: './main-search.component.html',
-  styleUrls: ['./main-search.component.css']
+  selector: 'app-search',
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.css']
 })
-export class MainSearchComponent implements OnInit {
+export class SearchComponent implements OnInit {
 
   private projects$: Subscription;
   public projects: Project[] = [];

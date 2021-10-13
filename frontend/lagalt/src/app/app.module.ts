@@ -3,11 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainPage } from './pages/main/main.page';
-import { MainSearchComponent } from './components/main-search/main-search.component';
-import { MainFilterComponent } from './components/main-filter/main-filter.component';
+import { SearchComponent } from './components/search/search.component';
 import { MainLoginComponent } from './components/main-login/main-login.component';
 import { MainListOfProjectsComponent } from './components/main-list-of-projects/main-list-of-projects.component';
-import { MainFilterOptionComponent } from './components/main-filter-option/main-filter-option.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MainListOfProjectsItemComponent } from './components/main-list-of-projects-item/main-list-of-projects-item.component';
 import { ProfilePage } from './pages/profile/profile.page';
@@ -23,17 +21,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
-
-
 @NgModule({
   declarations: [
     AppComponent,
     MainPage,
-    MainSearchComponent,
-    MainFilterComponent,
+    SearchComponent,
     MainLoginComponent,
     MainListOfProjectsComponent,
-    MainFilterOptionComponent,
     NavbarComponent,
     MainListOfProjectsItemComponent,
     ProfilePage,
