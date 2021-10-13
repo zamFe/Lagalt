@@ -20,11 +20,13 @@ namespace LagaltAPI.Services
         public async Task<IEnumerable<Message>> GetAllAsync()
         {
             return await _context.Messages
+                .Include(m => m.User)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<Message>> GetByProjectIdAsync(int id) {
             return await _context.Messages
+                .Include(m => m.User)
                 .Where(m => m.ProjectId == id)
                 .ToListAsync();
         }
@@ -32,6 +34,7 @@ namespace LagaltAPI.Services
         public async Task<Message> GetByIdAsync(int id)
         {
             return await _context.Messages
+                .Include(m => m.User)
                 .Where(m => m.Id == id)
                 .FirstAsync();
         }

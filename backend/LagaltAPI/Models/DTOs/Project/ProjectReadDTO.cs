@@ -1,5 +1,6 @@
 ﻿using LagaltAPI.Models.DTOs.Profession;
 using LagaltAPI.Models.DTOs.Skill;
+using LagaltAPI.Models.DTOs.User;
 
 namespace LagaltAPI.Models.DTOs.Project
 {
@@ -7,8 +8,8 @@ namespace LagaltAPI.Models.DTOs.Project
     {
         public int Id { get; set; }
         public ProfessionReadDTO Profession { get; set; }
-        public int[] Users { get; set; }
-        public int[] Administrators { get; set; }
+        public UserCompactReadDTO[] Users { get; set; }
+        public int[] AdministratorIds { get; set; }
         public SkillReadDTO[] Skills { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

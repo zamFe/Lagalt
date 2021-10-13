@@ -29,9 +29,9 @@ namespace LagaltAPI
         /// <returns> An enumerable containing read-specific DTOs of the users. </returns>
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserCompleteReadDTO>>> GetUsers()
         {
-            return _mapper.Map<List<UserReadDTO>>(await _service.GetAllAsync());
+            return _mapper.Map<List<UserCompleteReadDTO>>(await _service.GetAllAsync());
         }
 
         /// <summary> Fetches a user from the database based on id. </summary>
@@ -42,14 +42,14 @@ namespace LagaltAPI
         /// </returns>
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserReadDTO>> GetUser(int id)
+        public async Task<ActionResult<UserCompleteReadDTO>> GetUser(int id)
         {
             try
             {
                 var domainUser = await _service.GetByIdAsync(id);
 
                 if (domainUser != null)
-                    return _mapper.Map<UserReadDTO>(domainUser);
+                    return _mapper.Map<UserCompleteReadDTO>(domainUser);
                 else
                     return NotFound();
             }
@@ -118,7 +118,7 @@ namespace LagaltAPI
 
             return CreatedAtAction("GetUser", 
                 new { id = domainUser.Id }, 
-                _mapper.Map<UserReadDTO>(domainUser));
+                _mapper.Map<UserCompleteReadDTO>(domainUser));
         }
     }
 }

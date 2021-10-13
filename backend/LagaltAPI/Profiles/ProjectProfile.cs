@@ -10,8 +10,6 @@ namespace LagaltAPI.Profiles
         public ProjectProfile()
         {
             CreateMap<Project, ProjectReadDTO>()
-                .ForMember(pdto => pdto.Users, opt => opt
-                .MapFrom(p => p.Users.Select(up => up.Id).ToList()))
                 .ForMember(pdto => pdto.Skills, opt => opt
                 .MapFrom(p => p.Skills.ToList()))
                 .ReverseMap();

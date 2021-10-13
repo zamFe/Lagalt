@@ -2,7 +2,7 @@
 
 namespace LagaltAPI.Models.DTOs.User
 {
-    public class UserReadDTO
+    public class UserCompleteReadDTO
     {
         public int Id { get; set; }
         public SkillReadDTO[] Skills { get; set; }
@@ -11,9 +11,5 @@ namespace LagaltAPI.Models.DTOs.User
         public string Description { get; set; }
         public string Image { get; set; }
         public string Portfolio { get; set; }
-        public int[] Viewed { get; set; }
-        public int[] Clicked { get; set; }
-        public int[] AppliedTo { get; set; }
-        public int[] ContributedTo { get; set; }
     }
 }
