@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { SkillService } from 'src/app/services/skill.service';
 import { Skill } from 'src/app/models/skill.model'
 import { Project } from 'src/app/models/project.model';
@@ -9,7 +9,7 @@ import { Project } from 'src/app/models/project.model';
   templateUrl: './main-list-of-projects-item.component.html',
   styleUrls: ['./main-list-of-projects-item.component.css']
 })
-export class MainListOfProjectsItemComponent implements OnInit {
+export class MainListOfProjectsItemComponent implements OnInit, OnDestroy {
   @Input() project: Project = {
     id: 0,
     profession: 0,
@@ -23,22 +23,22 @@ export class MainListOfProjectsItemComponent implements OnInit {
     source: '',
   };
 
-  public skills: Skill[] = []
+  private skillsNeeded$: Subscription;
+  public skillsNeeded: Skill[] = []
+
   constructor(private readonly skillsService: SkillService) { 
-
-  }
-
-  ngOnInit(): void {
-    this.skills$.subscribe(data => {
-      this.skills = data
+    this.skillsNeeded$ = this.skillsService.skills$.subscribe((skills: Skill[]) => {
+      this.skillsNeeded = skills.filter(s => this.project.skills.includes(s.id))
     })
   }
 
-
-
-  get skills$(): Observable<Skill[]> {
-    return this.skillsService.getSkills$();
+  ngOnInit(): void {
   }
+
+  ngOnDestroy(): void {
+    this.skillsNeeded$.unsubscribe();
+  }
+
 
 
 }

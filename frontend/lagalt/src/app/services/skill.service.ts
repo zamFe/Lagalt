@@ -8,18 +8,14 @@ const API_URL = `${environment.apiUrl}Skills`
 @Injectable({
   providedIn: 'root'
 })
-export class SkillsService {
+export class SkillService {
 
-  private readonly _skills$: BehaviorSubject<Skill[]> = new BehaviorSubject<Skill[]>([]);
+  public readonly skills$: BehaviorSubject<Skill[]> = new BehaviorSubject<Skill[]>([]);
   constructor(private readonly http: HttpClient) { }
 
 
-  public getSkills$(): Observable<Skill[]> {
-    return this._skills$.asObservable()
-  }
-
   public setSkills(skills: Skill[]): void {
-    this._skills$.next(skills)
+    this.skills$.next(skills)
   }
 
 

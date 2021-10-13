@@ -6,12 +6,8 @@
         skills needed:
       </span>
       <ul class="row-sm-6">
-        <li *ngFor="let id of project.skills">
-          <div *ngFor="let skill of skills">
-            <div *ngIf="skill.id === id">
-              {{skill.name}}
-            </div>
-          </div>
+        <li *ngFor="let skill of skillsNeeded">
+          {{skill.name}}
         </li>
       </ul>
       </div>
