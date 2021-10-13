@@ -43,6 +43,7 @@ namespace LagaltAPI.Services
         {
             _context.Messages.Add(entity);
             await _context.SaveChangesAsync();
+            entity.User = await _context.Users.FindAsync(entity.UserId);
             return entity;
         }
 
