@@ -28,15 +28,16 @@ namespace LagaltAPI.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(140)
+                        .HasColumnType("nvarchar(140)");
 
                     b.Property<DateTime>("PostedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ProjectId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -46,6 +47,32 @@ namespace LagaltAPI.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Messages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Content = "Anyone else like submarines?",
+                            PostedTime = new DateTime(2021, 10, 2, 12, 30, 52, 0, DateTimeKind.Unspecified),
+                            ProjectId = 1,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Content = "Yeah",
+                            PostedTime = new DateTime(2021, 10, 2, 12, 40, 33, 0, DateTimeKind.Unspecified),
+                            ProjectId = 1,
+                            UserId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Content = "Not sure yet. We will see",
+                            PostedTime = new DateTime(2021, 10, 3, 8, 20, 3, 0, DateTimeKind.Unspecified),
+                            ProjectId = 1,
+                            UserId = 3
+                        });
                 });
 
             modelBuilder.Entity("LagaltAPI.Models.Profession", b =>
@@ -55,12 +82,36 @@ namespace LagaltAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Name")
-                        .HasColumnType("bit");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Professions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Music"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Film"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Game Development"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Web Development"
+                        });
                 });
 
             modelBuilder.Entity("LagaltAPI.Models.Project", b =>
@@ -72,25 +123,82 @@ namespace LagaltAPI.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("ProfessionId")
+                    b.Property<int>("ProfessionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Progress")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Source")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProfessionId");
 
                     b.ToTable("Projects");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "I've always wanted to travel by submarine and I've also got to make new songs",
+                            Image = "https://upload.wikimedia.org/wikipedia/commons/d/d8/Submarine_Vepr_by_Ilya_Kurganov_crop.jpg",
+                            ProfessionId = 1,
+                            Progress = "In Progress",
+                            Title = "Writing an album on a Submarine"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Some call them movies and some call them films. But what if both were correct?",
+                            ProfessionId = 2,
+                            Progress = "Founding",
+                            Title = "The Cinematic Movie Film"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "What could go wrong?",
+                            ProfessionId = 3,
+                            Progress = "Completed",
+                            Source = "https://github.com/vocollapse/Blockinger",
+                            Title = "Yet Another Tetris Game"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "It was better before",
+                            ProfessionId = 3,
+                            Progress = "Stalled",
+                            Source = "https://github.com/ddevault/TrueCraft",
+                            Title = "Minecraft Nostalgia"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "I did indeed read it",
+                            Image = "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png",
+                            ProfessionId = 4,
+                            Progress = "Stalled",
+                            Source = "https://github.com/ddevault/RedditSharp",
+                            Title = "Reddit API"
+                        });
                 });
 
             modelBuilder.Entity("LagaltAPI.Models.Skill", b =>
@@ -100,12 +208,46 @@ namespace LagaltAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Name")
-                        .HasColumnType("bit");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Skills");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Guitar"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Drums"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Acting"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Unity"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Unit testing"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "TypeScript"
+                        });
                 });
 
             modelBuilder.Entity("LagaltAPI.Models.User", b =>
@@ -116,24 +258,76 @@ namespace LagaltAPI.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(140)
+                        .HasColumnType("nvarchar(140)");
 
                     b.Property<bool>("Hidden")
                         .HasColumnType("bit");
 
                     b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Portfolio")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Looking for my friend, Mr. Tambourine",
+                            Hidden = false,
+                            Image = "https://upload.wikimedia.org/wikipedia/commons/0/02/Bob_Dylan_-_Azkena_Rock_Festival_2010_2.jpg",
+                            Portfolio = "https://en.wikipedia.org/wiki/Bob_Dylan_discography",
+                            UserName = "Bob"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Currently learning to fly",
+                            Hidden = false,
+                            Portfolio = "https://en.wikipedia.org/wiki/Dave_Grohl#Career",
+                            UserName = "Grohl"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Hidden = true,
+                            Image = "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg",
+                            UserName = "DoubleOh"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Hidden = false,
+                            Portfolio = "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/",
+                            UserName = "ManOfEgg"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Game dev, I guess",
+                            Hidden = false,
+                            UserName = "Rob"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Hidden = false,
+                            Image = "https://avatars.githubusercontent.com/u/1310872",
+                            Portfolio = "https://git.sr.ht/~sircmpwn",
+                            UserName = "Drew"
+                        });
                 });
 
             modelBuilder.Entity("LagaltAPI.Models.UserProject", b =>
@@ -148,7 +342,8 @@ namespace LagaltAPI.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Application")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(140)
+                        .HasColumnType("nvarchar(140)");
 
                     b.Property<bool>("Applied")
                         .HasColumnType("bit");
@@ -167,32 +362,157 @@ namespace LagaltAPI.Migrations
                     b.HasIndex("ProjectID");
 
                     b.ToTable("UserProjects");
+
+                    b.HasData(
+                        new
+                        {
+                            UserID = 1,
+                            ProjectID = 1,
+                            Administrator = true,
+                            Applied = true,
+                            Clicked = true,
+                            Contributed = false,
+                            Viewed = true
+                        },
+                        new
+                        {
+                            UserID = 2,
+                            ProjectID = 1,
+                            Administrator = false,
+                            Application = "Plz i luv submarinezz!!!1!!1!!",
+                            Applied = true,
+                            Clicked = true,
+                            Contributed = false,
+                            Viewed = true
+                        },
+                        new
+                        {
+                            UserID = 3,
+                            ProjectID = 1,
+                            Administrator = false,
+                            Application = "Request Access",
+                            Applied = true,
+                            Clicked = true,
+                            Contributed = false,
+                            Viewed = true
+                        },
+                        new
+                        {
+                            UserID = 4,
+                            ProjectID = 1,
+                            Administrator = false,
+                            Applied = false,
+                            Clicked = false,
+                            Contributed = false,
+                            Viewed = true
+                        },
+                        new
+                        {
+                            UserID = 5,
+                            ProjectID = 1,
+                            Administrator = false,
+                            Applied = false,
+                            Clicked = true,
+                            Contributed = false,
+                            Viewed = true
+                        });
                 });
 
-            modelBuilder.Entity("SkillUser", b =>
+            modelBuilder.Entity("UserSkills", b =>
                 {
-                    b.Property<int>("SkillsId")
+                    b.Property<int>("SkillId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UsersId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("SkillsId", "UsersId");
+                    b.HasKey("SkillId", "UserId");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("SkillUser");
+                    b.ToTable("UserSkills");
+
+                    b.HasData(
+                        new
+                        {
+                            SkillId = 1,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            SkillId = 1,
+                            UserId = 2
+                        },
+                        new
+                        {
+                            SkillId = 2,
+                            UserId = 2
+                        },
+                        new
+                        {
+                            SkillId = 3,
+                            UserId = 3
+                        },
+                        new
+                        {
+                            SkillId = 3,
+                            UserId = 4
+                        },
+                        new
+                        {
+                            SkillId = 4,
+                            UserId = 4
+                        },
+                        new
+                        {
+                            SkillId = 5,
+                            UserId = 4
+                        },
+                        new
+                        {
+                            SkillId = 1,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            SkillId = 2,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            SkillId = 3,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            SkillId = 4,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            SkillId = 5,
+                            UserId = 5
+                        },
+                        new
+                        {
+                            SkillId = 6,
+                            UserId = 5
+                        });
                 });
 
             modelBuilder.Entity("LagaltAPI.Models.Message", b =>
                 {
                     b.HasOne("LagaltAPI.Models.Project", "Project")
                         .WithMany("Messages")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LagaltAPI.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .WithMany("Messages")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Project");
 
@@ -202,8 +522,10 @@ namespace LagaltAPI.Migrations
             modelBuilder.Entity("LagaltAPI.Models.Project", b =>
                 {
                     b.HasOne("LagaltAPI.Models.Profession", "Profession")
-                        .WithMany()
-                        .HasForeignKey("ProfessionId");
+                        .WithMany("Projects")
+                        .HasForeignKey("ProfessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Profession");
                 });
@@ -227,19 +549,24 @@ namespace LagaltAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SkillUser", b =>
+            modelBuilder.Entity("UserSkills", b =>
                 {
                     b.HasOne("LagaltAPI.Models.Skill", null)
                         .WithMany()
-                        .HasForeignKey("SkillsId")
+                        .HasForeignKey("SkillId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LagaltAPI.Models.User", null)
                         .WithMany()
-                        .HasForeignKey("UsersId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("LagaltAPI.Models.Profession", b =>
+                {
+                    b.Navigation("Projects");
                 });
 
             modelBuilder.Entity("LagaltAPI.Models.Project", b =>
@@ -251,6 +578,8 @@ namespace LagaltAPI.Migrations
 
             modelBuilder.Entity("LagaltAPI.Models.User", b =>
                 {
+                    b.Navigation("Messages");
+
                     b.Navigation("UserProjects");
                 });
 #pragma warning restore 612, 618

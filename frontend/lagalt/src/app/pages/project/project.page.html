@@ -1,51 +1,47 @@
 <div>
   <div class="project-details">
     <div class="project-industry">
-      <h4>{{projectIndusty}}</h4>
+      <h4>{{project.profession}}</h4>
     </div>
 
     <div  class="project-name">
-      <h1>{{projectName}}</h1>
+      <h1>{{project.title}}</h1>
     </div>
     
     <div class="project-info">
       <section>
         <span>
           <p>
-            Project created by: {{userName}} <br>
-            Date created: {{date}}
+            Project created by: {{"userName"}} <br>
+            Date created: {{"date"}}
           </p>
         </span>
 
         <h3>
-          Status: {{projectStatus}}
+          Status: {{project.progress}}
         </h3>
         <div class="project-image">
-          <img src = {{projectImage}}
-            alt="project logo"
-          />
+          <img src="{{project.image}}" alt="project logo"/>
         </div>
         <div>
-          Skills needed: {{skillsNeeded}}
+          Skills needed: {{project.skills}}
         </div>
       </section>
       <br />
       <section class="project-description">
         <h3>Project description</h3>
-        <h5>{{projecDescription}}</h5>
+        <h5>{{project.description}}</h5>
       </section>
-
-      <div class="projcet-apply-button">
-        <button
-        type="submit"
-        class="apply-button"
-      >
-        Apply to join
-      </button>
+      <div>
+        <app-project-apply-pop-up></app-project-apply-pop-up>
       </div>
 
       <div class="project-tags">
-        <span> {{projectTags}}</span>
+        <span> {{"projectTags"}}</span>
+      </div>
+
+      <div class="project-source">
+        <span> {{project.source}}</span>
       </div>
     </div>
   </div>

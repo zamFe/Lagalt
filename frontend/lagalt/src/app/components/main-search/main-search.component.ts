@@ -1,14 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Project } from '../main-list-of-projects/main-list-of-projects.component';
-
-let projectInit: Project[] = [
-  {id: 1, name: "test1", type: "Music", thumbnail: "red"},
-  {id: 2, name: "test2", type: "Game Dev", thumbnail: "blue"},
-  {id: 3, name: "test3", type: "Web Dev", thumbnail: "green"},
-  {id: 4, name: "test4", type: "Film", thumbnail: "yellow"},
-
-]
+import { Project } from "../../models/project.model";
+import { ProjectService } from "../../services/project.service"
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main-search',
@@ -17,19 +11,27 @@ let projectInit: Project[] = [
 })
 export class MainSearchComponent implements OnInit {
 
-  public specificProject : Project[] = [];
-  public dummyProjectList: Project[] = []
+  private projects$: Subscription;
+  public projects: Project[] = [];
+  constructor(private readonly projectService : ProjectService) {
+    this.projects$ = this.projectService.projects$.subscribe((projects: Project[]) => {
+      this.projects = projects
+    })
+  }
 
-  constructor() { }
+  public specificProject = [];
 
   ngOnInit(): void {
-    this.dummyProjectList = projectInit;
+
   }
 
   searchForProject(searchProjectForm : NgForm) : void{
-
-    this.specificProject = this.dummyProjectList.filter(project => {
-      return project.name.includes(searchProjectForm.value.projectName)
+    let searchResults : Project[] = []
+    this.projectService.projects$.subscribe(data => {
+      searchResults = data.filter(p => p.title.includes(searchProjectForm.value.searchInput))
     })
+    this.projectService.setRenderProjects(searchResults)
+
+
   }
 }

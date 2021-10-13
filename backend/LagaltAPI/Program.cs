@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -22,9 +23,15 @@ namespace LagaltAPI
                 new ConfigurationBuilder()
                 .AddEnvironmentVariables()
                 .Build();
-            
+
+            //CreateWebHostBuilder(args).Build().Run();     //For Testing
             CreateHostBuilder(args).Build().Run();
         }
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseSetting("https_port", "5000")
+                .UseStartup<Startup>();
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
