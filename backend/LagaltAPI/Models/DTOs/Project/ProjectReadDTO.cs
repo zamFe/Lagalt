@@ -1,11 +1,12 @@
-﻿using LagaltAPI.Models.DTOs.Skill;
+﻿using LagaltAPI.Models.DTOs.Profession;
+using LagaltAPI.Models.DTOs.Skill;
 
 namespace LagaltAPI.Models.DTOs.Project
 {
     public class ProjectReadDTO
     {
         public int Id { get; set; }
-        public int Profession { get; set; }
+        public ProfessionReadDTO Profession { get; set; }
         public int[] Users { get; set; }
         public int[] Administrators { get; set; }
         public SkillReadDTO[] Skills { get; set; }

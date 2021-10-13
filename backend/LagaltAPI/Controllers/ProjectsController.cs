@@ -118,7 +118,7 @@ namespace LagaltAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ProjectCreateDTO>> PostProject(ProjectCreateDTO dtoProject)
         {
-            var domainProject = _mapper.Map<Project>(dtoProject);
+            Project domainProject = _mapper.Map<Project>(dtoProject);
             await _service.AddAsync(domainProject);
 
             return CreatedAtAction("GetProject", 

@@ -23,6 +23,7 @@ namespace LagaltAPI.Services
                 .Include(p => p.Messages)
                 .Include(p => p.Users)
                 .Include(p => p.Skills)
+                .Include(p => p.Profession)
                 .ToListAsync();
         }
 
@@ -32,6 +33,7 @@ namespace LagaltAPI.Services
                 .Include(p => p.Messages)
                 .Include(p => p.Users)
                 .Include(p => p.Skills)
+                .Include(p => p.Profession)
                 .Where(p => p.Id == Id)
                 .FirstAsync();
         }
