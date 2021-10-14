@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Project;
+using LagaltAPI.Models.Wrappers;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,13 +26,28 @@ namespace LagaltAPI.Controllers
             _service = service;
         }
 
-        /// <summary> Fetches all available projects from the database. </summary>
-        /// <returns> An enumerable containing read-specific DTOs of the projects. </returns>
-        // GET: api/Projects
+        /// <summary>
+        ///     Fetches projects from the database according to the specified offset and limit.
+        /// </summary>
+        /// <param name="offset"> Specifies the id of the first project to be included. </param>
+        /// <param name="limit"> Specifies how many projects to fetch. </param>
+        /// <returns>
+        ///     A page containing all available read-specific DTOs within the specified range.
+        /// </returns>
+        // GET api/Projects?offset=5&limit=5
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjects()
+        public async Task<ActionResult<Page<ProjectReadDTO>>> GetProjects(
+            [FromQuery] int offset, [FromQuery] int limit)
         {
-            return _mapper.Map<List<ProjectReadDTO>>(await _service.GetAllAsync());
+            var validOffset = offset < 1 ? 1 : offset;
+            var validLimit = limit < 1 || limit > 10 ? 10 : limit;
+
+            var projects = _mapper.Map<List<ProjectReadDTO>>(
+                await _service.GetOffsetPageAsync(
+                    startId: validOffset,
+                    pageSize: validLimit
+                ));
+            return new Page<ProjectReadDTO>(projects);
         }
 
         /// <summary> Fetches a project from the database based on id. </summary>
@@ -58,11 +74,6 @@ namespace LagaltAPI.Controllers
                 return NotFound();
             }
         }
-
-
-        // TODO - Add support for getting a range of projects (offset + limit).
-        //        Would this replace GetProjects?
-
 
         /// <summary>
         ///     Updates the specified project in the database to match the provided DTO.

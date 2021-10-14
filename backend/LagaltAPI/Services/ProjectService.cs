@@ -29,13 +29,15 @@ namespace LagaltAPI.Services
             return newProject;
         }
 
-        public async Task<IEnumerable<Project>> GetAllAsync()
+        public async Task<IEnumerable<Project>> GetOffsetPageAsync(int startId, int pageSize)
         {
             return await _context.Projects
                 .Include(project => project.Messages)
                 .Include(project => project.Users)
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
+                .Skip(startId - 1)
+                .Take(pageSize)
                 .ToListAsync();
         }
 
