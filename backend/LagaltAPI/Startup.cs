@@ -47,13 +47,6 @@ namespace LagaltAPI
                 string connStr;
                 if (env == "Development")
                 {
-                    // Use local connection while developing.
-                    var dotEnv = Path.Combine(Directory.GetCurrentDirectory(), ".env");
-                    DotEnv.Load(dotEnv);
-                    _ =
-                        new ConfigurationBuilder()
-                        .AddEnvironmentVariables()
-                        .Build();
                     connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
                 }
                 else
