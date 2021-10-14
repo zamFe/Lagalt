@@ -1,4 +1,4 @@
-<div class ="container" style="margin-top: 30px;">
+<div class ="container-fluid profilepage" style="margin-top: 30px;">
   <div class ="row" style="margin-bottom: 20px;">
     <h3 class ="col-sm-8 text-center">
       Hello {{user.userName}}
@@ -24,14 +24,17 @@
         id = "skills"
         required> <br/>
         <div class="p-3 justify-content-center">
-          <button class="btn btn-success form-control"
+          <button class="btn skill form-control"
           type="submit">Add your skill</button>
           <h5>
             Your current list of skills are:
           </h5>
-          <ul>
-            <li *ngFor="let skill of user.skills">{{skill}}</li>
-          </ul>
+          <div class="curr-skills">
+            <ul>
+              <li *ngFor="let skill of user.skills">{{skill}}</li>
+            </ul>
+          </div>
+
         </div>
       </form>
     </div>
@@ -46,14 +49,15 @@
         id = "description"
         required> <br/>
         <div class="p-3 justify-content-center">
-          <button class="btn btn-primary form-control"
+          <button class="btn desc form-control"
             type="submit">Update your description
           </button>
           <h5>
             Your current description is:
           </h5>
-          <div>
+          <div class="current-desc">
             {{user.description}}
+
           </div>
         </div>
       </form>

@@ -19,6 +19,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ProjectStatusComponent } from './components/project-status/project-status.component';
+import {MatRadioModule} from '@angular/material/radio';
 
 
 @NgModule({
@@ -35,7 +37,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ProfileSettingsComponent,
     ProjectPage,
     ProjectChatComponent,
-    ProjectApplyPopUpComponent
+    ProjectApplyPopUpComponent,
+    ProjectStatusComponent
   ],
   imports: [
     BrowserModule,
@@ -46,6 +49,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MatSlideToggleModule,
     HttpClientModule,
     NgbModule,
+    MatRadioModule,
   ],
   exports: [
     MatSlideToggleModule,
