@@ -18,6 +18,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AddNewProjectComponent } from './components/add-new-project/add-new-project.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ProfileSettingsComponent,
     ProjectPage,
     ProjectChatComponent,
-    ProjectApplyPopUpComponent
+    ProjectApplyPopUpComponent,
+    AddNewProjectComponent
   ],
   imports: [
     BrowserModule,
