@@ -21,6 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectStatusComponent } from './components/project-status/project-status.component';
 import {MatRadioModule} from '@angular/material/radio';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import {MatRadioModule} from '@angular/material/radio';
     HttpClientModule,
     NgbModule,
     MatRadioModule,
+    MatCheckboxModule,
   ],
   exports: [
     MatSlideToggleModule,
