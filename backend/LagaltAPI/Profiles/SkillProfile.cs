@@ -9,10 +9,11 @@ namespace LagaltAPI.Profiles
     {
         public SkillProfile()
         {
-            CreateMap<Skill, SkillCreateDTO>()
+            CreateMap<SkillCreateDTO, Skill>()
                 .ForMember(sdto => sdto.Users, opt => opt
-                .MapFrom(s => s.Users.Select(u => u.Id).ToList()))
-                .ReverseMap();
+                .Ignore())
+                .ForMember(sdto => sdto.Projects, opt => opt
+                .Ignore());
 
             CreateMap<Skill, SkillEditDTO>().ReverseMap();
 

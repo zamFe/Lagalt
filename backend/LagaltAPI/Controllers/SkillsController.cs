@@ -4,7 +4,9 @@ using LagaltAPI.Models.DTOs.Skill;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LagaltAPI.Controllers
@@ -33,7 +35,30 @@ namespace LagaltAPI.Controllers
             return _mapper.Map<List<SkillReadDTO>>(await _service.GetAllAsync());
         }
 
-        // TODO - Add GetSkill for returned result from post method.
+        /// <summary> Fetches a skill from the database based on id. </summary>
+        /// <param name="id"> The id of the skill to retrieve. </param>
+        /// <returns>
+        ///     A read-specific DTO of the skill if it is found in the database.
+        ///     If it is not, then NotFound is returned instead.
+        /// </returns>
+        // GET: api/Skills/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<SkillReadDTO>> GetSkill(int id)
+        {
+            try
+            {
+                var domainSkill = await _service.GetByIdAsync(id);
+
+                if (domainSkill != null)
+                    return _mapper.Map<SkillReadDTO>(domainSkill);
+                else
+                    return NotFound();
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
+            }
+        }
 
 
         // TODO - Add support for getting a range of skills (offset + limit).
@@ -51,7 +76,7 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<SkillCreateDTO>> PostSkill(SkillCreateDTO dtoSkill)
         {
             var domainSkill = _mapper.Map<Skill>(dtoSkill);
-            await _service.AddAsync(domainSkill);
+            await _service.AddAsync(domainSkill, dtoSkill.Users.ToList(), dtoSkill.Projects.ToList());
 
             return CreatedAtAction("GetSkill",
                 new { id = domainSkill.Id },
