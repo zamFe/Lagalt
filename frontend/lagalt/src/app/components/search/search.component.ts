@@ -11,19 +11,14 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class SearchComponent implements OnInit, OnDestroy {
 
-  private projects$: Subscription;
-  public projects: Project[] = [];
+
   constructor(private readonly projectService : ProjectService) {
-    this.projects$ = this.projectService.renderProjects$.subscribe((projects: Project[]) => {
-      this.projects = projects
-    })
   }
 
   ngOnInit(): void {
   }
 
   ngOnDestroy(): void {
-    this.projects$.unsubscribe();
   }
 
   searchForProject(searchProjectForm : NgForm) : void{
