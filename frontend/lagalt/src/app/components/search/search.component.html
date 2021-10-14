@@ -1,24 +1,16 @@
 <div>
-    <div>
-        <div>
-            <form #searchProjectForm="ngForm" (ngSubmit)="searchForProject(searchProjectForm)">
-                <div class="row">
-                    <div class="col-sm-8">
-                        <input
-                        ngModel
-                        class="form-control"
-                        placeholder="Search for a specific project here..."
-                        #username="ngModel"
-                        name = "searchInput"
-                        id = "searchInput"
-                        required>
-                    </div>
-                    <div class="col-sm-4">
-                        <button class="btn btn-success form-control"
-                                        type="submit">Search</button>
-                    </div>
-                </div>
-            </form>
+    <form class="form-inline" #searchProjectForm="ngForm" (ngSubmit)="searchForProject(searchProjectForm)">
+        <div class="d-flex">
+            <input
+            ngModel
+            class="form-control"
+            placeholder="Search for a specific project here..."
+            #username="ngModel"
+            name = "searchInput"
+            id = "searchInput"
+            required>
+            <button class="btn btn-success form-control"
+                            type="submit">Search</button>
         </div>
-    </div>
+    </form>
 </div>

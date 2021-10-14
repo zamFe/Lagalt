@@ -4,7 +4,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainPage } from './pages/main/main.page';
 import { SearchComponent } from './components/search/search.component';
-import { MainLoginComponent } from './components/main-login/main-login.component';
 import { MainListOfProjectsComponent } from './components/main-list-of-projects/main-list-of-projects.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MainListOfProjectsItemComponent } from './components/main-list-of-projects-item/main-list-of-projects-item.component';
@@ -19,6 +18,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AddNewProjectComponent } from './components/add-new-project/add-new-project.component';
 
 
 @NgModule({
@@ -26,7 +26,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AppComponent,
     MainPage,
     SearchComponent,
-    MainLoginComponent,
     MainListOfProjectsComponent,
     NavbarComponent,
     MainListOfProjectsItemComponent,
@@ -35,7 +34,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ProfileSettingsComponent,
     ProjectPage,
     ProjectChatComponent,
-    ProjectApplyPopUpComponent
+    ProjectApplyPopUpComponent,
+    AddNewProjectComponent
   ],
   imports: [
     BrowserModule,
