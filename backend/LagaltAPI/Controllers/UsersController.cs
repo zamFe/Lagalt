@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LagaltAPI
@@ -114,7 +115,7 @@ namespace LagaltAPI
         public async Task<ActionResult<UserCreateDTO>> PostUser(UserCreateDTO dtoUser)
         {
             User domainUser = _mapper.Map<User>(dtoUser);
-            await _service.AddAsync(domainUser);
+            await _service.AddAsync(domainUser, dtoUser.Skills.ToList());
 
             return CreatedAtAction("GetUser", 
                 new { id = domainUser.Id }, 

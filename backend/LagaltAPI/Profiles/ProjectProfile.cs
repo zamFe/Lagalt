@@ -28,10 +28,12 @@ namespace LagaltAPI.Profiles
                 .MapFrom(pdto => pdto.Profession))
                 .ForMember(p => p.Profession, opt => opt
                 .Ignore())
-                .ForMember(p => p.Users, opt => opt // not working
-                .MapFrom(pdto => pdto.Users)) // not working
-                .ForMember(p => p.Skills, opt => opt // not working
-                .MapFrom(pdto => pdto.Skills)); // not working
+                .ForMember(p => p.Users, opt => opt
+                .Ignore())
+                .ForMember(p => p.Skills, opt => opt
+                .Ignore())
+                .ForMember(p => p.Administrators, opt => opt
+                .Ignore());
         }
     }
 }

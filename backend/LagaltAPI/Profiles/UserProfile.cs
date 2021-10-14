@@ -24,10 +24,9 @@ namespace LagaltAPI.Profiles
                 .MapFrom(u => u.Skills.Select(s => s.Id).ToList()))
                 .ReverseMap();
 
-            CreateMap<User, UserCreateDTO>()
+            CreateMap<UserCreateDTO, User>()
                 .ForMember(udto => udto.Skills, opt => opt
-                .MapFrom(u => u.Skills.Select(s => s.Id).ToList()))
-                .ReverseMap();
+                .Ignore());
         }
     }
 }

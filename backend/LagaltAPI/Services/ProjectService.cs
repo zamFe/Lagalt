@@ -22,8 +22,18 @@ namespace LagaltAPI.Services
             return _context.Projects.Any(project => project.Id == projectId);
         }
 
-        public async Task<Project> AddAsync(Project newProject)
+        public async Task<Project> AddAsync(Project newProject, List<int> UserIds, List<int> SkillIds)
         {
+            List<User> users = await _context.Users
+                .Where(u => UserIds.Any(id => id == u.Id))
+                .ToListAsync();
+            List<Skill> skills = await _context.Skills
+                .Where(s => SkillIds.Any(id => id == s.Id))
+                .ToListAsync();
+
+            newProject.Users = users;
+            newProject.Skills = skills;
+
             _context.Projects.Add(newProject);
             await _context.SaveChangesAsync();
             return newProject;

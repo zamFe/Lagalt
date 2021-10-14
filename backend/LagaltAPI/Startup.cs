@@ -41,7 +41,7 @@ namespace LagaltAPI
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddEntityFrameworkNpgsql().AddDbContext<LagaltContext>(options =>
+            services.AddDbContext<LagaltContext>(options =>
             {
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 string connStr;

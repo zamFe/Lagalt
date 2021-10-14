@@ -22,8 +22,14 @@ namespace LagaltAPI.Services
             return _context.Users.Any(user => user.Id == userId);
         }
 
-        public async Task<User> AddAsync(User newUser)
+        public async Task<User> AddAsync(User newUser, List<int> SkillIds)
         {
+            List<Skill> skills = await _context.Skills
+                .Where(s => SkillIds.Any(id => id == s.Id))
+                .ToListAsync();
+
+            newUser.Skills = skills;
+
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
             return newUser;
@@ -52,7 +58,6 @@ namespace LagaltAPI.Services
         {
             _context.Entry(updatedUser).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-
         }
     }
 }

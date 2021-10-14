@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LagaltAPI.Controllers
@@ -130,7 +131,7 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<ProjectCreateDTO>> PostProject(ProjectCreateDTO dtoProject)
         {
             Project domainProject = _mapper.Map<Project>(dtoProject);
-            await _service.AddAsync(domainProject);
+            await _service.AddAsync(domainProject, dtoProject.Users.ToList(), dtoProject.Skills.ToList());
 
             return CreatedAtAction("GetProject", 
                 new { id = domainProject.Id }, 
