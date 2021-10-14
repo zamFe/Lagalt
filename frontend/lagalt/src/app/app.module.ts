@@ -4,7 +4,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainPage } from './pages/main/main.page';
 import { SearchComponent } from './components/search/search.component';
-import { MainLoginComponent } from './components/main-login/main-login.component';
 import { MainListOfProjectsComponent } from './components/main-list-of-projects/main-list-of-projects.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MainListOfProjectsItemComponent } from './components/main-list-of-projects-item/main-list-of-projects-item.component';
@@ -22,6 +21,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectStatusComponent } from './components/project-status/project-status.component';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { AddNewProjectComponent } from './components/add-new-project/add-new-project.component';
+
 
 
 @NgModule({
@@ -29,7 +30,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     AppComponent,
     MainPage,
     SearchComponent,
-    MainLoginComponent,
     MainListOfProjectsComponent,
     NavbarComponent,
     MainListOfProjectsItemComponent,
@@ -40,6 +40,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     ProjectChatComponent,
     ProjectApplyPopUpComponent,
     ProjectStatusComponent
+    AddNewProjectComponent
   ],
   imports: [
     BrowserModule,
