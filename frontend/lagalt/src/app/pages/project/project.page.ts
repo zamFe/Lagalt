@@ -10,7 +10,7 @@ import { Project } from 'src/app/models/project.model';
   templateUrl: './project.page.html',
   styleUrls: ['./project.page.css']
 })
-export class ProjectPage implements OnInit {
+export class ProjectPage implements OnInit, OnDestroy {
 
   // projectIndusty: string = 'Creative field(film)'
   // projectName: string = "Project name"
@@ -45,5 +45,8 @@ export class ProjectPage implements OnInit {
     this.projectService.getProjectById(5)
   }
 
+  ngOnDestroy(): void {
+    this.project$.unsubscribe();
+  }
 
 }
