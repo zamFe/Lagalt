@@ -1,10 +1,10 @@
 <div class ="pp container-fluid">
   <div class="row project-details">
     <img class="col-sm-2" src="{{project.image}}" alt="project logo"/>
-    <div class="col-sm-6 project-industry text-center">
+    <div class="col-sm-8 project-industry text-center">
       <h1>{{project.title}}</h1>
     </div>
-    <div  class="col-sm-4 project-name">
+    <div  class="col-sm-2 project-name text-end">
       <div class="" style="font-weight: bold;">
           Project created by: {{"userName"}}
       </div>
@@ -14,12 +14,12 @@
       <!-- <h4>{{project.profession}}</h4> -->
     </div>
     <div class="row">
-      <div class="col-sm-4">
+      <div class="col-sm-2">
         <h4>
           Messages:
         </h4>
       </div>
-      <div class="col-sm-4 project-description">
+      <div class="col-sm-5 project-description text-center">
         <h3>
           Project description
         </h3>
@@ -27,7 +27,7 @@
           {{project.description}}
         </h5>
       </div>
-      <div class="col-sm-4 project-skills">
+      <div class="col-sm-5 project-skills text-start">
         <h3>
           Skills needed:
         </h3>
@@ -48,13 +48,11 @@
       </div>
     </div>
     <div class="row flex-row-reverse">
-      <div class="col-sm-4">
+      <div class="col-sm-6 text-end">
         <app-project-apply-pop-up></app-project-apply-pop-up>
       </div>
-    </div>
-    <div class="row project-info">
-      <br />
-      <div class="col-sm-4">
+      <div class="col-sm-6 text-start">
+        <br/>
         <a href="{{project.source}}">Project Repository</a>
       </div>
     </div>
