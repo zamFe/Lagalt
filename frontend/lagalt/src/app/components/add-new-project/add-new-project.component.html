@@ -1,32 +1,49 @@
-<ng-template #content let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Create a new project</h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form [formGroup] = "textAreaForm">
-        <div  class="sub-heading">
-          <h6>
-            Choose profession
-          </h6>
-        </div>
-        <select>
-            <option>test1</option>
-            <option>test2</option>
-        </select>
-        <textarea class ="text-area" formControlName="textArea"></textarea>
-     </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Apply click')">Apply</button>
-    </div>
-  </ng-template>
-
 <div>
-    <button class="btn btn-primary" (click)="open(content)">
-        Add new project
-    </button>
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Create a new project</h4>
+            <button type="button" class="close btn btn-outline-dark" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="createProjectForm">
+                <div>
+                    <label for="title" class="form-label">Enter project title</label>
+                    <input type ="text" formControlName="title" ngbAutoFocus required class="form-control"/>
+                </div>
+                <div>
+                    <label for="description" class="form-label">Enter project description</label>
+                    <textarea class ="text-area form-control" formControlName="description"></textarea>
+                </div>
+                <div>
+                    <label for="imageUrl" class="form-label">Enter project image URL</label>
+                    <input type ="text" formControlName="imageUrl" class="form-control"/>
+                </div>
+                <div class="mt-2">
+                    <label for="profession" class="form-label">Enter project image URL</label>
+                    <select formControlName="profession" class="form-select">
+                        <option *ngFor="let item of professions">
+                            {{item.name}}
+                        </option>
+                    </select>
+                </div>
+
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="submitForm()">Submit</button>
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Apply click')">Apply</button>
+        </div>
+    </ng-template>
+    <div>
+        <button class="btn btn-primary" (click)="open(content)">
+            Add new project
+        </button>
+    </div>
 </div>
+
+
+
 
