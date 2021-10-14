@@ -19,8 +19,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectStatusComponent } from './components/project-status/project-status.component';
-import {MatRadioModule} from '@angular/material/radio';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AddNewProjectComponent } from './components/add-new-project/add-new-project.component';
 
 
@@ -39,7 +39,7 @@ import { AddNewProjectComponent } from './components/add-new-project/add-new-pro
     ProjectPage,
     ProjectChatComponent,
     ProjectApplyPopUpComponent,
-    ProjectStatusComponent
+    ProjectStatusComponent,
     AddNewProjectComponent
   ],
   imports: [
