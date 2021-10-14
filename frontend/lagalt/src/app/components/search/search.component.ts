@@ -11,11 +11,15 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class SearchComponent implements OnInit, OnDestroy {
 
+  public filterOptions: string[] = ["All", "Music", "Film", "Game", "Web"]
+  public selectedOption: string = "Web";
 
   constructor(private readonly projectService : ProjectService) {
+    
   }
 
   ngOnInit(): void {
+    this.selectedOption = this.filterOptions[0]
   }
 
   ngOnDestroy(): void {
@@ -28,4 +32,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     }).unsubscribe()
     this.projectService.setRenderProjects(searchResults)
   }
+
+  
+
+  
 }

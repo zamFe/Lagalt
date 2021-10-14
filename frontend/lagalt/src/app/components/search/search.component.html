@@ -1,6 +1,6 @@
 <div>
     <form class="form-inline" #searchProjectForm="ngForm" (ngSubmit)="searchForProject(searchProjectForm)">
-        <div class="d-flex">
+        <div class="d-flex form-outline">
             <input
             ngModel
             class="form-control"
@@ -13,4 +13,14 @@
                             type="submit">Search</button>
         </div>
     </form>
+    <div class="btn-group" role="group" id="filterOption">
+        <div id="filterOptionGroup"  *ngFor="let option of filterOptions">
+            <input type="radio" 
+                   class="btn-check" 
+                   name="filter" id="{{option}}" 
+                   checked
+                   autocomplete="off">
+            <label class="btn btn-outline-primary" for="´filter${{option}}´">{{option}}</label>
+        </div>
+    </div>
 </div>
