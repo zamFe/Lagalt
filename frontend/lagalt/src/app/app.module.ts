@@ -18,7 +18,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ProjectStatusComponent } from './components/project-status/project-status.component';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { AddNewProjectComponent } from './components/add-new-project/add-new-project.component';
+
 
 
 @NgModule({
@@ -35,6 +39,7 @@ import { AddNewProjectComponent } from './components/add-new-project/add-new-pro
     ProjectPage,
     ProjectChatComponent,
     ProjectApplyPopUpComponent,
+    ProjectStatusComponent
     AddNewProjectComponent
   ],
   imports: [
@@ -46,6 +51,8 @@ import { AddNewProjectComponent } from './components/add-new-project/add-new-pro
     MatSlideToggleModule,
     HttpClientModule,
     NgbModule,
+    MatRadioModule,
+    MatCheckboxModule,
   ],
   exports: [
     MatSlideToggleModule,

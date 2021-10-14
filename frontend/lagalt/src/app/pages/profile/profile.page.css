@@ -1,5 +1,25 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
+.profilepage{
+  background-color: #ECEFF4 ;
+  height: 1000px;
+}
+.desc{
+  background-color: #8FBCBB;
+  color: white;
+}
+.skill{
+  background-color: #8FBCBB;
+  color: white;
+}
+.current-desc{
+  background-color: white;
+  height: 300px;
+}
+.curr-skills{
+  background-color: white;
+  height: 300px;
+}
 /* #description {
   padding: 5px 20px 5px 5px;
   margin: 20px 20px 20px 0px;

@@ -1,47 +1,59 @@
-<div>
-  <div class="project-details">
-    <div class="project-industry">
-      <h4>{{project.profession}}</h4>
-    </div>
-
-    <div  class="project-name">
+<div class ="pp container-fluid">
+  <div class="row project-details">
+    <img class="col-sm-2" src="{{project.image}}" alt="project logo"/>
+    <div class="col-sm-8 project-industry text-center">
       <h1>{{project.title}}</h1>
     </div>
-    
-    <div class="project-info">
-      <section>
-        <span>
-          <p>
-            Project created by: {{"userName"}} <br>
-            Date created: {{"date"}}
-          </p>
-        </span>
-
+    <div  class="col-sm-2 project-name text-end">
+      <div class="" style="font-weight: bold;">
+          Project created by: {{"userName"}}
+      </div>
+      <div class="" style="font-weight: bold;">
+        Status: {{project.progress}}
+      </div>
+      <!-- <h4>{{project.profession}}</h4> -->
+    </div>
+    <div class="row">
+      <div class="col-sm-2">
+        <h4>
+          Messages:
+        </h4>
+      </div>
+      <div class="col-sm-5 project-description text-center">
         <h3>
-          Status: {{project.progress}}
+          Project description
         </h3>
-        <div class="project-image">
-          <img src="{{project.image}}" alt="project logo"/>
-        </div>
-        <div>
-          Skills needed: {{project.skills}}
-        </div>
-      </section>
-      <br />
-      <section class="project-description">
-        <h3>Project description</h3>
-        <h5>{{project.description}}</h5>
-      </section>
-      <div>
+        <h5>
+          {{project.description}}
+        </h5>
+      </div>
+      <div class="col-sm-5 project-skills text-start">
+        <h3>
+          Skills needed:
+        </h3>
+        <h5>
+        {{project.skills}}
+        </h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-2">
+        There are currently "4" applications to this project
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-1">
+      <br/>
+        <app-project-status></app-project-status>
+      </div>
+    </div>
+    <div class="row flex-row-reverse">
+      <div class="col-sm-6 text-end">
         <app-project-apply-pop-up></app-project-apply-pop-up>
       </div>
-
-      <div class="project-tags">
-        <span> {{"projectTags"}}</span>
-      </div>
-
-      <div class="project-source">
-        <span> {{project.source}}</span>
+      <div class="col-sm-6 text-start">
+        <br/>
+        <a href="{{project.source}}">Project Repository</a>
       </div>
     </div>
   </div>
