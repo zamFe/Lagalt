@@ -35,7 +35,13 @@ export class ProfilePage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.auth.user$.subscribe(
-      (profile) => (this.profileJson = JSON.stringify(profile, null, 2))
+      (profile) => {
+        (this.user.userName = JSON.parse(JSON.stringify(profile?.nickname, null, 2)))
+        console.log(this.user);
+        //Check if user is in DB
+        //If not post to DB
+        //Get user from DB and save local state as that user
+      }
     );
     //this.userService.getUserById(1) // CHANGE TO IMPLEMENT ON LOGIN
   }
