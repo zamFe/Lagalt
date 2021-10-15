@@ -1,13 +1,21 @@
-  <div class ="container">
-    <div class ="mx-auto">
-      <div *ngIf="auth.user$ | async as user">
-          <div class="col-md text-center text-md-left">
-            <h2>{{ user.name }}</h2>
-            <p class="lead text-muted">{{ user.email }}</p>
-          </div>
-        </div>
+<div class ="container-fluid profilepage" style="margin-top: 30px;">
+  <div *ngIf="auth.user$ | async as user">
+  <div class ="row" style="margin-bottom: 20px;">
+    <h1 class ="col-sm-10 text-center">
+      Hello {{user.userName}}
+    </h1>
+    <div class ="col-sm-2 text-end">
+      <mat-slide-toggle
+        [(ngModel)]="isChecked"
+        class="example-margin"
+        (change) = "changed()"
+        >Hidden mode: {{isChecked}}
+      </mat-slide-toggle>
     </div>
-    <div class ="mx-auto">
+  </div>
+  </div>
+  <div class ="row">
+    <div class="col-sm-6">
       <form #addSkillForm="ngForm" (ngSubmit)="addSkill(addSkillForm)">
         <input
         ngModel
@@ -17,38 +25,44 @@
         name = "skills"
         id = "skills"
         required> <br/>
-        <button class="btn btn-success form-control"
-        type="submit">Add your skill</button>
-        <ul>
-          <li *ngFor="let skill of skills">{{skill}}</li>
-        </ul>
-
-    </form>
-    </div>
-    <div>
-      <form [formGroup] = "textAreaForm">
-        <div  class="sub-heading">
+        <div class="p-3 justify-content-center">
+          <button class="btn skill form-control"
+          type="submit">Add your skill</button>
           <h5>
-            Describe yourself
+            Your current list of skills are:
           </h5>
-        </div>
-        <textarea class ="text-area" formControlName="textArea"></textarea>
-     </form>
-     <div class="sub-heading">
-        <h5>
-          This is how textArea Will be stored:
-          {{textAreaForm.get("textArea")!.value | json}}
-        </h5>
-      </div>
-    </div>
+          <div class="curr-skills">
+            <ul>
+              <li *ngFor="let skill of user.skills">{{skill}}</li>
+            </ul>
+          </div>
 
-    <div>
-      <mat-slide-toggle
-       [(ngModel)]="isChecked"
-        class="example-margin"
-       (change) = "changed()"
-        >Hidden mode: {{isChecked}}
-      </mat-slide-toggle>
+        </div>
+      </form>
+    </div>
+    <div class ="col-sm-6">
+      <form #handleDescriptionForm="ngForm" (ngSubmit)="handleDescription(handleDescriptionForm)">
+        <input
+        ngModel
+        class="form-control"
+        placeholder="Describe yourself in a short..."
+        #username="ngModel"
+        name = "description"
+        id = "description"
+        required> <br/>
+        <div class="p-3 justify-content-center">
+          <button class="btn desc form-control"
+            type="submit">Update your description
+          </button>
+          <h5>
+            Your current description is:
+          </h5>
+          <div class="current-desc">
+            {{user.description}}
+          </div>
+        </div>
+      </form>
     </div>
   </div>
+</div>
 

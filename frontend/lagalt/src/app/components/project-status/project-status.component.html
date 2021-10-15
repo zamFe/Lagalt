@@ -1,0 +1,14 @@
+<label id="project-status">
+  <div style="font-weight: bold;">
+    Project status
+  </div>
+</label>
+<mat-radio-group
+  aria-labelledby="project-status"
+  class="project-status-radio-group"
+  [(ngModel)]="progress">
+  <mat-radio-button class="project-status-radio-button" *ngFor="let state of status" [value]="state">
+    {{state}}
+  </mat-radio-button>
+</mat-radio-group>
+<div>Your Project status is: {{progress}}</div>
