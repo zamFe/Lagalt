@@ -19,10 +19,9 @@ namespace LagaltAPI.Profiles
 
             CreateMap<User, UserCompactReadDTO>();
 
-            CreateMap<User, UserEditDTO>()
+            CreateMap<UserEditDTO, User>()
                 .ForMember(udto => udto.Skills, opt => opt
-                .MapFrom(u => u.Skills.Select(s => s.Id).ToList()))
-                .ReverseMap();
+                .Ignore());
 
             CreateMap<UserCreateDTO, User>()
                 .ForMember(udto => udto.Skills, opt => opt
