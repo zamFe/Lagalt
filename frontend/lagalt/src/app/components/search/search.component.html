@@ -9,18 +9,15 @@
             name = "searchInput"
             id = "searchInput"
             required>
-            <button class="btn btn-success form-control"
+            <button class="btn btn-success btn-search form-control filterOption"
                             type="submit">Search</button>
         </div>
     </form>
-    <div class="btn-group" role="group" id="filterOption">
-        <div id="filterOptionGroup"  *ngFor="let option of filterOptions">
-            <input type="radio" 
-                   class="btn-check" 
-                   name="filter" id="{{option}}" 
-                   checked
-                   autocomplete="off">
-            <label class="btn btn-outline-primary" for="´filter${{option}}´">{{option}}</label>
-        </div>
+    <div class="filterOptions">
+        <button class="btn filterOption btn-primary btn-all" (click)="searchAll()">All</button>
+        <button class="btn filterOption btn-primary btn-music" (click)="searchMusic()">Music</button>
+        <button class="btn filterOption btn-primary btn-film" (click)="searchFilm()">Film</button>
+        <button class="btn filterOption btn-primary btn-game" (click)="searchGame()">Game</button>
+        <button class="btn filterOption btn-primary btn-web" (click)="searchWeb()">Web</button>
     </div>
 </div>

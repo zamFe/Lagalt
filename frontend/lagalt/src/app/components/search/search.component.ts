@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Project } from "../../models/project.model";
 import { ProjectService } from "../../services/project.service"
-import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-search',
@@ -11,15 +10,10 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class SearchComponent implements OnInit, OnDestroy {
 
-  public filterOptions: string[] = ["All", "Music", "Film", "Game", "Web"]
-  public selectedOption: string = "Web";
-
   constructor(private readonly projectService : ProjectService) {
-    
   }
 
   ngOnInit(): void {
-    this.selectedOption = this.filterOptions[0]
   }
 
   ngOnDestroy(): void {
@@ -33,7 +27,24 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.projectService.setRenderProjects(searchResults)
   }
 
-  
+  searchAll(): void {
+    console.log("all")
+  }
 
+  searchMusic(): void {
+    console.log("music")
+  }
+
+  searchFilm(): void {
+    console.log("film")
+  }
+
+  searchGame(): void {
+    console.log("game")
+  }
+
+  searchWeb(): void {
+    console.log("web")
+  }
   
 }
