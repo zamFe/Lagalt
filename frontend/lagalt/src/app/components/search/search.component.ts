@@ -21,30 +21,43 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   searchForProject(searchProjectForm : NgForm) : void{
     let searchResults : Project[] = []
+    // OPTIONAL: USE REGEX AND MATCH INSTEAD OF INCLUDES to account for captial/lower case searches
     this.projectService.projects$.subscribe(data => {
       searchResults = data.filter(p => p.title.includes(searchProjectForm.value.searchInput))
     }).unsubscribe()
     this.projectService.setRenderProjects(searchResults)
   }
 
-  searchAll(): void {
-    console.log("all")
+  searchMusic(searchProjectForm : NgForm): void {
+    let searchResults : Project[] = []
+    this.projectService.projects$.subscribe(data => {
+      searchResults = data.filter(p => p.title.includes(searchProjectForm.value.searchInput) && p.profession.id === 1)
+    }).unsubscribe()
+    this.projectService.setRenderProjects(searchResults)
   }
 
-  searchMusic(): void {
-    console.log("music")
+  searchFilm(searchProjectForm : NgForm): void {
+    let searchResults : Project[] = []
+    this.projectService.projects$.subscribe(data => {
+      searchResults = data.filter(p => p.title.includes(searchProjectForm.value.searchInput) && p.profession.id === 2)
+    }).unsubscribe()
+    this.projectService.setRenderProjects(searchResults)
   }
 
-  searchFilm(): void {
-    console.log("film")
+  searchGame(searchProjectForm : NgForm): void {
+    let searchResults : Project[] = []
+    this.projectService.projects$.subscribe(data => {
+      searchResults = data.filter(p => p.title.includes(searchProjectForm.value.searchInput) && p.profession.id === 3)
+    }).unsubscribe()
+    this.projectService.setRenderProjects(searchResults)
   }
 
-  searchGame(): void {
-    console.log("game")
-  }
-
-  searchWeb(): void {
-    console.log("web")
+  searchWeb(searchProjectForm : NgForm): void {
+    let searchResults : Project[] = []
+    this.projectService.projects$.subscribe(data => {
+      searchResults = data.filter(p => p.title.includes(searchProjectForm.value.searchInput) && p.profession.id === 4)
+    }).unsubscribe()
+    this.projectService.setRenderProjects(searchResults)
   }
   
 }
