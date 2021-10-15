@@ -27,6 +27,31 @@ namespace LagaltAPI.Controllers
             _service = service;
         }
 
+        /// <summary> Fetches a project from the database based on id. </summary>
+        /// <param name="id"> The id of the project to retrieve. </param>
+        /// <returns>
+        ///     A read-specific DTO of the project if it is found in the database.
+        ///     If it is not, then NotFound is returned instead.
+        /// </returns>
+        // GET: api/Projects/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ProjectReadDTO>> GetProject(int id)
+        {
+            try
+            {
+                var domainProject = await _service.GetByIdAsync(id);
+
+                if (domainProject != null)
+                    return _mapper.Map<ProjectReadDTO>(domainProject);
+                else
+                    return NotFound();
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
+            }
+        }
+
         /// <summary>
         ///     Fetches projects from the database according to the specified offset and limit.
         /// </summary>
@@ -51,29 +76,16 @@ namespace LagaltAPI.Controllers
             return new Page<ProjectReadDTO>(projects);
         }
 
-        /// <summary> Fetches a project from the database based on id. </summary>
-        /// <param name="id"> The id of the project to retrieve. </param>
+        /// <summary> Fetches a user's projects from the database. </summary>
+        /// <param name="id"> The id of the user to retrieve projects for. </param>
         /// <returns>
-        ///     A read-specific DTO of the project if it is found in the database.
-        ///     If it is not, then NotFound is returned instead.
+        ///     An enumerable containing read-specific DTOs of the projects joined by the user.
         /// </returns>
-        // GET: api/Projects/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ProjectReadDTO>> GetProject(int id)
+        // GET: api/Projects/User/5
+        [HttpGet("User/{id}")]
+        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetUserProjects(int id)
         {
-            try
-            {
-                var domainProject = await _service.GetByIdAsync(id);
-
-                if (domainProject != null)
-                    return _mapper.Map<ProjectReadDTO>(domainProject);
-                else
-                    return NotFound();
-            }
-            catch (InvalidOperationException)
-            {
-                return NotFound();
-            }
+            return _mapper.Map<List<ProjectReadDTO>>(await _service.GetUserProjectsAsync(id));
         }
 
         /// <summary>
