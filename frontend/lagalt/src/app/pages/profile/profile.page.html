@@ -1,6 +1,11 @@
   <div class ="container">
     <div class ="mx-auto">
-      <h3 class ="text-center">profile works!</h3>
+      <div *ngIf="auth.user$ | async as user">
+          <div class="col-md text-center text-md-left">
+            <h2>{{ user.name }}</h2>
+            <p class="lead text-muted">{{ user.email }}</p>
+          </div>
+        </div>
     </div>
     <div class ="mx-auto">
       <form #addSkillForm="ngForm" (ngSubmit)="addSkill(addSkillForm)">
