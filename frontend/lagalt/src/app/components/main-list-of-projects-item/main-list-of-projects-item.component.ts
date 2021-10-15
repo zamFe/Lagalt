@@ -12,15 +12,15 @@ import { Project } from 'src/app/models/project.model';
 export class MainListOfProjectsItemComponent implements OnInit, OnDestroy {
   @Input() project: Project = {
     id: 0,
-    profession: 0,
+    profession: {id : 0, name : ""},
     title: '',
     image: '',
     skills: [],
-    messages: [],
     users: [],
     description: '',
     progress: '',
-    source: '',
+    source: null,
+    administratorIds: []
   };
 
   private skillsNeeded$: Subscription;
@@ -28,7 +28,7 @@ export class MainListOfProjectsItemComponent implements OnInit, OnDestroy {
 
   constructor(private readonly skillsService: SkillService) { 
     this.skillsNeeded$ = this.skillsService.skills$.subscribe((skills: Skill[]) => {
-      this.skillsNeeded = skills.filter(s => this.project.skills.includes(s.id))
+      this.skillsNeeded = skills.filter(s => this.project.skills.includes(s))
     })
   }
 

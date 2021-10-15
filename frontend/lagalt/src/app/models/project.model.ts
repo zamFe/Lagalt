@@ -1,15 +1,18 @@
-// import User model
+ import { Skill } from "./skill.model"
+ import { Profession } from "./profession.model"
+ import { UserCompact } from "./user/user-compact.model"
 
-export interface Project {
+ export interface Project {
   id: number,
-  profession: number,
+  profession: Profession,
   title: string,
   image: string,
-  skills: number[]
-  messages: number[],
-  users: number[],
+  skills: Skill[],
+  users: UserCompact[],
   description: string,
   progress: string,
-  source: string | null
+  source: string | null,
+  administratorIds : number[],
 }
+
 

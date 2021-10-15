@@ -1,4 +1,4 @@
-export interface User {
+export interface UserComplete {
   id : number,
   userName: string,
   description : string,

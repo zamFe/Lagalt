@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProjectService } from 'src/app/services/project.service';
 import { Observable, Subscription } from 'rxjs';
 import { Project } from 'src/app/models/project.model';
+import { Profession } from 'src/app/models/profession.model';
 
 
 
@@ -25,15 +26,15 @@ export class ProjectPage implements OnInit, OnDestroy {
   private project$: Subscription
   public project: Project = {
     id: 0,
-    profession: 0,
+    profession: {id : 0, name : "Music"},
     title: '',
     image: '',
     skills: [],
-    messages: [],
     users: [],
     description: '',
     progress: '',
-    source: null
+    source: null,
+    administratorIds: []
   };
   constructor(private readonly projectService: ProjectService) { 
     this.project$ = this.projectService.project$.subscribe((project: Project) => {

@@ -4,19 +4,20 @@ import { Project } from "../models/project.model";
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { finalize, map, retry, switchMap, tap } from "rxjs/operators";
 import { environment } from "src/environments/environment";
+import { PageWrapper } from "../models/page-wrapper.model";
 
 const API_URL = `${environment.apiUrl}Projects`;
 const defaultProject: Project = {
     id: 0,
-    profession: 0,
+    profession: {id : 0, name : ""},
     title: "",
     image: "",
     skills: [],
-    messages: [],
     users: [],
     description: "",
     progress: "",
-    source: null
+    source: null,
+    administratorIds: []
 }
 
 
@@ -59,10 +60,10 @@ export class ProjectService {
     public getProjects(): Subscription {
 
         //set professions as enum in storage here.
-        return this.http.get<Project[]>(API_URL)
-            .subscribe((projects: Project[]) => {
-                this.setProjects(projects)
-                this.setRenderProjects(projects)
+        return this.http.get<PageWrapper>(API_URL)
+            .subscribe((page: PageWrapper) => {
+                this.setProjects(page.results)
+                this.setRenderProjects(page.results)
             });
     }
 

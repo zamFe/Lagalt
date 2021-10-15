@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { User } from 'src/app/models/user.model'
+import { UserComplete } from 'src/app/models/user/user-complete.model'
 import { NgForm, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '@auth0/auth0-angular';
@@ -14,7 +14,7 @@ import { Observable, Subscription } from 'rxjs';
 export class ProfilePage implements OnInit, OnDestroy {
   public profileJson: string = '';
   private user$: Subscription;
-  public user: User = {
+  public user: UserComplete = {
     id: 0,
     userName: '',
     description: '',
@@ -28,7 +28,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   
 
   constructor(private readonly userService : UserService, public auth: AuthService) {
-    this.user$ = this.userService.user$.subscribe((user: User) => {
+    this.user$ = this.userService.user$.subscribe((user: UserComplete) => {
       this.user = user;
     })
   }
