@@ -4,6 +4,7 @@
 #searchInput {
     min-width: 20.7rem;
     max-height: 1.6rem;
+    border-radius: 0.1rem;
 }
 
 .btn-search {
@@ -13,6 +14,9 @@
     border-radius: 0.1rem;
     padding-top: 0.01rem;
     padding-bottom: 0.01rem;
+}
+.btn-search:hover {
+    color:black;
 }
 
 .filterOption {
