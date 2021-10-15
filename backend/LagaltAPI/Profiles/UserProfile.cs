@@ -19,9 +19,7 @@ namespace LagaltAPI.Profiles
 
             CreateMap<User, UserCompactReadDTO>();
 
-            CreateMap<UserEditDTO, User>()
-                .ForMember(udto => udto.Skills, opt => opt
-                .Ignore());
+            CreateMap<UserEditDTO, User>();
 
             CreateMap<UserCreateDTO, User>()
                 .ForMember(udto => udto.Skills, opt => opt

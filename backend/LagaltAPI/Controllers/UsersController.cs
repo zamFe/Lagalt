@@ -89,7 +89,7 @@ namespace LagaltAPI
 
             try
             {
-                await _service.UpdateAsync(domainUser, dtoUser.Skills.ToList());
+                await _service.UpdateAsync(domainUser);
             }
             catch (DbUpdateConcurrencyException)
             {

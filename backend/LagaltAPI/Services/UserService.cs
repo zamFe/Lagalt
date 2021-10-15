@@ -1,6 +1,7 @@
 ﻿using LagaltAPI.Context;
 using LagaltAPI.Models.Domain;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -54,14 +55,8 @@ namespace LagaltAPI.Services
                 .FirstAsync();
         }
 
-        public async Task UpdateAsync(User updatedUser, List<int> SkillIds)
+        public async Task UpdateAsync(User updatedUser)
         {
-            List<Skill> skills = await _context.Skills
-                .Where(s => SkillIds.Any(id => id == s.Id))
-                .ToListAsync();
-
-            updatedUser.Skills = skills;
-
             _context.Entry(updatedUser).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
