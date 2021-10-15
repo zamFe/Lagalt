@@ -51,6 +51,17 @@ namespace LagaltAPI.Services
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Project>> GetUserProjectsAsync(int userId)
+        {
+            return await _context.Projects
+                .Include(project => project.Messages)
+                .Include(project => project.Users)
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .Where(project => project.Users.Any(user => user.Id == userId))
+                .ToListAsync();
+        }
+
         public async Task<Project> GetByIdAsync(int projectId)
         {
             return await _context.Projects
