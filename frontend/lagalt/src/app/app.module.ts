@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
+import { AuthModule } from '@auth0/auth0-angular';
 import { AppComponent } from './app.component';
 import { MainPage } from './pages/main/main.page';
 import { MainSearchComponent } from './components/main-search/main-search.component';
@@ -21,6 +22,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { LoginButtonComponent } from './components/login-button/login-button.component';
+import { AuthButtonComponent } from './components/auth-button/auth-button.component';
+import { LogoutButtonComponent } from './components/logout-button/logout-button.component';
+import { AuthNavComponent } from './components/auth-nav/auth-nav.component';
 
 
 
@@ -41,7 +46,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ProfileSettingsComponent,
     ProjectPage,
     ProjectChatComponent,
-    ProjectApplyPopUpComponent
+    ProjectApplyPopUpComponent,
+    LoginButtonComponent,
+    AuthButtonComponent,
+    LogoutButtonComponent,
+    AuthNavComponent
   ],
   imports: [
     BrowserModule,
@@ -51,6 +60,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BrowserAnimationsModule,
     MatSlideToggleModule,
     NgbModule,
+    AuthModule.forRoot({
+      domain: 'dev--rmchv2w.eu.auth0.com',
+      clientId: 'OoAzUGX9zMtfwak3auYzMkZCuURGRbA3'
+    }),
   ],
   exports: [
     MatSlideToggleModule,
