@@ -55,6 +55,16 @@ namespace LagaltAPI.Services
                 .FirstAsync();
         }
 
+        public async Task<User> GetByUsernameAsync(string username)
+        {
+            return await _context.Users
+                .Include(user => user.Messages)
+                .Include(user => user.Skills)
+                .Include(user => user.Projects)
+                .Where(user => user.Username == username)
+                .FirstAsync();
+        }
+
         public async Task UpdateAsync(User updatedUser)
         {
             _context.Entry(updatedUser).State = EntityState.Modified;

@@ -60,6 +60,31 @@ namespace LagaltAPI
             }
         }
 
+        /// <summary> Fetches a user from the database based on username. </summary>
+        /// <param name="username"> The username of the user to retrieve. </param>
+        /// <returns>
+        ///     A read-specific DTO of the user if it is found in the database.
+        ///     If it is not, then NotFound is returned instead.
+        /// </returns>
+        // GET: api/Users/<username>
+        [HttpGet("username/{username}")]
+        public async Task<ActionResult<UserCompleteReadDTO>> GetUserByUsername(string username)
+        {
+            try
+            {
+                var domainUser = await _service.GetByUsernameAsync(username);
+
+                if (domainUser != null)
+                    return _mapper.Map<UserCompleteReadDTO>(domainUser);
+                else
+                    return NotFound();
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
+            }
+        }
+
         /// <summary>
         ///     Updates the specified user in the database to match the provided DTO.
         /// </summary>
