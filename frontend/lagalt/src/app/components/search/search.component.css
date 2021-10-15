@@ -1,3 +1,6 @@
+.searchComponent {
+    
+}
 #searchInput {
     min-width: 20.7rem;
     max-height: 1.6rem;
@@ -5,6 +8,11 @@
 
 .btn-search {
     max-height: 1.6rem;
+    background-color: #354A59;
+    color: white;
+    border-radius: 0.1rem;
+    padding-top: 0.01rem;
+    padding-bottom: 0.01rem;
 }
 
 .filterOption {
@@ -16,6 +24,18 @@
     min-width: 3rem;
 }
 
-.filterAll {
-    
+.btn-all {
+    background-color: #BF616A;
+}
+.btn-music {
+    background-color: #D08770;
+}
+.btn-film {
+    background-color: #EBCB8B;
+}
+.btn-game {
+    background-color: #A3BE8C;
+}
+.btn-web {
+    background-color: #B48EAD;
 }

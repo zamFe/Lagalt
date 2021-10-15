@@ -1,6 +1,6 @@
-<div>
+<div class="searchComponent">
     <form class="form-inline" #searchProjectForm="ngForm" (ngSubmit)="searchForProject(searchProjectForm)">
-        <div class="d-flex form-outline">
+        <div class="d-flex form-outline align-items-center">
             <input
             ngModel
             class="form-control"
@@ -9,15 +9,15 @@
             name = "searchInput"
             id = "searchInput"
             required>
-            <button class="btn btn-success btn-search form-control filterOption"
+            <button class="btn btn-outline-dark btn-search form-control"
                             type="submit">Search</button>
         </div>
     </form>
     <div class="filterOptions">
-        <button class="btn filterOption btn-primary btn-all" (click)="searchAll()">All</button>
-        <button class="btn filterOption btn-primary btn-music" (click)="searchMusic()">Music</button>
-        <button class="btn filterOption btn-primary btn-film" (click)="searchFilm()">Film</button>
-        <button class="btn filterOption btn-primary btn-game" (click)="searchGame()">Game</button>
-        <button class="btn filterOption btn-primary btn-web" (click)="searchWeb()">Web</button>
+        <button class="btn filterOption btn-outline-dark btn-all" (click)="searchAll()">All</button>
+        <button class="btn filterOption btn-outline-dark btn-music" (click)="searchMusic()">Music</button>
+        <button class="btn filterOption btn-outline-dark btn-film" (click)="searchFilm()">Film</button>
+        <button class="btn filterOption btn-outline-dark btn-game" (click)="searchGame()">Game</button>
+        <button class="btn filterOption btn-outline-dark btn-web" (click)="searchWeb()">Web</button>
     </div>
 </div>
