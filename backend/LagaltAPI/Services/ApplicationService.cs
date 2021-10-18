@@ -27,14 +27,14 @@ namespace LagaltAPI.Services
         public async Task<Application> GetByIdAsync(int applicationId)
         {
             return await _context.Applications
-                .Include(application => application.User)
+                .Include(application => application.User.Skills)
                 .Where(application => application.Id == applicationId)
                 .FirstAsync();
         }
         public async Task<IEnumerable<Application>> GetByProjectIdAsync(int projectId)
         {
             return await _context.Applications
-                .Include(application => application.User)
+                .Include(application => application.User.Skills)
                 .Where(application => application.ProjectId == projectId)
                 .ToListAsync();
         }
