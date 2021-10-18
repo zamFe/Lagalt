@@ -13,8 +13,6 @@ namespace LagaltAPI.Profiles
             CreateMap<User, UserCompleteReadDTO>()
                 .ForMember(udto => udto.Skills, opt => opt
                 .MapFrom(u => u.Skills.ToList()))
-                .ForMember(udto => udto.Projects, opt => opt
-                .MapFrom(u => u.Projects.Select(up => up.Id).ToList()))
                 .ReverseMap();
 
             CreateMap<User, UserCompactReadDTO>();
