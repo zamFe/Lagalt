@@ -29,7 +29,11 @@ namespace LagaltAPI
             services.AddCors(options =>
             {
                 options.AddPolicy(name: _clientOrigin,
-                                  builder => builder.WithOrigins("http://localhost:4200"));
+                                  builder => builder
+                                  .WithOrigins("http://localhost:4200")
+                                  .AllowAnyHeader()
+                                  .AllowAnyMethod()
+                                  );
             });
 
             services.AddScoped(typeof(ApplicationService));

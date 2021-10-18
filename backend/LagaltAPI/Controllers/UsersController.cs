@@ -146,5 +146,71 @@ namespace LagaltAPI
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Updates the list of viewed projects for a specified user by Id,
+        /// </summary>
+        /// <param name="userId"> The id of the user to update. </param>
+        /// <param name="projectIds"> The array of projects that have been viewed </param>
+        /// <returns>
+        ///     NoContent on successful database update,
+        ///     or NotFound if the provided id does not match any users in the database.
+        /// </returns>
+        /// <exception cref="DbUpdateConcurrencyException">
+        ///     Thrown when the user is found in the database but not able to be updated.
+        /// </exception>
+        [HttpPut("{userId}/Viewed")]
+        public async Task<IActionResult> RegisterViews(int userId, int[] projectIds)
+        {
+            if (!_service.EntityExists(userId))
+                return NotFound();
+
+            try
+            {
+                await _service.UpdateViews(userId, projectIds);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_service.EntityExists(userId))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Updates the list of clicked projects for a specified user by Id,
+        /// </summary>
+        /// <param name="userId"> The id of the user to update. </param>
+        /// <param name="projectIds"> The array of projects that have been clicked </param>
+        /// <returns>
+        ///     NoContent on successful database update,
+        ///     or NotFound if the provided id does not match any users in the database.
+        /// </returns>
+        /// <exception cref="DbUpdateConcurrencyException">
+        ///     Thrown when the user is found in the database but not able to be updated.
+        /// </exception>
+        [HttpPut("{userId}/Clicked")]
+        public async Task<IActionResult> RegisterClicks(int userId, int[] projectIds)
+        {
+            if (!_service.EntityExists(userId))
+                return NotFound();
+
+            try
+            {
+                await _service.UpdateClicks(userId, projectIds);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_service.EntityExists(userId))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
+        }
     }
 }

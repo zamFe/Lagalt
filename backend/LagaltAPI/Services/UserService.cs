@@ -70,5 +70,29 @@ namespace LagaltAPI.Services
             _context.Entry(updatedUser).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateViews(int userId, int[] projectIds)
+        {
+            User updatedUser = await _context.Users
+                .Where(user => user.Id == userId)
+                .FirstAsync();
+
+            updatedUser.Viewed = updatedUser.Viewed.Union(projectIds).ToArray();
+
+            _context.Entry(updatedUser).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateClicks(int userId, int[] projectIds)
+        {
+            User updatedUser = await _context.Users
+                .Where(user => user.Id == userId)
+                .FirstAsync();
+
+            updatedUser.Clicked = updatedUser.Clicked.Union(projectIds).ToArray();
+
+            _context.Entry(updatedUser).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
     }
 }
