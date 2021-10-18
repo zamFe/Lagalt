@@ -5,6 +5,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '@auth0/auth0-angular';
 import { UserService } from 'src/app/services/user.service';
 import { Observable, Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +17,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   private user$: Subscription;
   public user: UserComplete = {
     id: 0,
-    userName: '',
+    username: '',
     description: '',
     image: '',
     portfolio: '',
@@ -36,11 +37,17 @@ export class ProfilePage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.auth.user$.subscribe(
       (profile) => {
-        (this.user.userName = JSON.parse(JSON.stringify(profile?.nickname, null, 2)))
+        (this.user.username = JSON.parse(JSON.stringify(profile?.nickname, null, 2)))
         console.log(this.user);
-        //Check if user is in DB
-        //If not post to DB
-        //Get user from DB and save local state as that user
+        
+        this.userService.userExists(this.user.username).pipe(finalize(() => {    
+        })).subscribe(res => {    
+          if(res){
+            this.userService.getUserByUsername(this.user.username)
+         }
+        }, () => {    
+          this.userService.postUserByUsername(this.user.username)
+        });  
       }
     );
     //this.userService.getUserById(1) // CHANGE TO IMPLEMENT ON LOGIN
