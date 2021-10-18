@@ -59,10 +59,7 @@ namespace LagaltAPI.Services
                 .Where(user => user.Id == userId)
                 .FirstAsync();
 
-            // TODO - Rewrite to make it a one-liner.
-            var userSkillIds = new List<int>();
-            foreach (Skill s in user.Skills)
-                userSkillIds.Add(s.Id);
+            var userSkillIds = user.Skills.Select(skill => skill.Id).ToList();
 
             // TODO - Include projects joined by fellow contributors.
             //        Currently only looks at projects matching the user's skills.
