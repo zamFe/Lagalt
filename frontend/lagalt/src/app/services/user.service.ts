@@ -24,7 +24,7 @@ export class UserService {
 
   public readonly users$: BehaviorSubject<UserComplete[]> = new BehaviorSubject<UserComplete[]>([]);
   public readonly user$: BehaviorSubject<UserComplete> = new BehaviorSubject<UserComplete>(defaultUser);
-  
+
   constructor(private readonly http : HttpClient) { }
 
   // State CRUD functions
@@ -50,6 +50,10 @@ export class UserService {
         .subscribe((user: UserComplete) => {
             this.setUserById(user)
         });
+  }
+  getUserExistStatus(username : string): Observable<any> {
+    const url = (API_URL_USERS +`/Username${username}`);
+    return this.http.get(url);
   }
 
   // public putDescriptionById(id : number , description : string) : Subscription {

@@ -1,0 +1,47 @@
+.container {
+  padding: 1rem;
+}
+
+.border {
+  border-color: #81A1C1;
+  border-width: 0.2rem !important;
+}
+
+.projectItem {
+    margin: 0;
+    min-width: 168px;
+    min-height: 100px;
+}
+
+ul {
+  list-style: none ;
+}
+
+span {
+    opacity: 1;
+}
+
+.filterOption {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0.1rem;
+  min-width: 4rem;
+  align-self: center;
+}
+
+.projectDesc {
+  align-self: center;
+}
+
+.btn-music {
+  background-color: #D08770;
+}
+.btn-film {
+  background-color: #EBCB8B;
+}
+.btn-game {
+  background-color: #A3BE8C;
+}
+.btn-web {
+  background-color: #B48EAD;
+}

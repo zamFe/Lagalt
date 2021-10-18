@@ -66,6 +66,15 @@ export class ProjectService {
                 this.setRenderProjects(page.results)
             });
     }
+    public getProjectsByUserId(userId : number): Subscription {
+
+      //set professions as enum in storage here.
+      return this.http.get<PageWrapper>(`${API_URL}/User/${userId} `)
+      .subscribe((page: PageWrapper) => {
+        this.setProjects(page.results)
+        this.setRenderProjects(page.results)
+    });
+  }
 
     public getProjectById(id: number): Subscription {
         return this.http.get<Project>(`${API_URL}/${id}`)
