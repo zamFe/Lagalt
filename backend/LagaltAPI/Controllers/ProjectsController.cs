@@ -27,19 +27,19 @@ namespace LagaltAPI.Controllers
             _service = service;
         }
 
-        /// <summary> Fetches a project from the database based on id. </summary>
-        /// <param name="id"> The id of the project to retrieve. </param>
+        /// <summary> Fetches a project from the database based on project id. </summary>
+        /// <param name="projectId"> The id of the project to retrieve. </param>
         /// <returns>
         ///     A read-specific DTO of the project if it is found in the database.
         ///     If it is not, then NotFound is returned instead.
         /// </returns>
         // GET: api/Projects/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ProjectReadDTO>> GetProject(int id)
+        [HttpGet("{projectId}")]
+        public async Task<ActionResult<ProjectReadDTO>> GetProject(int projectId)
         {
             try
             {
-                var domainProject = await _service.GetByIdAsync(id);
+                var domainProject = await _service.GetByIdAsync(projectId);
 
                 if (domainProject != null)
                     return _mapper.Map<ProjectReadDTO>(domainProject);
@@ -77,69 +77,28 @@ namespace LagaltAPI.Controllers
         }
 
         /// <summary> Generates recommended projects for a user. </summary>
-        /// <param name="id"> The id of the user to get recommended projects for. </param>
+        /// <param name="userId"> The id of the user to get recommended projects for. </param>
         /// <returns>
         ///     A page containing all available read-specific DTOs for the user.
         /// </returns>
         // GET: api/Projects/Recommended/User/5
-        [HttpGet("Recommended/User/{id}")]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetRecommendedProjects(int id)
+        [HttpGet("Recommended/User/{userId}")]
+        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetRecommendedProjects(
+            int userId)
         {
-            return _mapper.Map<List<ProjectReadDTO>>(await _service.GetUserProjectsAsync(id));
+            return _mapper.Map<List<ProjectReadDTO>>(await _service.GetUserProjectsAsync(userId));
         }
 
         /// <summary> Fetches a user's projects from the database. </summary>
-        /// <param name="id"> The id of the user to retrieve projects for. </param>
+        /// <param name="userId"> The id of the user to retrieve projects for. </param>
         /// <returns>
         ///     An enumerable containing read-specific DTOs of the projects joined by the user.
         /// </returns>
         // GET: api/Projects/User/5
-        [HttpGet("User/{id}")]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetUserProjects(int id)
+        [HttpGet("User/{userId}")]
+        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetUserProjects(int userId)
         {
-            return _mapper.Map<List<ProjectReadDTO>>(await _service.GetUserProjectsAsync(id));
-        }
-
-        /// <summary>
-        ///     Updates the specified project in the database to match the provided DTO.
-        /// </summary>
-        /// <param name="id"> The id of the project to update. </param>
-        /// <param name="dtoProject">
-        ///     An edit-specific DTO containing the updated version of the project.
-        /// </param>
-        /// <returns>
-        ///     NoContent on successful database update,
-        ///     BadRequest if the provided id and the id of the project do not match,
-        ///     or NotFound if the provided id does not match any projects in the database.
-        /// </returns>
-        /// <exception cref="DbUpdateConcurrencyException">
-        ///     Thrown when the project is found in the database but not able to be updated.
-        /// </exception>
-        // PUT: api/Projects/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProject(int id, ProjectEditDTO dtoProject)
-        {
-            if (id != dtoProject.Id)
-                return BadRequest();
-
-            if (!_service.EntityExists(id))
-                return NotFound();
-
-            var domainProject = _mapper.Map<Project>(dtoProject);
-
-            try
-            {
-                await _service.UpdateAsync(domainProject);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_service.EntityExists(id))
-                    return NotFound();
-                else
-                    throw;
-            }
-
-            return NoContent();
+            return _mapper.Map<List<ProjectReadDTO>>(await _service.GetUserProjectsAsync(userId));
         }
 
         /// <summary> Adds a new project entry to the database. </summary>
@@ -157,9 +116,51 @@ namespace LagaltAPI.Controllers
             Project domainProject = _mapper.Map<Project>(dtoProject);
             await _service.AddAsync(domainProject, dtoProject.Users.ToList(), dtoProject.Skills.ToList());
 
-            return CreatedAtAction("GetProject", 
-                new { id = domainProject.Id }, 
+            return CreatedAtAction("GetProject",
+                new { projectId = domainProject.Id },
                 _mapper.Map<ProjectReadDTO>(domainProject));
+        }
+
+        /// <summary>
+        ///     Updates the specified project in the database to match the provided DTO.
+        /// </summary>
+        /// <param name="projectId"> The id of the project to update. </param>
+        /// <param name="dtoProject">
+        ///     An edit-specific DTO containing the updated version of the project.
+        /// </param>
+        /// <returns>
+        ///     NoContent on successful database update,
+        ///     BadRequest if the provided id and the id of the project do not match,
+        ///     or NotFound if the provided id does not match any projects in the database.
+        /// </returns>
+        /// <exception cref="DbUpdateConcurrencyException">
+        ///     Thrown when the project is found in the database but not able to be updated.
+        /// </exception>
+        // PUT: api/Projects/5
+        [HttpPut("{projectId}")]
+        public async Task<IActionResult> PutProject(int projectId, ProjectEditDTO dtoProject)
+        {
+            if (projectId != dtoProject.Id)
+                return BadRequest();
+
+            if (!_service.EntityExists(projectId))
+                return NotFound();
+
+            var domainProject = _mapper.Map<Project>(dtoProject);
+
+            try
+            {
+                await _service.UpdateAsync(domainProject);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_service.EntityExists(projectId))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
         }
     }
 }

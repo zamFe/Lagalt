@@ -24,19 +24,19 @@ namespace LagaltAPI.Controllers
             _service = service;
         }
 
-        /// <summary> Fetches a message from the database based on id. </summary>
-        /// <param name="id"> The id of the message to retrieve. </param>
+        /// <summary> Fetches a message from the database based on message id. </summary>
+        /// <param name="messageId"> The id of the message to retrieve. </param>
         /// <returns>
         ///     A read-specific DTO of the message if it is found in the database.
         ///     If it is not, then NotFound is returned instead.
         /// </returns>
         // GET: api/Messages/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<MessageReadDTO>> GetMessage(int id)
+        [HttpGet("{messageId}")]
+        public async Task<ActionResult<MessageReadDTO>> GetMessage(int messageId)
         {
             try
             {
-                var domainMessage = await _service.GetByIdAsync(id);
+                var domainMessage = await _service.GetByIdAsync(messageId);
 
                 if (domainMessage != null)
                     return _mapper.Map<MessageReadDTO>(domainMessage);
@@ -50,13 +50,15 @@ namespace LagaltAPI.Controllers
         }
 
         /// <summary> Fetches messages from the database based on project id. </summary>
-        /// <param name="id"> The id of the project to retrieve messages from. </param>
+        /// <param name="projectId"> The id of the project to retrieve messages from. </param>
         /// <returns> An enumerable containing read-specific DTOs of the messages. </returns>
         // GET: api/Messages/Project/5
-        [HttpGet("Project/{id}")]
-        public async Task<ActionResult<IEnumerable<MessageReadDTO>>> GetProjectMessages(int id)
+        [HttpGet("Project/{projectId}")]
+        public async Task<ActionResult<IEnumerable<MessageReadDTO>>> GetProjectMessages
+            (int projectId)
         {
-            return _mapper.Map<List<MessageReadDTO>>(await _service.GetByProjectIdAsync(id));
+            return _mapper.Map<List<MessageReadDTO>>(
+                await _service.GetByProjectIdAsync(projectId));
         }
 
         /// <summary> Adds a new message entry to the database. </summary>
@@ -75,7 +77,7 @@ namespace LagaltAPI.Controllers
             domainMessage = await _service.AddAsync(domainMessage);
 
             return CreatedAtAction("GetMessage", 
-                new { id = domainMessage.Id }, 
+                new { messageId = domainMessage.Id }, 
                 _mapper.Map<MessageReadDTO>(domainMessage));
         }
     }

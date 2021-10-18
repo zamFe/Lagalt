@@ -23,19 +23,19 @@ namespace LagaltAPI.Controllers
             _service = service;
         }
 
-        /// <summary> Fetches an application from the database based on id. </summary>
-        /// <param name="id"> The id of the application to retrieve. </param>
+        /// <summary> Fetches an application from the database based on application id. </summary>
+        /// <param name="applicationId"> The id of the application to retrieve. </param>
         /// <returns>
         ///     A read-specific DTO of the application if it is found in the database.
         ///     If it is not, then NotFound is returned instead.
         /// </returns>
         // GET: api/Applications/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ApplicationReadDTO>> GetApplication(int id)
+        [HttpGet("{applicationId}")]
+        public async Task<ActionResult<ApplicationReadDTO>> GetApplication(int applicationId)
         {
             try
             {
-                var domainApplication = await _service.GetByIdAsync(id);
+                var domainApplication = await _service.GetByIdAsync(applicationId);
 
                 if (domainApplication != null)
                     return _mapper.Map<ApplicationReadDTO>(domainApplication);
@@ -49,13 +49,15 @@ namespace LagaltAPI.Controllers
         }
 
         /// <summary> Fetches applications from the database based on project id. </summary>
-        /// <param name="id"> The id of the project to retrieve applications from. </param>
+        /// <param name="projectId"> The id of the project to retrieve applications from. </param>
         /// <returns> An enumerable containing read-specific DTOs of the applications. </returns>
         // GET: api/Applications/Project/5
-        [HttpGet("Project/{id}")]
-        public async Task<ActionResult<IEnumerable<ApplicationReadDTO>>> GetProjectApplications(int id)
+        [HttpGet("Project/{projectId}")]
+        public async Task<ActionResult<IEnumerable<ApplicationReadDTO>>> GetProjectApplications(
+            int projectId)
         {
-            return _mapper.Map<List<ApplicationReadDTO>>(await _service.GetByProjectIdAsync(id));
+            return _mapper.Map<List<ApplicationReadDTO>>(
+                await _service.GetByProjectIdAsync(projectId));
         }
 
         /// <summary> Adds a new application entry to the database. </summary>
@@ -68,13 +70,14 @@ namespace LagaltAPI.Controllers
         /// </returns>
         // POST: api/Applications
         [HttpPost]
-        public async Task<ActionResult<ApplicationReadDTO>> PostApplication(ApplicationCreateDTO dtoApplication)
+        public async Task<ActionResult<ApplicationReadDTO>> PostApplication(
+            ApplicationCreateDTO dtoApplication)
         {
             var domainApplication = _mapper.Map<Application>(dtoApplication);
             domainApplication = await _service.AddAsync(domainApplication);
 
             return CreatedAtAction("GetApplication",
-                new { id = domainApplication.Id },
+                new { applicationId = domainApplication.Id },
                 _mapper.Map<ApplicationReadDTO>(domainApplication));
         }
     }

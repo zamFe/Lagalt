@@ -3,7 +3,6 @@ using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Skill;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,19 +34,19 @@ namespace LagaltAPI.Controllers
             return _mapper.Map<List<SkillReadDTO>>(await _service.GetAllAsync());
         }
 
-        /// <summary> Fetches a skill from the database based on id. </summary>
-        /// <param name="id"> The id of the skill to retrieve. </param>
+        /// <summary> Fetches a skill from the database based on skill id. </summary>
+        /// <param name="skillId"> The id of the skill to retrieve. </param>
         /// <returns>
         ///     A read-specific DTO of the skill if it is found in the database.
         ///     If it is not, then NotFound is returned instead.
         /// </returns>
         // GET: api/Skills/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<SkillReadDTO>> GetSkill(int id)
+        [HttpGet("{skillId}")]
+        public async Task<ActionResult<SkillReadDTO>> GetSkill(int skillId)
         {
             try
             {
-                var domainSkill = await _service.GetByIdAsync(id);
+                var domainSkill = await _service.GetByIdAsync(skillId);
 
                 if (domainSkill != null)
                     return _mapper.Map<SkillReadDTO>(domainSkill);
@@ -79,7 +78,7 @@ namespace LagaltAPI.Controllers
             await _service.AddAsync(domainSkill, dtoSkill.Users.ToList(), dtoSkill.Projects.ToList());
 
             return CreatedAtAction("GetSkill",
-                new { id = domainSkill.Id },
+                new { skillId = domainSkill.Id },
                 _mapper.Map<SkillReadDTO>(domainSkill));
         }
     }

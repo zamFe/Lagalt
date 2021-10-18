@@ -35,19 +35,19 @@ namespace LagaltAPI
             return _mapper.Map<List<UserCompleteReadDTO>>(await _service.GetAllAsync());
         }
 
-        /// <summary> Fetches a user from the database based on id. </summary>
-        /// <param name="id"> The id of the user to retrieve. </param>
+        /// <summary> Fetches a user from the database based on user id. </summary>
+        /// <param name="userId"> The id of the user to retrieve. </param>
         /// <returns>
         ///     A read-specific DTO of the user if it is found in the database.
         ///     If it is not, then NotFound is returned instead.
         /// </returns>
         // GET: api/Users/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserCompleteReadDTO>> GetUser(int id)
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<UserCompleteReadDTO>> GetUser(int userId)
         {
             try
             {
-                var domainUser = await _service.GetByIdAsync(id);
+                var domainUser = await _service.GetByIdAsync(userId);
 
                 if (domainUser != null)
                     return _mapper.Map<UserCompleteReadDTO>(domainUser);
@@ -85,48 +85,6 @@ namespace LagaltAPI
             }
         }
 
-        /// <summary>
-        ///     Updates the specified user in the database to match the provided DTO.
-        /// </summary>
-        /// <param name="id"> The id of the user to update. </param>
-        /// <param name="dtoUser">
-        ///     An edit-specific DTO containing the updated version of the user.
-        /// </param>
-        /// <returns>
-        ///     NoContent on successful database update,
-        ///     BadRequest if the provided id and the id of the user do not match,
-        ///     or NotFound if the provided id does not match any users in the database.
-        /// </returns>
-        /// <exception cref="DbUpdateConcurrencyException">
-        ///     Thrown when the user is found in the database but not able to be updated.
-        /// </exception>
-        // PUT: api/Users/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, UserEditDTO dtoUser)
-        {
-            if (id != dtoUser.Id)
-                return BadRequest();
-
-            if (!_service.EntityExists(id))
-                return NotFound();
-
-            User domainUser = _mapper.Map<User>(dtoUser);
-
-            try
-            {
-                await _service.UpdateAsync(domainUser);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_service.EntityExists(id))
-                    return NotFound();
-                else
-                    throw;
-            }
-
-            return NoContent();
-        }
-
         /// <summary> Adds a new user entry to the database. </summary>
         /// <param name="dtoUser">
         ///     A creation-specific DTO representing the new user.
@@ -142,9 +100,51 @@ namespace LagaltAPI
             User domainUser = _mapper.Map<User>(dtoUser);
             await _service.AddAsync(domainUser, dtoUser.Skills.ToList());
 
-            return CreatedAtAction("GetUser", 
-                new { id = domainUser.Id }, 
+            return CreatedAtAction("GetUser",
+                new { userId = domainUser.Id },
                 _mapper.Map<UserCompleteReadDTO>(domainUser));
+        }
+
+        /// <summary>
+        ///     Updates the specified user in the database to match the provided DTO.
+        /// </summary>
+        /// <param name="userId"> The id of the user to update. </param>
+        /// <param name="dtoUser">
+        ///     An edit-specific DTO containing the updated version of the user.
+        /// </param>
+        /// <returns>
+        ///     NoContent on successful database update,
+        ///     BadRequest if the provided id and the id of the user do not match,
+        ///     or NotFound if the provided id does not match any users in the database.
+        /// </returns>
+        /// <exception cref="DbUpdateConcurrencyException">
+        ///     Thrown when the user is found in the database but not able to be updated.
+        /// </exception>
+        // PUT: api/Users/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser(int userId, UserEditDTO dtoUser)
+        {
+            if (userId != dtoUser.Id)
+                return BadRequest();
+
+            if (!_service.EntityExists(userId))
+                return NotFound();
+
+            User domainUser = _mapper.Map<User>(dtoUser);
+
+            try
+            {
+                await _service.UpdateAsync(domainUser);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_service.EntityExists(userId))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
         }
     }
 }
