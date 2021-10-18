@@ -51,6 +51,27 @@ namespace LagaltAPI.Services
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Project>> GetRecommendedProjectsAsync(int userId)
+        {
+            var user = await _context.Users
+                .Include(user => user.Skills)
+                .Include(user => user.Projects)
+                .Where(user => user.Id == userId)
+                .FirstAsync();
+
+            // Todo - Include projects joined by fellow contributors.
+            //        Currently only looks at projects matching the user's skills.
+            return await _context.Projects
+                .Include(project => project.Messages)
+                .Include(project => project.Users)
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .Where(project =>
+                    !project.Users.Any(user => user.Id == userId
+                    && project.Skills.Any(skill => user.Skills.Contains(skill))))
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Project>> GetUserProjectsAsync(int userId)
         {
             return await _context.Projects

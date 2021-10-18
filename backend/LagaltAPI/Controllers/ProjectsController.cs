@@ -76,6 +76,18 @@ namespace LagaltAPI.Controllers
             return new Page<ProjectReadDTO>(projects);
         }
 
+        /// <summary> Generates recommended projects for a user. </summary>
+        /// <param name="id"> The id of the user to get recommended projects for. </param>
+        /// <returns>
+        ///     A page containing all available read-specific DTOs for the user.
+        /// </returns>
+        // GET: api/Projects/Recommended/User/5
+        [HttpGet("Recommended/User/{id}")]
+        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetRecommendedProjects(int id)
+        {
+            return _mapper.Map<List<ProjectReadDTO>>(await _service.GetUserProjectsAsync(id));
+        }
+
         /// <summary> Fetches a user's projects from the database. </summary>
         /// <param name="id"> The id of the user to retrieve projects for. </param>
         /// <returns>
