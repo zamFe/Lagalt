@@ -1,6 +1,6 @@
 export interface UserComplete {
   id : number,
-  userName: string,
+  username: string,
   description : string,
   image: string,
   portfolio : string,
