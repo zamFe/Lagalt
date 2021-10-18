@@ -2,8 +2,8 @@ using LagaltAPI.Context;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
@@ -50,9 +50,7 @@ namespace LagaltAPI
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 string connStr;
                 if (env == "Development")
-                {
                     connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
-                }
                 else
                 {
                     // Use Heroku while deployed.
@@ -75,6 +73,15 @@ namespace LagaltAPI
                     Environment.SetEnvironmentVariable("CONNECTION_STRING", connStr);
                 }
                 options.UseNpgsql(connStr);
+            });
+
+            services.AddHttpContextAccessor();
+            services.AddScoped(typeof(UriService), options =>
+            {
+                var accessor = options.GetRequiredService<IHttpContextAccessor>();
+                var request = accessor.HttpContext.Request;
+                var baseUri = request.Scheme + "://" + request.Host.ToUriComponent();
+                return new UriService(baseUri);
             });
 
             services.AddSwaggerGen(c =>

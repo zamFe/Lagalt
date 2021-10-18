@@ -18,13 +18,16 @@ namespace LagaltAPI.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly ProjectService _service;
+        private readonly ProjectService _projectService;
+        private readonly UriService _uriService;
 
         // Constructor.
-        public ProjectsController(IMapper mapper, ProjectService service)
+        public ProjectsController(
+            IMapper mapper, ProjectService projectService, UriService uriService)
         {
             _mapper = mapper;
-            _service = service;
+            _projectService = projectService;
+            _uriService = uriService;
         }
 
         /// <summary> Fetches a project from the database based on project id. </summary>
@@ -39,7 +42,7 @@ namespace LagaltAPI.Controllers
         {
             try
             {
-                var domainProject = await _service.GetByIdAsync(projectId);
+                var domainProject = await _projectService.GetByIdAsync(projectId);
 
                 if (domainProject != null)
                     return _mapper.Map<ProjectReadDTO>(domainProject);
@@ -55,7 +58,7 @@ namespace LagaltAPI.Controllers
         /// <summary>
         ///     Fetches projects from the database according to the specified offset and limit.
         /// </summary>
-        /// <param name="offset"> Specifies the id of the first project to be included. </param>
+        /// <param name="offset"> Specifies the index of the first project to be included. </param>
         /// <param name="limit"> Specifies how many projects to fetch. </param>
         /// <returns>
         ///     A page containing all available read-specific DTOs within the specified range.
@@ -65,15 +68,24 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<Page<ProjectReadDTO>>> GetProjects(
             [FromQuery] int offset, [FromQuery] int limit)
         {
-            var validOffset = offset < 1 ? 1 : offset;
-            var validLimit = limit < 1 || limit > 10 ? 10 : limit;
+            int validOffset = offset < 1 ? 1 : offset;
+            int validLimit = limit < 1 || limit > 10 ? 10 : limit;
 
             var projects = _mapper.Map<List<ProjectReadDTO>>(
-                await _service.GetOffsetPageAsync(
+                await _projectService.GetOffsetPageAsync(
                     startId: validOffset,
                     pageSize: validLimit
                 ));
-            return new Page<ProjectReadDTO>(projects);
+
+            var baseUri = _uriService.GetBaseUrl() + "api/Projects";
+            var nextUri = projects.Count < validLimit
+                ? ""
+                : baseUri + $"?offset={validOffset + validLimit}&limit={validLimit}";
+            var previousUri = validOffset == 1
+                ? ""
+                : baseUri + $"?offset={validOffset - validLimit}&limit={validLimit}";
+
+            return new Page<ProjectReadDTO>(nextUri, previousUri, projects);
         }
 
         /// <summary> Generates recommended projects for a user. </summary>
@@ -87,7 +99,7 @@ namespace LagaltAPI.Controllers
             int userId)
         {
             return _mapper.Map<List<ProjectReadDTO>>(
-                await _service.GetRecommendedProjectsAsync(userId));
+                await _projectService.GetRecommendedProjectsAsync(userId));
         }
 
         /// <summary> Fetches a user's projects from the database. </summary>
@@ -99,7 +111,7 @@ namespace LagaltAPI.Controllers
         [HttpGet("User/{userId}")]
         public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetUserProjects(int userId)
         {
-            return _mapper.Map<List<ProjectReadDTO>>(await _service.GetUserProjectsAsync(userId));
+            return _mapper.Map<List<ProjectReadDTO>>(await _projectService.GetUserProjectsAsync(userId));
         }
 
         /// <summary> Adds a new project entry to the database. </summary>
@@ -115,7 +127,7 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<ProjectCreateDTO>> PostProject(ProjectCreateDTO dtoProject)
         {
             Project domainProject = _mapper.Map<Project>(dtoProject);
-            await _service.AddAsync(domainProject, dtoProject.Users.ToList(), dtoProject.Skills.ToList());
+            await _projectService.AddAsync(domainProject, dtoProject.Users.ToList(), dtoProject.Skills.ToList());
 
             return CreatedAtAction("GetProject",
                 new { projectId = domainProject.Id },
@@ -144,18 +156,18 @@ namespace LagaltAPI.Controllers
             if (projectId != dtoProject.Id)
                 return BadRequest();
 
-            if (!_service.EntityExists(projectId))
+            if (!_projectService.EntityExists(projectId))
                 return NotFound();
 
             var domainProject = _mapper.Map<Project>(dtoProject);
 
             try
             {
-                await _service.UpdateAsync(domainProject);
+                await _projectService.UpdateAsync(domainProject);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_service.EntityExists(projectId))
+                if (!_projectService.EntityExists(projectId))
                     return NotFound();
                 else
                     throw;
