@@ -59,16 +59,20 @@ namespace LagaltAPI.Services
                 .Where(user => user.Id == userId)
                 .FirstAsync();
 
-            // Todo - Include projects joined by fellow contributors.
+            // TODO - Rewrite to make it a one-liner.
+            var userSkillIds = new List<int>();
+            foreach (Skill s in user.Skills)
+                userSkillIds.Add(s.Id);
+
+            // TODO - Include projects joined by fellow contributors.
             //        Currently only looks at projects matching the user's skills.
             return await _context.Projects
                 .Include(project => project.Messages)
                 .Include(project => project.Users)
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
-                .Where(project =>
-                    !project.Users.Any(user => user.Id == userId
-                    && project.Skills.Any(skill => user.Skills.Contains(skill))))
+                .Where(project => !project.Users.Any(projectUser => projectUser.Id == userId))
+                .Where(project => project.Skills.Any(projectSkill => userSkillIds.Contains(projectSkill.Id)))
                 .ToListAsync();
         }
 

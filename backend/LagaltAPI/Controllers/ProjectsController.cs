@@ -86,7 +86,8 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetRecommendedProjects(
             int userId)
         {
-            return _mapper.Map<List<ProjectReadDTO>>(await _service.GetUserProjectsAsync(userId));
+            return _mapper.Map<List<ProjectReadDTO>>(
+                await _service.GetRecommendedProjectsAsync(userId));
         }
 
         /// <summary> Fetches a user's projects from the database. </summary>
