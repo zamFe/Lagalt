@@ -26,7 +26,7 @@ const defaultProject: Project = {
 })
 export class ProjectService {
 
-    // Private store varaibles
+    // Store varaibles
     public readonly projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
     public readonly renderProjects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
     public readonly project$: BehaviorSubject<Project> = new BehaviorSubject<Project>(defaultProject);
@@ -35,7 +35,6 @@ export class ProjectService {
     }
 
     // State CRUD functions
-
     public setProjects(projects: Project[]): void {
         this.projects$.next(projects)
     }
@@ -51,15 +50,13 @@ export class ProjectService {
         this.setProjects(projects)
     }
 
-    public removeProject(project: Project): void {
-        const projects = this.projects$.getValue().filter(p => p.id !== project.id);
+    public removeProject(projectId: number): void {
+        const projects = this.projects$.getValue().filter(p => p.id !== projectId);
         this.setProjects(projects)
     }
 
     // API CRUD calls
     public getProjects(): Subscription {
-
-        //set professions as enum in storage here.
         return this.http.get<PageWrapper>(API_URL)
             .subscribe((page: PageWrapper) => {
                 this.setProjects(page.results)
@@ -67,14 +64,12 @@ export class ProjectService {
             });
     }
     public getProjectsByUserId(userId : number): Subscription {
-
-      //set professions as enum in storage here.
-      return this.http.get<PageWrapper>(`${API_URL}/User/${userId} `)
-      .subscribe((page: PageWrapper) => {
-        this.setProjects(page.results)
-        this.setRenderProjects(page.results)
-    });
-  }
+        return this.http.get<PageWrapper>(`${API_URL}/User/${userId}`)
+            .subscribe((page: PageWrapper) => {
+                this.setProjects(page.results)
+                this.setRenderProjects(page.results)
+            });
+    }
 
     public getProjectById(id: number): Subscription {
         return this.http.get<Project>(`${API_URL}/${id}`)
@@ -83,17 +78,26 @@ export class ProjectService {
             });
     }
 
-    // public postProject(project: Project): Subscription {
-    //     return this.http.post<Project>(API_URL, project)
-    //         .subscribe((response) => {
-    //             console.log("response:")
-    //             console.log(response)
-    //             this.addProject(project)
-    //             console.log("project added to state:")
-    //             console.log(this._projects$)
-    //             console.log("project added to API go check")
-    //         });
-    // }
+    public getRecommendedProjectsByUserId(userId: number): Subscription {
+        return this.http.get<PageWrapper>(`${API_URL}/Recommended/User/${userId}`)
+            .subscribe((page: PageWrapper) => {
+                this.setRenderProjects(page.results)
+            })
+    }
 
-    // post, put/id, get/id
+    public postProject(project: Object): Subscription {
+        return this.http.post<Project>(API_URL, project)
+            .subscribe((response: Project) => {
+                this.addProject(response)
+            });
+    }
+
+    // IKKE TESTET
+    public putProject(project: Project): Subscription {
+        this.removeProject(project.id)
+        return this.http.put<Project>(`${API_URL}/${project.id}`, project)
+        .subscribe((response: Project) => {
+            this.addProject(response)
+        });
+    }
 }
