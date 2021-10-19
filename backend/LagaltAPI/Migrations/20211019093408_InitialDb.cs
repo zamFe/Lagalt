@@ -62,7 +62,7 @@ namespace LagaltAPI.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ProfessionId = table.Column<int>(type: "integer", nullable: false),
-                    Administrators = table.Column<int[]>(type: "integer[]", nullable: true),
+                    AdministratorIds = table.Column<int[]>(type: "integer[]", nullable: true),
                     Title = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
                     Description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     Progress = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
@@ -247,7 +247,7 @@ namespace LagaltAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Projects",
-                columns: new[] { "Id", "Administrators", "Description", "Image", "ProfessionId", "Progress", "Source", "Title" },
+                columns: new[] { "Id", "AdministratorIds", "Description", "Image", "ProfessionId", "Progress", "Source", "Title" },
                 values: new object[,]
                 {
                     { 1, new[] { 1 }, "I've always wanted to travel by submarine and I've also got to make new songs", "https://upload.wikimedia.org/wikipedia/commons/d/d8/Submarine_Vepr_by_Ilya_Kurganov_crop.jpg", 1, "In Progress", null, "Writing an album on a Submarine" },

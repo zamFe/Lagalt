@@ -129,7 +129,7 @@ namespace LagaltAPI.Context
                 {
                     Id = 1,
                     ProfessionId = professions[0].Id,
-                    Administrators = new int[] {1},
+                    AdministratorIds = new int[] {1},
                     Title = "Writing an album on a Submarine",
                     Description = "I've always wanted to travel by submarine and I've also got to make new songs",
                     Progress = "In Progress",
@@ -139,7 +139,7 @@ namespace LagaltAPI.Context
                 {
                     Id = 2,
                     ProfessionId = professions[1].Id,
-                    Administrators = new int[] {4},
+                    AdministratorIds = new int[] {4},
                     Title = "The Cinematic Movie Film",
                     Description = "Some call them movies and some call them films. But what if both were correct?"
                 },
@@ -147,7 +147,7 @@ namespace LagaltAPI.Context
                 {
                     Id = 3,
                     ProfessionId = professions[2].Id,
-                    Administrators = new int[] {5},
+                    AdministratorIds = new int[] {5},
                     Title = "Yet Another Tetris Game",
                     Description = "What could go wrong?",
                     Progress =  "Completed",
@@ -157,7 +157,7 @@ namespace LagaltAPI.Context
                 {
                     Id = 4,
                     ProfessionId = professions[2].Id,
-                    Administrators = new int[] {6},
+                    AdministratorIds = new int[] {6},
                     Title = "Minecraft Nostalgia",
                     Description = "It was better before",
                     Progress = "Stalled",

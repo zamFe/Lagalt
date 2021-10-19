@@ -38,14 +38,14 @@ namespace LagaltAPI.Controllers
         /// </returns>
         // GET: api/Projects/5
         [HttpGet("{projectId}")]
-        public async Task<ActionResult<ProjectReadDTO>> GetProject(int projectId)
+        public async Task<ActionResult<ProjectCompleteReadDTO>> GetProject(int projectId)
         {
             try
             {
                 var domainProject = await _projectService.GetByIdAsync(projectId);
 
                 if (domainProject != null)
-                    return _mapper.Map<ProjectReadDTO>(domainProject);
+                    return _mapper.Map<ProjectCompleteReadDTO>(domainProject);
                 else
                     return NotFound();
             }
@@ -65,14 +65,14 @@ namespace LagaltAPI.Controllers
         /// </returns>
         // GET api/Projects?offset=5&limit=5
         [HttpGet]
-        public async Task<ActionResult<Page<ProjectReadDTO>>> GetProjects(
+        public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetProjects(
             [FromQuery] int offset, [FromQuery] int limit)
         {
             var range = new PageRange(offset, limit);
-            var projects = _mapper.Map<List<ProjectReadDTO>>(
+            var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
                 await _projectService.GetPageAsync(range));
             var baseUri = _uriService.GetBaseUrl() + "api/Projects";
-            return new Page<ProjectReadDTO>(projects, range, baseUri);
+            return new Page<ProjectCompactReadDTO>(projects, range, baseUri);
         }
 
         /// <summary> Generates recommended projects for a user. </summary>
@@ -84,14 +84,14 @@ namespace LagaltAPI.Controllers
         /// </returns>
         // GET: api/Projects/Recommended/User/5
         [HttpGet("Recommended/User/{userId}")]
-        public async Task<ActionResult<Page<ProjectReadDTO>>> GetRecommendedProjects(
+        public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetRecommendedProjects(
             int userId, [FromQuery] int offset, [FromQuery] int limit)
         {
             var range = new PageRange(offset, limit);
-            var projects = _mapper.Map<List<ProjectReadDTO>>(
+            var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
                 await _projectService.GetRecommendedProjectsPageAsync(userId, range));
             var baseUri = _uriService.GetBaseUrl() + $"api/Projects/Recommended/User/{userId}";
-            return new Page<ProjectReadDTO>(projects, range, baseUri);
+            return new Page<ProjectCompactReadDTO>(projects, range, baseUri);
         }
 
         /// <summary> Fetches a user's projects from the database. </summary>
@@ -101,9 +101,9 @@ namespace LagaltAPI.Controllers
         /// </returns>
         // GET: api/Projects/User/5
         [HttpGet("User/{userId}")]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetUserProjects(int userId)
+        public async Task<ActionResult<IEnumerable<ProjectCompactReadDTO>>> GetUserProjects(int userId)
         {
-            return _mapper.Map<List<ProjectReadDTO>>(await _projectService.GetUserProjectsAsync(userId));
+            return _mapper.Map<List<ProjectCompactReadDTO>>(await _projectService.GetUserProjectsAsync(userId));
         }
 
         /// <summary> Adds a new project entry to the database. </summary>
@@ -119,11 +119,11 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<ProjectCreateDTO>> PostProject(ProjectCreateDTO dtoProject)
         {
             Project domainProject = _mapper.Map<Project>(dtoProject);
-            await _projectService.AddAsync(domainProject, dtoProject.Users.ToList(), dtoProject.Skills.ToList());
+            await _projectService.AddAsync(domainProject, dtoProject.UserIds.ToList(), dtoProject.SkillIds.ToList());
 
             return CreatedAtAction("GetProject",
                 new { projectId = domainProject.Id },
-                _mapper.Map<ProjectReadDTO>(domainProject));
+                _mapper.Map<ProjectCompleteReadDTO>(domainProject));
         }
 
         /// <summary>
