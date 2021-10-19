@@ -59,11 +59,6 @@ namespace LagaltAPI.Controllers
             }
         }
 
-
-        // TODO - Add support for getting a range of skills (offset + limit).
-        //        Would this replace GetSkills?
-
-
         /// <summary> Adds a new skill entry to the database. </summary>
         /// <param name="dtoSkill"> A creation-specific DTO representing the new skill. </param>
         /// <returns>
