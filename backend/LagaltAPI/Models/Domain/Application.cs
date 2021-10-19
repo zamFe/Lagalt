@@ -19,6 +19,8 @@ namespace LagaltAPI.Models.Domain
         // Data.
         public bool Accepted { get; set; } = false;
 
+        public bool Seen { get; set; } = false;
+
         [MaxLength(140), Required]
         public string Motivation { get; set; }
     }
