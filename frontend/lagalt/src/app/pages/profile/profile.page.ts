@@ -48,8 +48,11 @@ export class ProfilePage implements OnInit, OnDestroy {
         }, () => {    
           this.userService.postUserByUsername(this.user.username)
         });  
+        console.log(profile)
       }
     );
+    this.auth.idTokenClaims$.subscribe(data =>
+      console.log(data))
     //this.userService.getUserById(1) // CHANGE TO IMPLEMENT ON LOGIN
   }
   
