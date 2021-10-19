@@ -54,7 +54,9 @@ export class AddNewProjectComponent implements OnInit, OnDestroy {
       profession: selectedProfessionId,
       users: [userId],
       administrators: [userId],
-      progress: 'founding'
+      progress: 'founding',
+      source: null,
+      skills: []
     }
     this.projectService.postProject(newProject)
     this.modalOpen = false;
