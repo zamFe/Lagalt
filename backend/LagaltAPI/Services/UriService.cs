@@ -7,7 +7,7 @@
         // Constructor.
         public UriService(string baseUri)
         {
-            _baseUri = baseUri;
+            _baseUri = baseUri + "/";
         }
 
         /// <summary> Gets the base url for where the program is currently running. </summary>

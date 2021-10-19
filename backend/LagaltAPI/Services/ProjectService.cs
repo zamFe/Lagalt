@@ -1,5 +1,6 @@
 ﻿using LagaltAPI.Context;
 using LagaltAPI.Models.Domain;
+using LagaltAPI.Models.Wrappers;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,27 +43,25 @@ namespace LagaltAPI.Services
             return newProject;
         }
 
-        public async Task<IEnumerable<Project>> GetOffsetPageAsync(int startId, int pageSize)
+        public async Task<IEnumerable<Project>> GetPageAsync(PageRange range)
         {
             return await _context.Projects
                 .Include(project => project.Messages)
                 .Include(project => project.Users)
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
-                .Skip(startId - 1)
-                .Take(pageSize)
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Project>> GetRecommendedProjectsAsync(int userId)
+        public async Task<IEnumerable<Project>> GetRecommendedProjectsPageAsync(
+            int userId, PageRange range)
         {
-            var user = await _context.Users
-                .Include(user => user.Skills)
-                .Include(user => user.Projects)
-                .Where(user => user.Id == userId)
-                .FirstAsync();
-
-            var userSkillIds = user.Skills.Select(skill => skill.Id).ToList();
+            var userSkillIds = await _context.Skills
+                .Where(skill => skill.Users.Any(user => user.Id == userId))
+                .Select(skill => skill.Id)
+                .ToListAsync();
 
             // TODO - Include projects joined by fellow contributors.
             //        Currently only looks at projects matching the user's skills.
@@ -73,6 +72,8 @@ namespace LagaltAPI.Services
                 .Include(project => project.Profession)
                 .Where(project => !project.Users.Any(projectUser => projectUser.Id == userId))
                 .Where(project => project.Skills.Any(projectSkill => userSkillIds.Contains(projectSkill.Id)))
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
                 .ToListAsync();
         }
 

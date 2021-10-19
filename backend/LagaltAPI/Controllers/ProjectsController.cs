@@ -59,7 +59,7 @@ namespace LagaltAPI.Controllers
         ///     Fetches projects from the database according to the specified offset and limit.
         /// </summary>
         /// <param name="offset"> Specifies the index of the first project to be included. </param>
-        /// <param name="limit"> Specifies how many projects to fetch. </param>
+        /// <param name="limit"> Specifies how many projects to include. </param>
         /// <returns>
         ///     A page containing all available read-specific DTOs within the specified range.
         /// </returns>
@@ -68,38 +68,30 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<Page<ProjectReadDTO>>> GetProjects(
             [FromQuery] int offset, [FromQuery] int limit)
         {
-            int validOffset = offset < 1 ? 1 : offset;
-            int validLimit = limit < 1 || limit > 10 ? 10 : limit;
-
+            var range = new PageRange(offset, limit);
             var projects = _mapper.Map<List<ProjectReadDTO>>(
-                await _projectService.GetOffsetPageAsync(
-                    startId: validOffset,
-                    pageSize: validLimit
-                ));
-
+                await _projectService.GetPageAsync(range));
             var baseUri = _uriService.GetBaseUrl() + "api/Projects";
-            var nextUri = projects.Count < validLimit
-                ? ""
-                : baseUri + $"?offset={validOffset + validLimit}&limit={validLimit}";
-            var previousUri = validOffset == 1
-                ? ""
-                : baseUri + $"?offset={validOffset - validLimit}&limit={validLimit}";
-
-            return new Page<ProjectReadDTO>(nextUri, previousUri, projects);
+            return new Page<ProjectReadDTO>(projects, range, baseUri);
         }
 
         /// <summary> Generates recommended projects for a user. </summary>
         /// <param name="userId"> The id of the user to get recommended projects for. </param>
+        /// <param name="offset"> Specifies the index of the first project to be included. </param>
+        /// <param name="limit"> Specifies how many projects to include. </param>
         /// <returns>
         ///     A page containing all available read-specific DTOs for the user.
         /// </returns>
         // GET: api/Projects/Recommended/User/5
         [HttpGet("Recommended/User/{userId}")]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetRecommendedProjects(
-            int userId)
+        public async Task<ActionResult<Page<ProjectReadDTO>>> GetRecommendedProjects(
+            int userId, [FromQuery] int offset, [FromQuery] int limit)
         {
-            return _mapper.Map<List<ProjectReadDTO>>(
-                await _projectService.GetRecommendedProjectsAsync(userId));
+            var range = new PageRange(offset, limit);
+            var projects = _mapper.Map<List<ProjectReadDTO>>(
+                await _projectService.GetRecommendedProjectsPageAsync(userId, range));
+            var baseUri = _uriService.GetBaseUrl() + $"api/Projects/Recommended/User/{userId}";
+            return new Page<ProjectReadDTO>(projects, range, baseUri);
         }
 
         /// <summary> Fetches a user's projects from the database. </summary>
