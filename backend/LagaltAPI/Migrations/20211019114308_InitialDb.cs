@@ -113,6 +113,7 @@ namespace LagaltAPI.Migrations
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     Accepted = table.Column<bool>(type: "boolean", nullable: false),
+                    Seen = table.Column<bool>(type: "boolean", nullable: false),
                     Motivation = table.Column<string>(type: "character varying(140)", maxLength: 140, nullable: false)
                 },
                 constraints: table =>
@@ -279,12 +280,12 @@ namespace LagaltAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Applications",
-                columns: new[] { "Id", "Accepted", "Motivation", "ProjectId", "UserId" },
+                columns: new[] { "Id", "Accepted", "Motivation", "ProjectId", "Seen", "UserId" },
                 values: new object[,]
                 {
-                    { 1, true, "I also love submarines", 1, 2 },
-                    { 2, true, "Trying to figure out if i like submarines", 1, 3 },
-                    { 3, false, "What's a submarine?", 1, 5 }
+                    { 1, true, "I also love submarines", 1, false, 2 },
+                    { 2, true, "Trying to figure out if i like submarines", 1, false, 3 },
+                    { 3, false, "What's a submarine?", 1, false, 5 }
                 });
 
             migrationBuilder.InsertData(

@@ -37,6 +37,9 @@ namespace LagaltAPI.Migrations
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("Seen")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
@@ -55,6 +58,7 @@ namespace LagaltAPI.Migrations
                             Accepted = true,
                             Motivation = "I also love submarines",
                             ProjectId = 1,
+                            Seen = false,
                             UserId = 2
                         },
                         new
@@ -63,6 +67,7 @@ namespace LagaltAPI.Migrations
                             Accepted = true,
                             Motivation = "Trying to figure out if i like submarines",
                             ProjectId = 1,
+                            Seen = false,
                             UserId = 3
                         },
                         new
@@ -71,6 +76,7 @@ namespace LagaltAPI.Migrations
                             Accepted = false,
                             Motivation = "What's a submarine?",
                             ProjectId = 1,
+                            Seen = false,
                             UserId = 5
                         });
                 });
