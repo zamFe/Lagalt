@@ -53,54 +53,36 @@ export class UserService {
             this.setUserById(user)
         });
   }
-  getUserExistStatus(username : string): Observable<any> {
+
+  // BRUKES DENNE?
+  public getUserExistStatus(username : string): Observable<any> {
     const url = (API_URL_USERS +`/Username${username}`);
     return this.http.get(url);
   }
 
   public getUserByUsername(username: string): Subscription{
-    return this.http.get<UserComplete>(API_URL_USERS +`/username/${username}`)
+    return this.http.get<UserComplete>(`${API_URL_USERS}/username/${username}`)
         .subscribe((user: UserComplete) => {
             this.setUserById(user)
         });
   }
 
   public userExists(username: string): Observable<any>{
-    return this.http.get(API_URL_USERS +`/username/${username}`)
-    
-
-    //return this.http.get<UserComplete>(API_URL_USERS +`/username/${username}`,{observe: "response"})
-    /*
-    .subscribe(data => {
-      if(data.status === 200){
-        of(true)
-      }
-      else{
-        of(false)
-      }
-    })
-    */
+    return this.http.get(`${API_URL_USERS}/username/${username}`)
   }
 
-  public postUserByUsername(username : string): Subscription{
-    return this.http.post<UserComplete>(API_URL_USERS,{
-      username: username,
-      description: "",
-      image: "",
-      portfolio: "",
-      skills: [],
-      projects: []
-    }).subscribe((res: UserComplete) => {
-      this.setUserById(res)
-    })
+  public postUserByUsername(username : string): Subscription {
+    return this.http.post<UserComplete>(API_URL_USERS, {username: username, skills: []})
+      .subscribe((response: UserComplete) => {
+        this.setUserById(response)
+    });
   }
-  
 
-  // public putDescriptionById(id : number , description : string) : Subscription {
-  //   return this.http.put<User>(API_URL_USERS +`/${id}`, description)
-  //   .subscribe((user: User) =>{
-  //     this.putUserById$(user)
-  //   });
-  // }
-
+  // IKKE TESTET
+  public putUser(user: UserComplete): Subscription {
+    return this.http.put<UserComplete>(`${API_URL_USERS}/${user.id}`, user)
+      .subscribe(() => {
+        this.setUserById(user)
+      });
+  }
 }
