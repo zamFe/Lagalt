@@ -5,6 +5,7 @@ import { AuthGuard } from '@auth0/auth0-angular';
 import { ProjectPage } from './pages/project/project.page';
 import { MainPage } from "./pages/main/main.page";
 import { ProfilePage } from './pages/profile/profile.page';
+import { AdminGiveAccessPage } from './pages/admin-give-access/admin-give-access.page';
 
 const routes: Routes = [
   {
@@ -24,6 +25,10 @@ const routes: Routes = [
   {
       path : 'project',
       component : ProjectPage,
+  },
+  {
+    path : 'approval',
+    component : AdminGiveAccessPage,
   }
 ]
 

@@ -28,6 +28,7 @@ import { ProjectStatusComponent } from './components/project-status/project-stat
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AddNewProjectComponent } from './components/add-new-project/add-new-project.component';
+import { AdminGiveAccessPage } from './pages/admin-give-access/admin-give-access.page';
 
 
 
@@ -50,7 +51,8 @@ import { AddNewProjectComponent } from './components/add-new-project/add-new-pro
     LogoutButtonComponent,
     AuthNavComponent,
     ProjectStatusComponent,
-    AddNewProjectComponent
+    AddNewProjectComponent,
+    AdminGiveAccessPage
   ],
   imports: [
     BrowserModule,

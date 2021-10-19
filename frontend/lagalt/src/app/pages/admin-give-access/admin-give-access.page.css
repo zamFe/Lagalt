@@ -1,0 +1,13 @@
+.button-box {
+    text-align:center;
+    margin-top:20px;
+ }
+
+.btn-decline {
+    background-color: #D08770;
+  }
+  
+  .btn-accept {
+    background-color: #A3BE8C;
+  }
+  
