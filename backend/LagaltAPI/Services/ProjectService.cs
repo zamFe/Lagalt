@@ -52,6 +52,7 @@ namespace LagaltAPI.Services
                 .Include(project => project.Profession)
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
+                .OrderByDescending(application => application.Id)
                 .ToListAsync();
         }
 
@@ -74,6 +75,7 @@ namespace LagaltAPI.Services
                 .Where(project => project.Skills.Any(projectSkill => userSkillIds.Contains(projectSkill.Id)))
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
+                .OrderByDescending(application => application.Id)
                 .ToListAsync();
         }
 
@@ -88,6 +90,7 @@ namespace LagaltAPI.Services
                 .Where(project => project.Users.Any(user => user.Id == userId))
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
+                .OrderByDescending(application => application.Id)
                 .ToListAsync();
         }
 

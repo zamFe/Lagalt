@@ -41,6 +41,7 @@ namespace LagaltAPI.Services
                 .Where(message => message.ProjectId == projectId)
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
+                .OrderByDescending(application => application.Id)
                 .ToListAsync();
         }
     }
