@@ -17,6 +17,18 @@ namespace LagaltAPI.Services
         {
             _context = context;
         }
+
+        public bool EntityExists(int applicationId)
+        {
+            return _context.Applications.Any(application => application.Id == applicationId);
+        }
+
+        public bool UserHasAppliedToProject(int userId, int projectId)
+        {
+            return _context.Applications.Any(application =>
+                application.UserId == userId && application.ProjectId == projectId);
+        }
+
         public async Task<Application> AddAsync(Application newApplication)
         {
             _context.Applications.Add(newApplication);
@@ -32,6 +44,7 @@ namespace LagaltAPI.Services
                 .Where(application => application.Id == applicationId)
                 .FirstAsync();
         }
+
         public async Task<IEnumerable<Application>> GetPageByProjectIdAsync(
             int projectId, PageRange filter)
         {
@@ -42,11 +55,11 @@ namespace LagaltAPI.Services
                 .Take(filter.Limit)
                 .ToListAsync();
         }
-        public bool HasUserAppliedToProject(int userId, int projectId)
+
+        public async Task UpdateAsync(Application updatedApplication)
         {
-            int count = _context.Applications.Count(a =>
-                a.UserId == userId && a.ProjectId == projectId);
-            return count > 0 ? true: false;
+            _context.Entry(updatedApplication).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -12,6 +12,7 @@ namespace LagaltAPI.Profiles
             CreateMap<Application, ApplicationReadDTO>();
 
             CreateMap<ApplicationCreateDTO, Application>();
+            CreateMap<ApplicationEditDTO, Application>();
         }
     }
 }

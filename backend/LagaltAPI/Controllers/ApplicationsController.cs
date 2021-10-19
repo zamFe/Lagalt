@@ -4,6 +4,7 @@ using LagaltAPI.Models.DTOs.Application;
 using LagaltAPI.Models.Wrappers;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -87,7 +88,9 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<ApplicationReadDTO>> PostApplication(
             ApplicationCreateDTO dtoApplication)
         {
-            if(_applicationService.HasUserAppliedToProject(dtoApplication.UserId, dtoApplication.ProjectId)) {
+            if(_applicationService.UserHasAppliedToProject(
+                dtoApplication.UserId, dtoApplication.ProjectId))
+            {
                 return BadRequest("Existing application for user found in the projcet");
             }
 
@@ -97,6 +100,50 @@ namespace LagaltAPI.Controllers
             return CreatedAtAction("GetApplication",
                 new { applicationId = domainApplication.Id },
                 _mapper.Map<ApplicationReadDTO>(domainApplication));
+        }
+
+        /// <summary>
+        ///     Updates the specified application in the database to match the provided DTO.
+        /// </summary>
+        /// <param name="applicationId"> The id of the application to update. </param>
+        /// <param name="dtoApplication">
+        ///     An edit-specific DTO containing the updated version of the application.
+        /// </param>
+        /// <returns>
+        ///     NoContent on successful database update,
+        ///     BadRequest if the provided id and the id of the user do not match,
+        ///     or NotFound if the provided id does not match any users in the database.
+        /// </returns>
+        /// <exception cref="DbUpdateConcurrencyException">
+        ///     Thrown when the application is found in the database but not able to be updated.
+        /// </exception>
+        // PUT: api/Applications/5
+        [HttpPut("{applicationId}")]
+        public async Task<IActionResult> PutUser(
+            int applicationId, ApplicationEditDTO dtoApplication)
+        {
+            if (applicationId != dtoApplication.Id)
+                return BadRequest();
+
+            if (!_applicationService.EntityExists(applicationId))
+                return NotFound();
+
+            var domainApplication = await _applicationService.GetByIdAsync(applicationId);
+            _mapper.Map<ApplicationEditDTO, Application>(dtoApplication, domainApplication);
+
+            try
+            {
+                await _applicationService.UpdateAsync(domainApplication);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_applicationService.EntityExists(applicationId))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
         }
     }
 }
