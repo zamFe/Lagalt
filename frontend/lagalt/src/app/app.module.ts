@@ -29,6 +29,9 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AddNewProjectComponent } from './components/add-new-project/add-new-project.component';
 import { AdminGiveAccessPage } from './pages/admin-give-access/admin-give-access.page';
+import { MyProjectsComponent } from './pages/my-projects/my-projects.component';
+import { MyProjectsListOfProjectsComponent } from './components/my-projects-list-of-projects/my-projects-list-of-projects.component';
+import { MyProjectsListOfProjectsItemComponent } from './components/my-projects-list-of-projects-item/my-projects-list-of-projects-item.component';
 
 
 
@@ -52,7 +55,10 @@ import { AdminGiveAccessPage } from './pages/admin-give-access/admin-give-access
     AuthNavComponent,
     ProjectStatusComponent,
     AddNewProjectComponent,
-    AdminGiveAccessPage
+    AdminGiveAccessPage,
+    MyProjectsComponent,
+    MyProjectsListOfProjectsComponent,
+    MyProjectsListOfProjectsItemComponent
   ],
   imports: [
     BrowserModule,
