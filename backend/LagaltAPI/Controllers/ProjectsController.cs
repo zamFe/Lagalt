@@ -40,6 +40,8 @@ namespace LagaltAPI.Controllers
         [HttpGet("{projectId}")]
         public async Task<ActionResult<ProjectCompleteReadDTO>> GetProject(int projectId)
         {
+            // TODO - Track history (click).
+
             try
             {
                 var domainProject = await _projectService.GetByIdAsync(projectId);
@@ -68,6 +70,8 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetProjects(
             [FromQuery] int offset, [FromQuery] int limit)
         {
+            // TODO - Track history (viewed).
+
             var range = new PageRange(offset, limit);
             var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
                 await _projectService.GetPageAsync(range));
@@ -87,6 +91,8 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetRecommendedProjects(
             int userId, [FromQuery] int offset, [FromQuery] int limit)
         {
+            // TODO - Track history (viewed).
+
             var range = new PageRange(offset, limit);
             var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
                 await _projectService.GetRecommendedProjectsPageAsync(userId, range));
