@@ -87,7 +87,7 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<ApplicationReadDTO>> PostApplication(
             ApplicationCreateDTO dtoApplication)
         {
-            if(_service.HasUserAppliedToProject(dtoApplication.UserId, dtoApplication.ProjectId)) {
+            if(_applicationService.HasUserAppliedToProject(dtoApplication.UserId, dtoApplication.ProjectId)) {
                 return BadRequest("Existing application for user found in the projcet");
             }
 
