@@ -20,8 +20,8 @@ namespace LagaltAPI.Services
         {
             _context.Applications.Add(newApplication);
             await _context.SaveChangesAsync();
-            newApplication.User = await _context.Users.FindAsync(newApplication.UserId);
-            return newApplication;
+                newApplication.User = await _context.Users.FindAsync(newApplication.UserId);
+                return newApplication;
         }
 
         public async Task<Application> GetByIdAsync(int applicationId)
@@ -37,6 +37,12 @@ namespace LagaltAPI.Services
                 .Include(application => application.User.Skills)
                 .Where(application => application.ProjectId == projectId)
                 .ToListAsync();
+        }
+        public bool HasUserAppliedToProject(int userId, int projectId)
+        {
+            int count = _context.Applications.Count(a =>
+                a.UserId == userId && a.ProjectId == projectId);
+            return count > 0 ? true: false;
         }
     }
 }

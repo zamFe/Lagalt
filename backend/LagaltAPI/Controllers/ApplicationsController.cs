@@ -73,6 +73,10 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<ApplicationReadDTO>> PostApplication(
             ApplicationCreateDTO dtoApplication)
         {
+            if(_service.HasUserAppliedToProject(dtoApplication.UserId, dtoApplication.ProjectId)) {
+                return BadRequest("Existing application for user found in the projcet");
+            }
+
             var domainApplication = _mapper.Map<Application>(dtoApplication);
             domainApplication = await _service.AddAsync(domainApplication);
 
