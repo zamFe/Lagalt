@@ -64,10 +64,10 @@ export class ProjectService {
             });
     }
     public getProjectsByUserId(userId : number): Subscription {
-        return this.http.get<PageWrapper>(`${API_URL}/User/${userId}`)
-            .subscribe((page: PageWrapper) => {
-                this.setProjects(page.results)
-                this.setRenderProjects(page.results)
+        return this.http.get<Project[]>(`${API_URL}/User/${userId}`)
+            .subscribe((project: Project[]) => {
+                this.setProjects(project)
+                this.setRenderProjects(project)
             });
     }
 
