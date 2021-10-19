@@ -21,9 +21,8 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   searchForProject(searchProjectForm : NgForm) : void{
     let searchResults : Project[] = []
-    // OPTIONAL: USE REGEX AND MATCH INSTEAD OF INCLUDES to account for captial/lower case searches
     this.projectService.projects$.subscribe(data => {
-      searchResults = data.filter(p => p.title.includes(searchProjectForm.value.searchInput))
+      searchResults = data.filter(p => p.title.toLowerCase().includes(searchProjectForm.value.searchInput.toLowerCase()))
     }).unsubscribe()
     this.projectService.setRenderProjects(searchResults)
   }
