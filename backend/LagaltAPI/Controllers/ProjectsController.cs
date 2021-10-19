@@ -123,7 +123,7 @@ namespace LagaltAPI.Controllers
         /// </returns>
         // POST: api/Projects
         [HttpPost]
-        public async Task<ActionResult<ProjectCreateDTO>> PostProject(ProjectCreateDTO dtoProject)
+        public async Task<ActionResult<ProjectCompleteReadDTO>> PostProject(ProjectCreateDTO dtoProject)
         {
             Project domainProject = _mapper.Map<Project>(dtoProject);
             await _projectService.AddAsync(domainProject, dtoProject.UserIds.ToList(), dtoProject.SkillIds.ToList());

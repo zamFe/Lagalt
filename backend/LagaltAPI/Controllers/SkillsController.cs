@@ -72,7 +72,7 @@ namespace LagaltAPI.Controllers
         /// </returns>
         // POST: api/Skills
         [HttpPost]
-        public async Task<ActionResult<SkillCreateDTO>> PostSkill(SkillCreateDTO dtoSkill)
+        public async Task<ActionResult<SkillReadDTO>> PostSkill(SkillCreateDTO dtoSkill)
         {
             var domainSkill = _mapper.Map<Skill>(dtoSkill);
             await _service.AddAsync(domainSkill, dtoSkill.Users.ToList(), dtoSkill.Projects.ToList());
