@@ -13,13 +13,15 @@ Lagalt is a project management platform designed to connect individuals in creat
 ## Installation Instructons
 
 ### Website
+1. Navigate to `Lagalt/frontend/lagalt`
+2. Run `ng serve --open` in a terminal
 
 ### API (Dev mode)
 
 1. Install PostgreSQL and set up a server on localhost
 2. In the environment variables for your pc account, add a new variable
    `CONNECTION_STRING`, with your PostgreSQL connection string as value
-3. Open Lagalt/backend/LagaptAPI/LagaltAPI.sln in Visual Studio 2019
+3. Open `Lagalt/backend/LagaptAPI/LagaltAPI.sln` in Visual Studio 2019
 4. Run `update-database` in the package manager console
 
 ## Technical
