@@ -2,6 +2,14 @@
 
 Lagalt is a project management platform designed to connect individuals in creative fields with projects that need their specific skill sets.
 
+## The Team
+
+- [Edlix](https://github.com/Edlix)
+- [Emil Onsøyen](https://github.com/emilons)
+- [lassoer](https://github.com/lassoer)
+- [singh1999](https://github.com/singh1999)
+- [zamfe](https://github.com/zamFe)
+
 ## Features
 
 ### Create and join projects withing your field
