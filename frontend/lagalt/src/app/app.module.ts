@@ -58,7 +58,7 @@ import { MyProjectsListOfProjectsItemComponent } from './components/my-projects-
     AdminGiveAccessPage,
     MyProjectsComponent,
     MyProjectsListOfProjectsComponent,
-    MyProjectsListOfProjectsItemComponent
+    MyProjectsListOfProjectsItemComponent,
   ],
   imports: [
     BrowserModule,

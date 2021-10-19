@@ -1,34 +1,47 @@
-<div class="popup">
-  <ng-template #content let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Apply to join project: {{projectName}}</h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="check">
-      <mat-checkbox class="example-margin">
-       <h5>
-        I acknowledge that the projectleader can see <br/>  my username!
-       </h5>
-      </mat-checkbox>
-    </div>
-    <div class="modal-body">
-      <form [formGroup] = "textAreaForm">
-        <div  class="sub-heading">
-          <h6>
-            Motivation to join the project
-          </h6>
-        </div>
-        <textarea class ="text-area" formControlName="textArea"></textarea>
-     </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn" (click)="modal.close('Apply click')">Apply</button>
-    </div>
-  </ng-template>
 
-  <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Apply to join project</button>
-
-  <hr>
+<div *ngIf="this.userRole === 'admin', else isUser">
+  <div class="popup">
+    <ng-template #content let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Apply to join project: {{projectName}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="check">
+        <mat-checkbox class="example-margin">
+         <h5>
+          I acknowledge that the projectleader can see <br/>  my username!
+         </h5>
+        </mat-checkbox>
+      </div>
+      <div class="modal-body">
+        <form [formGroup] = "textAreaForm">
+          <div  class="sub-heading">
+            <h6>
+              Motivation to join the project
+            </h6>
+          </div>
+          <textarea class ="text-area" formControlName="textArea"></textarea>
+       </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" (click)="modal.close('Apply click')">Apply</button>
+      </div>
+    </ng-template>
+  
+    <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Apply to join project</button>
+  
+    <hr>
+  </div>
 </div>
+<ng-template #isUser>
+  <div *ngIf="this.userRole === 'user', else isGuest">
+    <h1>IKKE TILGANG RIP</h1>
+  </div>
+</ng-template>
+<ng-template #isGuest>
+  <div>
+    <h1>GUEST</h1>
+  </div>
+</ng-template>
