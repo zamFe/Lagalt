@@ -164,8 +164,7 @@ namespace LagaltAPI.Controllers
             if (!_projectService.EntityExists(projectId))
                 return NotFound();
 
-            var domainProject = await _projectService.GetByIdAsync(projectId);
-            _mapper.Map<ProjectEditDTO, Project>(dtoProject, domainProject);
+            var domainProject = _mapper.Map<Project>(dtoProject);
 
             try
             {
