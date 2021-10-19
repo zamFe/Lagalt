@@ -71,6 +71,7 @@ export class ProjectService {
             });
     }
 
+
     public getProjectById(id: number): Subscription {
         return this.http.get<Project>(`${API_URL}/${id}`)
             .subscribe((project: Project) => {

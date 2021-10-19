@@ -12,6 +12,9 @@ export class LoginButtonComponent implements OnInit {
   ngOnInit(): void {}
 
   loginWithRedirect(): void {
-    this.auth.loginWithRedirect();
+    //this.auth.loginWithRedirect();
+    this.auth.loginWithRedirect({appState: {
+      target: "profile"
+    }});
   }
 }
