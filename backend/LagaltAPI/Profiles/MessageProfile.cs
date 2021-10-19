@@ -6,11 +6,11 @@ namespace LagaltAPI.Profiles
 {
     public class MessageProfile : Profile
     {
+        // Constructor.
         public MessageProfile()
         {
-            CreateMap<Message, MessageCreateDTO>().ReverseMap();
-
-            CreateMap<Message, MessageReadDTO>().ReverseMap();
+            CreateMap<Message, MessageCreateDTO>();
+            CreateMap<Message, MessageReadDTO>();
         }
     }
 }

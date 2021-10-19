@@ -6,9 +6,10 @@ namespace LagaltAPI.Profiles
 {
     public class ProfessionProfile : Profile
     {
+        // Constructor.
         public ProfessionProfile()
         {
-            CreateMap<Profession, ProfessionReadDTO>().ReverseMap();
+            CreateMap<Profession, ProfessionReadDTO>();
         }
     }
 }
