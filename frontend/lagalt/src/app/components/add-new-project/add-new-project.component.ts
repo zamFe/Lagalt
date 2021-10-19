@@ -3,8 +3,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { Profession } from 'src/app/models/profession.model';
+import { Project } from 'src/app/models/project.model';
 import { ProfessionService } from 'src/app/services/profession.service';
 import { ProjectService } from 'src/app/services/project.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-add-new-project',
@@ -22,6 +24,7 @@ export class AddNewProjectComponent implements OnInit, OnDestroy {
 
   constructor(private readonly professionService: ProfessionService, 
     private readonly projectService: ProjectService,
+    private readonly userService: UserService,
     private modalService: NgbModal,
     private fb : FormBuilder) {
     this.professions$ = this.professionService.professions$.subscribe((professions: Profession[]) => {
@@ -41,17 +44,19 @@ export class AddNewProjectComponent implements OnInit, OnDestroy {
   }
 
   submitForm() {
-    // ADD CURRENT USER as well, implement user service and add user object
+    let userId = 0;
+    this.userService.user$.subscribe(user => userId = user.id).unsubscribe();
     let selectedProfessionId: number = this.professions.find(e => e.name === this.createProjectForm.value.profession)!.id
-    let newProject = {
+    let newProject: Object = {
       title: this.createProjectForm.value.title,
       description: this.createProjectForm.value.description,
       image: this.createProjectForm.value.imageUrl,
-      profession: selectedProfessionId
-      // ADD USER HERE
+      profession: selectedProfessionId,
+      users: [userId],
+      administrators: [userId],
+      progress: 'founding'
     }
-    console.log(newProject)
-    //this.projectService.postProject(newProject)   // Create a postProject method in projectService
+    this.projectService.postProject(newProject)
     this.modalOpen = false;
   }
 

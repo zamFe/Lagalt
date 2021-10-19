@@ -18,14 +18,24 @@ export class SkillService {
     this.skills$.next(skills)
   }
 
+  public addSkill(skill: Skill): void {
+    const skills = [...this.skills$.getValue(), skill]
+    this.setSkills(skills)
+}
 
   // API CRUD calls
   public getSkills(): Subscription {
-
-    //set professions as enum in storage here.
     return this.http.get<Skill[]>(API_URL)
         .subscribe((skills: Skill[]) => {
             this.setSkills(skills)
         });
   }
+  
+  public postSkill(skill: Object): Subscription {
+    return this.http.post<Skill>(API_URL, skill)
+      .subscribe((response) => {
+        this.addSkill(response)
+      })
+  }
+    
 }
