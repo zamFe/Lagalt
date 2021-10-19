@@ -77,7 +77,8 @@ namespace LagaltAPI.Services
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Project>> GetUserProjectsAsync(int userId)
+        public async Task<IEnumerable<Project>> GetUserProjectsPageAsync(
+            int userId, PageRange range)
         {
             return await _context.Projects
                 .Include(project => project.Messages)
@@ -85,6 +86,8 @@ namespace LagaltAPI.Services
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
                 .Where(project => project.Users.Any(user => user.Id == userId))
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
                 .ToListAsync();
         }
 
