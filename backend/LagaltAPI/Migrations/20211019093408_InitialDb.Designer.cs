@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LagaltAPI.Migrations
 {
     [DbContext(typeof(LagaltContext))]
-    [Migration("20211013082600_InitialDb")]
+    [Migration("20211019093408_InitialDb")]
     partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,7 +18,7 @@ namespace LagaltAPI.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.10")
+                .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("LagaltAPI.Models.Domain.Application", b =>
@@ -179,7 +179,7 @@ namespace LagaltAPI.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int[]>("Administrators")
+                    b.Property<int[]>("AdministratorIds")
                         .HasColumnType("integer[]");
 
                     b.Property<string>("Description")
@@ -218,7 +218,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 1,
-                            Administrators = new[] { 1 },
+                            AdministratorIds = new[] { 1 },
                             Description = "I've always wanted to travel by submarine and I've also got to make new songs",
                             Image = "https://upload.wikimedia.org/wikipedia/commons/d/d8/Submarine_Vepr_by_Ilya_Kurganov_crop.jpg",
                             ProfessionId = 1,
@@ -228,7 +228,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 2,
-                            Administrators = new[] { 4 },
+                            AdministratorIds = new[] { 4 },
                             Description = "Some call them movies and some call them films. But what if both were correct?",
                             ProfessionId = 2,
                             Progress = "Founding",
@@ -237,7 +237,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 3,
-                            Administrators = new[] { 5 },
+                            AdministratorIds = new[] { 5 },
                             Description = "What could go wrong?",
                             ProfessionId = 3,
                             Progress = "Completed",
@@ -247,7 +247,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 4,
-                            Administrators = new[] { 6 },
+                            AdministratorIds = new[] { 6 },
                             Description = "It was better before",
                             ProfessionId = 3,
                             Progress = "Stalled",

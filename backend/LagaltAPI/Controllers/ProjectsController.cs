@@ -38,14 +38,14 @@ namespace LagaltAPI.Controllers
         /// </returns>
         // GET: api/Projects/5
         [HttpGet("{projectId}")]
-        public async Task<ActionResult<ProjectReadDTO>> GetProject(int projectId)
+        public async Task<ActionResult<ProjectCompleteReadDTO>> GetProject(int projectId)
         {
             try
             {
                 var domainProject = await _projectService.GetByIdAsync(projectId);
 
                 if (domainProject != null)
-                    return _mapper.Map<ProjectReadDTO>(domainProject);
+                    return _mapper.Map<ProjectCompleteReadDTO>(domainProject);
                 else
                     return NotFound();
             }
@@ -59,59 +59,58 @@ namespace LagaltAPI.Controllers
         ///     Fetches projects from the database according to the specified offset and limit.
         /// </summary>
         /// <param name="offset"> Specifies the index of the first project to be included. </param>
-        /// <param name="limit"> Specifies how many projects to fetch. </param>
+        /// <param name="limit"> Specifies how many projects to include. </param>
         /// <returns>
         ///     A page containing all available read-specific DTOs within the specified range.
         /// </returns>
         // GET api/Projects?offset=5&limit=5
         [HttpGet]
-        public async Task<ActionResult<Page<ProjectReadDTO>>> GetProjects(
+        public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetProjects(
             [FromQuery] int offset, [FromQuery] int limit)
         {
-            int validOffset = offset < 1 ? 1 : offset;
-            int validLimit = limit < 1 || limit > 10 ? 10 : limit;
-
-            var projects = _mapper.Map<List<ProjectReadDTO>>(
-                await _projectService.GetOffsetPageAsync(
-                    startId: validOffset,
-                    pageSize: validLimit
-                ));
-
+            var range = new PageRange(offset, limit);
+            var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
+                await _projectService.GetPageAsync(range));
             var baseUri = _uriService.GetBaseUrl() + "api/Projects";
-            var nextUri = projects.Count < validLimit
-                ? ""
-                : baseUri + $"?offset={validOffset + validLimit}&limit={validLimit}";
-            var previousUri = validOffset == 1
-                ? ""
-                : baseUri + $"?offset={validOffset - validLimit}&limit={validLimit}";
-
-            return new Page<ProjectReadDTO>(nextUri, previousUri, projects);
+            return new Page<ProjectCompactReadDTO>(projects, range, baseUri);
         }
 
         /// <summary> Generates recommended projects for a user. </summary>
         /// <param name="userId"> The id of the user to get recommended projects for. </param>
+        /// <param name="offset"> Specifies the index of the first project to be included. </param>
+        /// <param name="limit"> Specifies how many projects to include. </param>
         /// <returns>
         ///     A page containing all available read-specific DTOs for the user.
         /// </returns>
-        // GET: api/Projects/Recommended/User/5
-        [HttpGet("Recommended/User/{userId}")]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetRecommendedProjects(
-            int userId)
+        // GET: api/Projects/Recommended/5
+        [HttpGet("Recommended/{userId}")]
+        public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetRecommendedProjects(
+            int userId, [FromQuery] int offset, [FromQuery] int limit)
         {
-            return _mapper.Map<List<ProjectReadDTO>>(
-                await _projectService.GetRecommendedProjectsAsync(userId));
+            var range = new PageRange(offset, limit);
+            var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
+                await _projectService.GetRecommendedProjectsPageAsync(userId, range));
+            var baseUri = _uriService.GetBaseUrl() + $"api/Projects/Recommended/{userId}";
+            return new Page<ProjectCompactReadDTO>(projects, range, baseUri);
         }
 
         /// <summary> Fetches a user's projects from the database. </summary>
         /// <param name="userId"> The id of the user to retrieve projects for. </param>
+        /// <param name="offset"> Specifies the index of the first project to be included. </param>
+        /// <param name="limit"> Specifies how many projects to include. </param>
         /// <returns>
         ///     An enumerable containing read-specific DTOs of the projects joined by the user.
         /// </returns>
         // GET: api/Projects/User/5
         [HttpGet("User/{userId}")]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetUserProjects(int userId)
+        public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetUserProjects(
+            int userId, [FromQuery] int offset, [FromQuery] int limit)
         {
-            return _mapper.Map<List<ProjectReadDTO>>(await _projectService.GetUserProjectsAsync(userId));
+            var range = new PageRange(offset, limit);
+            var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
+                await _projectService.GetUserProjectsPageAsync(userId, range));
+            var baseUri = _uriService.GetBaseUrl() + $"api/Projects/User/{userId}";
+            return new Page<ProjectCompactReadDTO>(projects, range, baseUri);
         }
 
         /// <summary> Adds a new project entry to the database. </summary>
@@ -124,14 +123,14 @@ namespace LagaltAPI.Controllers
         /// </returns>
         // POST: api/Projects
         [HttpPost]
-        public async Task<ActionResult<ProjectCreateDTO>> PostProject(ProjectCreateDTO dtoProject)
+        public async Task<ActionResult<ProjectCompleteReadDTO>> PostProject(ProjectCreateDTO dtoProject)
         {
             Project domainProject = _mapper.Map<Project>(dtoProject);
-            await _projectService.AddAsync(domainProject, dtoProject.Users.ToList(), dtoProject.Skills.ToList());
+            await _projectService.AddAsync(domainProject, dtoProject.UserIds.ToList(), dtoProject.SkillIds.ToList());
 
             return CreatedAtAction("GetProject",
                 new { projectId = domainProject.Id },
-                _mapper.Map<ProjectReadDTO>(domainProject));
+                _mapper.Map<ProjectCompleteReadDTO>(domainProject));
         }
 
         /// <summary>

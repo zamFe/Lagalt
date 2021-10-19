@@ -11,10 +11,17 @@ namespace LagaltAPI.Models.Wrappers
         public IEnumerable<T> Results { get; set; }
 
         // Constructor.
-        public Page(string next, string previous, IEnumerable<T> data)
+        public Page(ICollection<T> data, PageRange filter, string baseUri)
         {
-            Next = next;
-            Previous = previous;
+            // TODO - Fix next page sometimes being empty.
+            //        Have to instead get total valid results,
+            //        and then see if there is enough for another page
+            Next = data.Count < filter.Limit
+                ? ""
+                : baseUri + $"?offset={filter.Offset + filter.Limit}&limit={filter.Limit}";
+            Previous = filter.Offset == 1
+                ? ""
+                : baseUri + $"?offset={filter.Offset - filter.Limit}&limit={filter.Limit}";
             Results = data;
         }
     }

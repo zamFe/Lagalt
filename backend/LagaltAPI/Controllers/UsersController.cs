@@ -95,7 +95,7 @@ namespace LagaltAPI
         /// </returns>
         // POST: api/Users
         [HttpPost]
-        public async Task<ActionResult<UserCreateDTO>> PostUser(UserCreateDTO dtoUser)
+        public async Task<ActionResult<UserCompleteReadDTO>> PostUser(UserCreateDTO dtoUser)
         {
             User domainUser = _mapper.Map<User>(dtoUser);
             await _service.AddAsync(domainUser, dtoUser.Skills.ToList());

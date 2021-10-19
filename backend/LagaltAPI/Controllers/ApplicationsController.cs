@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Application;
+using LagaltAPI.Models.Wrappers;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,12 +16,15 @@ namespace LagaltAPI.Controllers
     public class ApplicationsController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly ApplicationService _service;
+        private readonly ApplicationService _applicationService;
+        private readonly UriService _uriService;
 
-        public ApplicationsController(IMapper mapper, ApplicationService service)
+        public ApplicationsController(
+            IMapper mapper, ApplicationService applicationService, UriService uriService)
         {
             _mapper = mapper;
-            _service = service;
+            _applicationService = applicationService;
+            _uriService = uriService;
         }
 
         /// <summary> Fetches an application from the database based on application id. </summary>
@@ -35,7 +39,7 @@ namespace LagaltAPI.Controllers
         {
             try
             {
-                var domainApplication = await _service.GetByIdAsync(applicationId);
+                var domainApplication = await _applicationService.GetByIdAsync(applicationId);
 
                 if (domainApplication != null)
                     return _mapper.Map<ApplicationReadDTO>(domainApplication);
@@ -48,16 +52,26 @@ namespace LagaltAPI.Controllers
             }
         }
 
-        /// <summary> Fetches applications from the database based on project id. </summary>
+        /// <summary>
+        ///     Fetches applications from the database based on project id,
+        ///     according to the specified offset and limit.
+        /// </summary>
         /// <param name="projectId"> The id of the project to retrieve applications from. </param>
+        /// <param name="offset">
+        ///     Specifies the index of the first application to be included.
+        /// </param>
+        /// <param name="limit"> Specifies how many applications to include. </param>
         /// <returns> An enumerable containing read-specific DTOs of the applications. </returns>
-        // GET: api/Applications/Project/5
+        // GET: api/Applications/Project/5?offset=5&limit=5
         [HttpGet("Project/{projectId}")]
-        public async Task<ActionResult<IEnumerable<ApplicationReadDTO>>> GetProjectApplications(
-            int projectId)
+        public async Task<ActionResult<Page<ApplicationReadDTO>>> GetProjectApplications(
+            int projectId, [FromQuery] int offset, [FromQuery] int limit)
         {
-            return _mapper.Map<List<ApplicationReadDTO>>(
-                await _service.GetByProjectIdAsync(projectId));
+            var filter = new PageRange(offset, limit);
+            var applications = _mapper.Map<List<ApplicationReadDTO>>(
+                await _applicationService.GetPageByProjectIdAsync(projectId, filter));
+            var baseUri = _uriService.GetBaseUrl() + $"api/Applications/Project/{projectId}";
+            return new Page<ApplicationReadDTO>(applications, filter, baseUri);
         }
 
         /// <summary> Adds a new application entry to the database. </summary>
@@ -78,7 +92,7 @@ namespace LagaltAPI.Controllers
             }
 
             var domainApplication = _mapper.Map<Application>(dtoApplication);
-            domainApplication = await _service.AddAsync(domainApplication);
+            domainApplication = await _applicationService.AddAsync(domainApplication);
 
             return CreatedAtAction("GetApplication",
                 new { applicationId = domainApplication.Id },

@@ -6,9 +6,11 @@ namespace LagaltAPI.Profiles
 {
     public class ApplicationProfile : Profile
     {
+        // Constructor.
         public ApplicationProfile()
         {
             CreateMap<Application, ApplicationReadDTO>();
+
             CreateMap<ApplicationCreateDTO, Application>();
         }
     }

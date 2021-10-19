@@ -1,5 +1,6 @@
 ﻿using LagaltAPI.Context;
 using LagaltAPI.Models.Domain;
+using LagaltAPI.Models.Wrappers;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,11 +34,13 @@ namespace LagaltAPI.Services
                 .FirstAsync();
         }
 
-        public async Task<IEnumerable<Message>> GetByProjectIdAsync(int projectId)
+        public async Task<IEnumerable<Message>> GetPageByProjectIdAsync(int projectId, PageRange range)
         {
             return await _context.Messages
                 .Include(message => message.User)
                 .Where(message => message.ProjectId == projectId)
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
                 .ToListAsync();
         }
     }

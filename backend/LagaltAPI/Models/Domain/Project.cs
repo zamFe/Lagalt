@@ -23,7 +23,7 @@ namespace LagaltAPI.Models.Domain
         public ICollection<User> Users { get; set; }
 
         // Data.
-        public int[] Administrators { get; set; }
+        public int[] AdministratorIds { get; set; }
 
         [MaxLength(40), Required]
         public string Title { get; set; }

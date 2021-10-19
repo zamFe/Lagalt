@@ -59,11 +59,6 @@ namespace LagaltAPI.Controllers
             }
         }
 
-
-        // TODO - Add support for getting a range of skills (offset + limit).
-        //        Would this replace GetSkills?
-
-
         /// <summary> Adds a new skill entry to the database. </summary>
         /// <param name="dtoSkill"> A creation-specific DTO representing the new skill. </param>
         /// <returns>
@@ -72,7 +67,7 @@ namespace LagaltAPI.Controllers
         /// </returns>
         // POST: api/Skills
         [HttpPost]
-        public async Task<ActionResult<SkillCreateDTO>> PostSkill(SkillCreateDTO dtoSkill)
+        public async Task<ActionResult<SkillReadDTO>> PostSkill(SkillCreateDTO dtoSkill)
         {
             var domainSkill = _mapper.Map<Skill>(dtoSkill);
             await _service.AddAsync(domainSkill, dtoSkill.Users.ToList(), dtoSkill.Projects.ToList());
