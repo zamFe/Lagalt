@@ -12,6 +12,8 @@ namespace LagaltAPI.Profiles
             CreateMap<Project, ProjectReadDTO>()
                 .ForMember(pdto => pdto.Skills, opt => opt
                 .MapFrom(p => p.Skills.ToList()))
+                .ForMember(pdto => pdto.AdministratorIds, opt => opt
+                .MapFrom(p => p.Administrators))
                 .ReverseMap();
 
             CreateMap<Project, ProjectEditDTO>()
@@ -31,8 +33,6 @@ namespace LagaltAPI.Profiles
                 .ForMember(p => p.Users, opt => opt
                 .Ignore())
                 .ForMember(p => p.Skills, opt => opt
-                .Ignore())
-                .ForMember(p => p.Administrators, opt => opt
                 .Ignore());
         }
     }

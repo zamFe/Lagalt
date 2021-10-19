@@ -33,6 +33,9 @@ namespace LagaltAPI.Services
 
             newProject.Users = users;
             newProject.Skills = skills;
+            newProject.Profession = await _context.Professions
+                .Where(p => p.Id == newProject.ProfessionId)
+                .FirstAsync();
 
             _context.Projects.Add(newProject);
             await _context.SaveChangesAsync();
