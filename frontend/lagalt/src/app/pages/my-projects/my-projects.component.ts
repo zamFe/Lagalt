@@ -13,7 +13,7 @@ export class MyProjectsComponent implements OnInit{
   constructor(private readonly projectService: ProjectService, private readonly skillsService: SkillService) {  }
 
   ngOnInit(): void {
-    this.projectService.getProjects();
+    this.projectService.getProjectsByUserId(5);
     this.skillsService.getSkills();
 
   }
