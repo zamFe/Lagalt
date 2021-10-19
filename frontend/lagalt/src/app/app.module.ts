@@ -33,6 +33,7 @@ import { MyProjectsComponent } from './pages/my-projects/my-projects.component';
 import { MyProjectsListOfProjectsComponent } from './components/my-projects-list-of-projects/my-projects-list-of-projects.component';
 import { MyProjectsListOfProjectsItemComponent } from './components/my-projects-list-of-projects-item/my-projects-list-of-projects-item.component';
 import { ProjectApplicationsComponent } from './components/project-applications/project-applications.component';
+import { GetRecommendedComponent } from './components/get-recommended/get-recommended.component';
 
 
 
@@ -61,6 +62,7 @@ import { ProjectApplicationsComponent } from './components/project-applications/
     MyProjectsListOfProjectsComponent,
     MyProjectsListOfProjectsItemComponent,
     ProjectApplicationsComponent,
+    GetRecommendedComponent,
   ],
   imports: [
     BrowserModule,
