@@ -121,7 +121,7 @@ namespace LagaltAPI
         ///     Thrown when the user is found in the database but not able to be updated.
         /// </exception>
         // PUT: api/Users/5
-        [HttpPut("{id}")]
+        [HttpPut("{userId}")]
         public async Task<IActionResult> PutUser(int userId, UserEditDTO dtoUser)
         {
             if (userId != dtoUser.Id)
@@ -130,7 +130,9 @@ namespace LagaltAPI
             if (!_service.EntityExists(userId))
                 return NotFound();
 
-            User domainUser = _mapper.Map<User>(dtoUser);
+
+            var domainUser = await _service.GetByIdAsync(userId);
+            _mapper.Map<UserEditDTO, User>(dtoUser, domainUser);
 
             try
             {
