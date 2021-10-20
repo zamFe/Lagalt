@@ -1,7 +1,9 @@
 <div class="chat">
   <ul class="chatlist">
     <li *ngFor="let msg of messages">
-      <p style="font-weight: bold;">{{msg.user.username}} says: {{msg.content}} ---- Posted at: {{msg.postedTime}} </p>
+      <div style="font-weight:bold;">{{msg.content}}</div>
+      <div>Posted by: {{msg.user.username}} at: {{msg.postedTime}}  </div>
+      <p style="font-weight: bold;"> </p>
     </li>
   </ul>
   <form #newMessageForm="ngForm" (ngSubmit)="postMessage(newMessageForm)">

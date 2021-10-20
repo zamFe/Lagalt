@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UserComplete } from 'src/app/models/user/user-complete.model'
+import { UserComplete } from 'src/app/models/user/user-complete.model';
 import { NgForm, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '@auth0/auth0-angular';
@@ -26,7 +26,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   }
   public isChecked = true;
   public color = 'accent';
-  
+
 
   constructor(private readonly userService : UserService, public auth: AuthService) {
     this.user$ = this.userService.user$.subscribe((user: UserComplete) => {
@@ -38,32 +38,27 @@ export class ProfilePage implements OnInit, OnDestroy {
     this.auth.user$.subscribe(
       (profile) => {
         (this.user.username = JSON.parse(JSON.stringify(profile?.nickname, null, 2)))
-        console.log(this.user);
-        
-        this.userService.userExists(this.user.username).pipe(finalize(() => {    
-        })).subscribe(res => {    
+
+        this.userService.userExists(this.user.username).pipe(finalize(() => {
+        })).subscribe(res => {
           if(res){
             this.userService.getUserByUsername(this.user.username)
          }
-        }, () => {    
+        }, () => {
           this.userService.postUserByUsername(this.user.username)
-        });  
-        console.log(profile)
+        });
       }
     );
-    this.auth.idTokenClaims$.subscribe(data =>
-      console.log(data))
     //this.userService.getUserById(1) // CHANGE TO IMPLEMENT ON LOGIN
   }
-  
-    
+
+
   ngOnDestroy(): void {
     this.user$.unsubscribe();
   }
 
   //Changes the hidden mode button from true to false or false to true
   changed(){
-    console.log(this.isChecked);
   }
 
 

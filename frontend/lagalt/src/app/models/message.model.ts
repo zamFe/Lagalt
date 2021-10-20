@@ -17,5 +17,5 @@ export interface MessagePost{
   userId: number,
   projectId : number,
   content : string,
-  postedTime : string,
+  postedTime : Date,
 }

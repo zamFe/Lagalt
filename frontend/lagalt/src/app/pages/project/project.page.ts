@@ -44,8 +44,9 @@ export class ProjectPage implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.projectService.getProjectById(5)
+    this.projectService.getProjectById(1)
     this.messageService.getMessagesByProjectId(1)
+
   }
 
   ngOnDestroy(): void {

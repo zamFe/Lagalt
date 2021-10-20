@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Message, MessageResponse } from 'src/app/models/message.model';
+import { Message, MessagePost, MessageResponse } from 'src/app/models/message.model';
 
 const API_URL = `${environment.apiUrl}Messages`;
 
@@ -31,7 +31,7 @@ export class MessageService {
         });
   }
 
-  public postMessage(message: Object): Subscription {
+  public postMessage(message: MessagePost): Subscription {
     return this.http.post<Message>(API_URL, message)
       .subscribe((message: Message) => {
         this.addMessage(message)
