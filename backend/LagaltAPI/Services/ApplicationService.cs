@@ -31,10 +31,12 @@ namespace LagaltAPI.Services
 
         public async Task<Application> AddAsync(Application newApplication)
         {
+            // TODO - fix skills missing in returned object.
+            newApplication.User = await _context.Users
+                .FindAsync(newApplication.UserId);
             _context.Applications.Add(newApplication);
             await _context.SaveChangesAsync();
-                newApplication.User = await _context.Users.FindAsync(newApplication.UserId);
-                return newApplication;
+            return newApplication;
         }
 
         public async Task<Application> GetByIdAsync(int applicationId)
@@ -46,13 +48,13 @@ namespace LagaltAPI.Services
         }
 
         public async Task<IEnumerable<Application>> GetPageByProjectIdAsync(
-            int projectId, PageRange filter)
+            int projectId, PageRange range)
         {
             return await _context.Applications
                 .Include(application => application.User.Skills)
                 .Where(application => application.ProjectId == projectId)
-                .Skip(filter.Offset - 1)
-                .Take(filter.Limit)
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
                 .OrderByDescending(application => application.Id)
                 .ToListAsync();
         }

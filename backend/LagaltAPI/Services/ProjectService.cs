@@ -23,20 +23,19 @@ namespace LagaltAPI.Services
             return _context.Projects.Any(project => project.Id == projectId);
         }
 
-        public async Task<Project> AddAsync(Project newProject, List<int> UserIds, List<int> SkillIds)
+        public async Task<Project> AddAsync(
+            Project newProject, List<int> userIds, List<int> skillIds)
         {
-            List<User> users = await _context.Users
-                .Where(u => UserIds.Any(id => id == u.Id))
-                .ToListAsync();
-            List<Skill> skills = await _context.Skills
-                .Where(s => SkillIds.Any(id => id == s.Id))
+            newProject.Users = await _context.Users
+                .Where(user => userIds.Any(userId => userId == user.Id))
                 .ToListAsync();
 
-            newProject.Users = users;
-            newProject.Skills = skills;
+            newProject.Skills = await _context.Skills
+                .Where(skill => skillIds.Any(skillId => skillId == skill.Id))
+                .ToListAsync();
+
             newProject.Profession = await _context.Professions
-                .Where(p => p.Id == newProject.ProfessionId)
-                .FirstAsync();
+                .FindAsync(newProject.ProfessionId);
 
             _context.Projects.Add(newProject);
             await _context.SaveChangesAsync();
@@ -52,7 +51,7 @@ namespace LagaltAPI.Services
                 .Include(project => project.Profession)
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
-                .OrderByDescending(application => application.Id)
+                .OrderByDescending(project => project.Id)
                 .ToListAsync();
         }
 
@@ -71,11 +70,13 @@ namespace LagaltAPI.Services
                 .Include(project => project.Users)
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
-                .Where(project => !project.Users.Any(projectUser => projectUser.Id == userId))
-                .Where(project => project.Skills.Any(projectSkill => userSkillIds.Contains(projectSkill.Id)))
+                .Where(project => !project.Users.Any(projectUser =>
+                    projectUser.Id == userId))
+                .Where(project => project.Skills.Any(projectSkill =>
+                    userSkillIds.Contains(projectSkill.Id)))
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
-                .OrderByDescending(application => application.Id)
+                .OrderByDescending(project => project.Id)
                 .ToListAsync();
         }
 
@@ -90,7 +91,7 @@ namespace LagaltAPI.Services
                 .Where(project => project.Users.Any(user => user.Id == userId))
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
-                .OrderByDescending(application => application.Id)
+                .OrderByDescending(project => project.Id)
                 .ToListAsync();
         }
 
