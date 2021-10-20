@@ -94,4 +94,8 @@ export class ProfilePage implements OnInit, OnDestroy {
     this.user.description = handleDescriptionForm.value.description
     // RUN PUT USER API CALL so we can update description
   }
+
+  saveUser() {
+    //this.userService.putUser(this.user)
+  }
 }

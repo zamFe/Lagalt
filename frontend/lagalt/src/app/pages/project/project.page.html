@@ -31,8 +31,8 @@
         <h3>
           Skills needed:
         </h3>
-        <h5>
-        {{project.skills}}
+        <h5 *ngFor="let skill of project.skills">
+        {{skill.name}}
         </h5>
       </div>
     </div>
