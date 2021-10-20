@@ -1,18 +1,23 @@
 using Google.Apis.Auth.AspNetCore3;
+using LagaltAPI.Auth;
 using LagaltAPI.Context;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace LagaltAPI
 {
@@ -54,6 +59,7 @@ namespace LagaltAPI
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 string connStr;
                 if (env == "Development")
+                    // Use Local Variable during development.
                     connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
                 else
                 {
@@ -88,19 +94,25 @@ namespace LagaltAPI
                 return new UriService(baseUri);
             });
 
-            // TODO - Check if working.
+            //Auth0
             services
-                .AddAuthentication(options =>
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
-                    options.DefaultChallengeScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
-                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                })
-                .AddCookie()
-                .AddGoogleOpenIdConnect(options =>
-                {
-                    options.ClientId = Environment.GetEnvironmentVariable(_clientId);
-                    options.ClientSecret = Environment.GetEnvironmentVariable(_clientSecret);
+                    options.Authority = $"https://dev--rmchv2w.eu.auth0.com/";
+                    options.Audience = "https://lagalt-api-f.herokuapp.com/";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = ClaimTypes.NameIdentifier
+                    };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("read:users", policy => policy.Requirements.Add(new HasScopeRequirement("read:users", $"https://dev--rmchv2w.eu.auth0.com/")));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
             services.AddSwaggerGen(c =>
             {
@@ -135,6 +147,7 @@ namespace LagaltAPI
 
             app.UseCors(_clientOrigin);
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => endpoints.MapControllers());
