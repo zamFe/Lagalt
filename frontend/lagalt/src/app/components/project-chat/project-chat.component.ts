@@ -27,6 +27,7 @@ export class ProjectChatComponent implements OnInit, OnDestroy {
     content : '',
     postedTime : new Date
   }
+  
   public messagePost : MessagePost = {
     userId: 0,
     projectId: 0,
@@ -61,8 +62,8 @@ export class ProjectChatComponent implements OnInit, OnDestroy {
     this.messagePost.postedTime = new Date
     this.messagePost.content = newMessageForm.value.message
 
-  //console.log(this.messagePost);
-  //this.messageService.postMessage(this.messagePost)
+  console.log(this.messagePost);
+  this.messageService.postMessage(this.messagePost)
   }
 }
 
