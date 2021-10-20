@@ -59,8 +59,18 @@ namespace LagaltAPI.Services
                 .ToListAsync();
         }
 
-        public async Task UpdateAsync(Application updatedApplication)
+        public async Task UpdateAsync(Application updatedApplication, bool newlyAccepted = false)
         {
+            if (newlyAccepted)
+            {
+                var user = await _context.Users
+                    .Include(user => user.Projects)
+                    .FirstAsync(user => user.Id == updatedApplication.UserId);
+                var project = await _context.Projects.FindAsync(updatedApplication.ProjectId);
+                user.Projects.Add(project);
+                _context.Entry(user).State = EntityState.Modified;
+            }
+
             _context.Entry(updatedApplication).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }

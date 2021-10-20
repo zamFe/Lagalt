@@ -129,11 +129,13 @@ namespace LagaltAPI.Controllers
                 return NotFound();
 
             var domainApplication = await _applicationService.GetByIdAsync(applicationId);
+            var newlyAccepted = dtoApplication.Accepted && !domainApplication.Accepted;
+
             _mapper.Map<ApplicationEditDTO, Application>(dtoApplication, domainApplication);
 
             try
             {
-                await _applicationService.UpdateAsync(domainApplication);
+                await _applicationService.UpdateAsync(domainApplication, newlyAccepted);
             }
             catch (DbUpdateConcurrencyException)
             {
