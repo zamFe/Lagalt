@@ -91,7 +91,7 @@ namespace LagaltAPI.Controllers
             if(_applicationService.UserHasAppliedToProject(
                 dtoApplication.UserId, dtoApplication.ProjectId))
             {
-                return BadRequest("Existing application for user found in the projcet");
+                return BadRequest("User has already applied to project");
             }
 
             var domainApplication = _mapper.Map<Application>(dtoApplication);
@@ -130,7 +130,7 @@ namespace LagaltAPI.Controllers
 
             var domainApplication = await _applicationService.GetByIdAsync(applicationId);
             if (domainApplication.Accepted)
-                return BadRequest();
+                return BadRequest("Application has already been accepted");
             var newlyAccepted = dtoApplication.Accepted && !domainApplication.Accepted;
             _mapper.Map<ApplicationEditDTO, Application>(dtoApplication, domainApplication);
 
