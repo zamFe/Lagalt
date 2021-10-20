@@ -2,6 +2,7 @@
 using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.User;
 using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -29,6 +30,7 @@ namespace LagaltAPI
         /// <summary> Fetches all available users from the database. </summary>
         /// <returns> An enumerable containing read-specific DTOs of the users. </returns>
         // GET: api/Users
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserCompleteReadDTO>>> GetUsers()
         {
