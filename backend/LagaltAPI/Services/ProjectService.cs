@@ -24,7 +24,7 @@ namespace LagaltAPI.Services
         }
 
         public async Task<Project> AddAsync(
-            Project newProject, List<int> userIds, List<int> skillIds)
+            Project newProject, IEnumerable<int> userIds, IEnumerable<int> skillIds)
         {
             newProject.Users = await _context.Users
                 .Where(user => userIds.Any(userId => userId == user.Id))
@@ -106,8 +106,12 @@ namespace LagaltAPI.Services
                 .FirstAsync();
         }
 
-        public async Task UpdateAsync(Project updatedProject)
+        public async Task UpdateAsync(Project updatedProject, IEnumerable<int> skillIds)
         {
+            updatedProject.Skills = await _context.Skills
+                .Where(skill => skillIds.Any(skillId => skillId == skill.Id))
+                .ToListAsync();
+
             _context.Entry(updatedProject).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }

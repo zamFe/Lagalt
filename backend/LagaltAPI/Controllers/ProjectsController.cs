@@ -169,7 +169,7 @@ namespace LagaltAPI.Controllers
 
             try
             {
-                await _projectService.UpdateAsync(domainProject);
+                await _projectService.UpdateAsync(domainProject, dtoProject.Skills);
             }
             catch (DbUpdateConcurrencyException)
             {
