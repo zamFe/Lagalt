@@ -12,3 +12,10 @@ export interface Message{
   content: string,
   postedTime: Date,
 }
+
+export interface MessagePost{
+  userId: number,
+  projectId : number,
+  content : string,
+  postedTime : string,
+}

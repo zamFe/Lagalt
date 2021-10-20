@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Message } from 'src/app/models/message.model';
+import { Message, MessagePost } from 'src/app/models/message.model';
 import { MessageService } from 'src/app/services/message.service';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -23,6 +23,12 @@ export class ProjectChatComponent implements OnInit, OnDestroy {
     content : '',
     postedTime : new Date
   }
+  public messagePost : MessagePost = {
+    userId: 0,
+    projectId: 0,
+    content: '',
+    postedTime: ''
+  }
 
 
 
@@ -40,11 +46,14 @@ export class ProjectChatComponent implements OnInit, OnDestroy {
     this.messages$.unsubscribe()
   }
   postMessage(newMessageForm : NgForm){
-    // this.messageService.postMessage(newMessageForm)
-    //   this.message.content = newMessageForm.value.description
-    //   this.message.id = this.userService
-    //   this.message.postedTime = this.message.postedTime
-    //   this.message.user = this.userService
+    this.messageService.postMessage(newMessageForm)
+    this.messagePost.userId =
+    this.messagePost.projectId
+    this.messagePost.postedTime
+    this.messagePost.content = newMessageForm.value.message
+    // console.log(newMessageForm.value);
+    // console.log(newMessageForm.value.message);
+
 
   }
 
