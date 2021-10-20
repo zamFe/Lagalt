@@ -1,5 +1,7 @@
+using Google.Apis.Auth.AspNetCore3;
 using LagaltAPI.Context;
 using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +19,8 @@ namespace LagaltAPI
     public class Startup
     {
         private readonly string _clientOrigin = "Client Origin";
+        private readonly string _clientId = "CLIENT_ID";
+        private readonly string _clientSecret = "CLIENT_SECRET";
 
         // This method gets called by the runtime.
         // Use this method to add services to the container.
@@ -83,6 +87,20 @@ namespace LagaltAPI
                 var baseUri = request.Scheme + "://" + request.Host.ToUriComponent();
                 return new UriService(baseUri);
             });
+
+            // TODO - Check if working.
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultChallengeScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie()
+                .AddGoogleOpenIdConnect(options =>
+                {
+                    options.ClientId = Environment.GetEnvironmentVariable(_clientId);
+                    options.ClientSecret = Environment.GetEnvironmentVariable(_clientSecret);
+                });
 
             services.AddSwaggerGen(c =>
             {
