@@ -11,9 +11,13 @@ namespace LagaltAPI.Profiles
         {
             CreateMap<Project, ProjectCompleteReadDTO>();
             CreateMap<Project, ProjectCompactReadDTO>();
-            CreateMap<Project, ProjectEditDTO>();
 
-            CreateMap<ProjectCreateDTO, Project>();
+            CreateMap<ProjectCreateDTO, Project>()
+                .ForMember(p => p.Users, opt => opt
+                .Ignore())
+                .ForMember(p => p.Skills, opt => opt
+                .Ignore());
+            CreateMap<ProjectEditDTO, Project>();
         }
     }
 }
