@@ -85,4 +85,7 @@ export class UserService {
         this.setUserById(user)
       });
   }
+  public getTest() {
+    return this.http.get<UserComplete[]>(API_URL_USERS).subscribe(data => console.log(data))
+}
 }
