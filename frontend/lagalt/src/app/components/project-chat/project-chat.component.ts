@@ -6,6 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { UserCompact } from 'src/app/models/user/user-compact.model'
 import { NgForm } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
+import { UserComplete } from 'src/app/models/user/user-complete.model';
 
 
 @Component({
@@ -47,7 +48,10 @@ export class ProjectChatComponent implements OnInit, OnDestroy {
   }
   postMessage(newMessageForm : NgForm){
     this.messageService.postMessage(newMessageForm)
-    this.messagePost.userId =
+    this.userService.user$.subscribe((user : UserComplete) => {
+      
+    })
+    this.messagePost.userId
     this.messagePost.projectId
     this.messagePost.postedTime
     this.messagePost.content = newMessageForm.value.message
