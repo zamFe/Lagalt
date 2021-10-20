@@ -17,17 +17,22 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
-        public async Task<Skill> AddAsync(Skill newSkill, List<int> UserIds, List<int> ProjectIds)
+        public bool SkillNameExists(string skillName)
         {
-            List<User> users = await _context.Users
-                .Where(u => UserIds.Any(id => id == u.Id))
-                .ToListAsync();
-            List<Project> projects = await _context.Projects
-                .Where(p => ProjectIds.Any(id => id == p.Id))
-                .ToListAsync();
+            var normalizedSkillName = skillName.Trim().ToLower();
+            return _context.Skills.Any(skill => skill.Name == normalizedSkillName);
+        }
 
-            newSkill.Users = users;
-            newSkill.Projects = projects;
+        public async Task<Skill> AddAsync(
+            Skill newSkill, IEnumerable<int> userIds, IEnumerable<int> projectIds)
+        {
+            newSkill.Users = await _context.Users
+                .Where(user => userIds.Any(userId => userId == user.Id))
+                .ToListAsync();
+            newSkill.Projects = await _context.Projects
+                .Where(project => projectIds.Any(projectId => projectId == project.Id))
+                .ToListAsync();
+            newSkill.Name = newSkill.Name.Trim();
 
             _context.Skills.Add(newSkill);
             await _context.SaveChangesAsync();
@@ -41,11 +46,14 @@ namespace LagaltAPI.Services
 
         public async Task<Skill> GetByIdAsync(int skillId)
         {
+            return await _context.Skills.FindAsync(skillId);
+        }
+
+        public async Task<Skill> GetByNameAsync(string skillName)
+        {
+            var normalizedSkillName = skillName.Trim().ToLower();
             return await _context.Skills
-                .Include(skill => skill.Users)
-                .Where(skill => skill.Id == skillId)
-                .Include(skill => skill.Projects)
-                .Where(skill => skill.Id == skillId)
+                .Where(skill => skill.Name.ToLower() == normalizedSkillName)
                 .FirstAsync();
         }
     }
