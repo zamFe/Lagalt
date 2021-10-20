@@ -14,13 +14,13 @@ namespace LagaltAPI.Profiles
                 .ForMember(udto => udto.Skills, opt => opt
                 .MapFrom(u => u.Skills.ToList()))
                 .ReverseMap();
-
             CreateMap<User, UserCompactReadDTO>();
-
-            CreateMap<UserEditDTO, User>();
 
             CreateMap<UserCreateDTO, User>()
                 .ForMember(udto => udto.Skills, opt => opt
+                .Ignore());
+            CreateMap<UserEditDTO, User>()
+            .ForMember(udto => udto.Skills, opt => opt
                 .Ignore());
         }
     }

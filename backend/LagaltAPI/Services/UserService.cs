@@ -1,7 +1,6 @@
 ﻿using LagaltAPI.Context;
 using LagaltAPI.Models.Domain;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,13 +22,11 @@ namespace LagaltAPI.Services
             return _context.Users.Any(user => user.Id == userId);
         }
 
-        public async Task<User> AddAsync(User newUser, List<int> SkillIds)
+        public async Task<User> AddAsync(User newUser, IEnumerable<int> skillIds)
         {
-            List<Skill> skills = await _context.Skills
-                .Where(s => SkillIds.Any(id => id == s.Id))
+            newUser.Skills = await _context.Skills
+                .Where(skill => skillIds.Any(id => id == skill.Id))
                 .ToListAsync();
-
-            newUser.Skills = skills;
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
@@ -65,8 +62,12 @@ namespace LagaltAPI.Services
                 .FirstAsync();
         }
 
-        public async Task UpdateAsync(User updatedUser)
+        public async Task UpdateAsync(User updatedUser, IEnumerable<int> skillIds)
         {
+            updatedUser.Skills = await _context.Skills
+                .Where(skill => skillIds.Any(id => id == skill.Id))
+                .ToListAsync();
+
             _context.Entry(updatedUser).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
