@@ -40,13 +40,38 @@ namespace LagaltAPI.Controllers
         ///     A read-specific DTO of the skill if it is found in the database.
         ///     If it is not, then NotFound is returned instead.
         /// </returns>
-        // GET: api/Skills/5
-        [HttpGet("{skillId}")]
-        public async Task<ActionResult<SkillReadDTO>> GetSkill(int skillId)
+        // GET: api/Skills/Id/5
+        [HttpGet("Id/{skillId}")]
+        public async Task<ActionResult<SkillReadDTO>> GetSkillById(int skillId)
         {
             try
             {
                 var domainSkill = await _service.GetByIdAsync(skillId);
+
+                if (domainSkill != null)
+                    return _mapper.Map<SkillReadDTO>(domainSkill);
+                else
+                    return NotFound();
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
+            }
+        }
+
+        /// <summary> Fetches a skill from the database based on skill name. </summary>
+        /// <param name="skillName"> The name of the skill to retrieve. </param>
+        /// <returns>
+        ///     A read-specific DTO of the skill if it is found in the database.
+        ///     If it is not, then NotFound is returned instead.
+        /// </returns>
+        // GET: api/Skills/Name/Python
+        [HttpGet("Name/{skillName}")]
+        public async Task<ActionResult<SkillReadDTO>> GetSkillByName(string skillName)
+        {
+            try
+            {
+                var domainSkill = await _service.GetByNameAsync(skillName);
 
                 if (domainSkill != null)
                     return _mapper.Map<SkillReadDTO>(domainSkill);

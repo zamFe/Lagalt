@@ -17,17 +17,15 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
-        public async Task<Skill> AddAsync(Skill newSkill, List<int> UserIds, List<int> ProjectIds)
+        public async Task<Skill> AddAsync(
+            Skill newSkill, IEnumerable<int> userIds, IEnumerable<int> projectIds)
         {
-            List<User> users = await _context.Users
-                .Where(u => UserIds.Any(id => id == u.Id))
+            newSkill.Users = await _context.Users
+                .Where(user => userIds.Any(userId => userId == user.Id))
                 .ToListAsync();
-            List<Project> projects = await _context.Projects
-                .Where(p => ProjectIds.Any(id => id == p.Id))
+            newSkill.Projects = await _context.Projects
+                .Where(project => projectIds.Any(projectId => projectId == project.Id))
                 .ToListAsync();
-
-            newSkill.Users = users;
-            newSkill.Projects = projects;
 
             _context.Skills.Add(newSkill);
             await _context.SaveChangesAsync();
@@ -43,9 +41,16 @@ namespace LagaltAPI.Services
         {
             return await _context.Skills
                 .Include(skill => skill.Users)
-                .Where(skill => skill.Id == skillId)
                 .Include(skill => skill.Projects)
                 .Where(skill => skill.Id == skillId)
+                .FirstAsync();
+        }
+
+        public async Task<Skill> GetByNameAsync(string skillName)
+        {
+            var normalizedSkillName = skillName.Trim().ToLower();
+            return await _context.Skills
+                .Where(skill => skill.Name.ToLower() == normalizedSkillName)
                 .FirstAsync();
         }
     }
