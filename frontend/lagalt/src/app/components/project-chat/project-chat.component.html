@@ -1,1 +1,25 @@
-<p>project-chat works!</p>
+<div class="chat">
+  <ul class="chatlist">
+    <li *ngFor="let msg of messages">
+      <p style="font-weight: bold;">{{msg.user.username}} says: {{msg.content}} ---- Posted at: {{msg.postedTime}} </p>
+    </li>
+  </ul>
+  <form #newMessageForm="ngForm" (ngSubmit)="postMessage(newMessageForm)">
+    <input
+    ngModel
+    class="form-control"
+    placeholder="Post a new message here..."
+    #username="ngModel"
+    name = "skills"
+    id = "skills"
+    required> <br/>
+    <div class="chatbtn justify-content-center" >
+      <button class="btn skill form-control" style="color: white;"
+      type="submit">Post new message</button>
+    </div>
+    <div class="refreshbtn justify-content-center">
+      <button class="btn refresh form-control" style="color: white;"
+      onclick="window.location.reload()">Refresh chat</button>
+    </div>
+  </form>
+</div>

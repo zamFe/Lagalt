@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Message } from 'src/app/models/message.model';
+import { Message, MessageResponse } from 'src/app/models/message.model';
 
 const API_URL = `${environment.apiUrl}Messages`;
 
@@ -25,9 +25,9 @@ export class MessageService {
   }
 
   public getMessagesByProjectId(projectId: number): Subscription {
-    return this.http.get<Message[]>(`${API_URL}/Project/${projectId}`)
-        .subscribe((messages: Message[]) => {
-            this.setMessages(messages)
+    return this.http.get<MessageResponse>(`${API_URL}/Project/${projectId}`)
+        .subscribe((messages: MessageResponse) => {
+            this.setMessages(messages.results)
         });
   }
 

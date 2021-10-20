@@ -25,19 +25,16 @@ export class ProjectStatusComponent implements OnInit, OnDestroy {
   constructor(private readonly projectService: ProjectService, private readonly userService: UserService) {
     this.progress$ = this.projectService.project$.subscribe((project: Project) => {
       this.progress = project.progress
-      console.log(this.progress);
 
     })
     this.project$ = this.projectService.project$.subscribe((project : Project) => {
       this.adminId = project.administratorIds
-      console.log(this.adminId);
-      
-      
+
+
     })
     this.user$ = this.userService.user$.subscribe((user : UserComplete) => {
       this.userId = user.id
-      console.log(this.userId);
-      
+
     })
     if (this.userId && this.adminId?.includes(this.userId)) {
       this.userRole = "admin"
@@ -52,13 +49,13 @@ export class ProjectStatusComponent implements OnInit, OnDestroy {
 
   ifAdmin(){
     // Check if current user is in the projects admin id list
-    
+
   }
 
 
-  ngOnInit(): void {  
-    
-    
+  ngOnInit(): void {
+
+
   }
   ngOnDestroy(): void {
     this.progress$.unsubscribe();

@@ -21,23 +21,21 @@ export class ProjectApplicationsComponent implements OnInit, OnDestroy {
   public userId : number | undefined;
   public userRole: string = ""
   public projectId: number | undefined;
-  
+
 
   constructor(private modalService: NgbModal, private readonly projectService: ProjectService,
-     private readonly userService: UserService, private readonly router : Router) { 
-      
+     private readonly userService: UserService, private readonly router : Router) {
+
     this.project$ = this.projectService.project$.subscribe((project : Project) =>{
       this.projectId = project.id
     })
-      
+
     this.project$ = this.projectService.project$.subscribe((project : Project) => {
       this.adminId = project.administratorIds
-      console.log(this.adminId);
     })
 
     this.user$ = this.userService.user$.subscribe((user : UserComplete) => {
       this.userId = user.id
-      console.log(this.userId);
     })
 
     if (this.userId && this.adminId?.includes(this.userId)) {
@@ -62,7 +60,7 @@ export class ProjectApplicationsComponent implements OnInit, OnDestroy {
   goToapplication(){
     this.router.navigate(["approval"])
   }
-  ngOnInit(): void {  
+  ngOnInit(): void {
   }
 
   ngOnDestroy(): void {

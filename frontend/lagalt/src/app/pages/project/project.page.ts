@@ -3,6 +3,7 @@ import { ProjectService } from 'src/app/services/project.service';
 import { Observable, Subscription } from 'rxjs';
 import { Project } from 'src/app/models/project.model';
 import { Profession } from 'src/app/models/profession.model';
+import { MessageService } from 'src/app/services/message.service';
 
 
 
@@ -36,7 +37,7 @@ export class ProjectPage implements OnInit, OnDestroy {
     source: null,
     administratorIds: []
   };
-  constructor(private readonly projectService: ProjectService) { 
+  constructor(private readonly projectService: ProjectService, private readonly messageService : MessageService) {
     this.project$ = this.projectService.project$.subscribe((project: Project) => {
       this.project = project;
     })
@@ -44,6 +45,7 @@ export class ProjectPage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.projectService.getProjectById(5)
+    this.messageService.getMessagesByProjectId(1)
   }
 
   ngOnDestroy(): void {
