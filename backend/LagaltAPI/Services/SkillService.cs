@@ -39,11 +39,7 @@ namespace LagaltAPI.Services
 
         public async Task<Skill> GetByIdAsync(int skillId)
         {
-            return await _context.Skills
-                .Include(skill => skill.Users)
-                .Include(skill => skill.Projects)
-                .Where(skill => skill.Id == skillId)
-                .FirstAsync();
+            return await _context.Skills.FindAsync(skillId);
         }
 
         public async Task<Skill> GetByNameAsync(string skillName)
