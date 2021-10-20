@@ -9,8 +9,9 @@ namespace LagaltAPI.Profiles
         // Constructor.
         public MessageProfile()
         {
-            CreateMap<Message, MessageCreateDTO>();
             CreateMap<Message, MessageReadDTO>();
+
+            CreateMap<MessageCreateDTO, Message>();
         }
     }
 }
