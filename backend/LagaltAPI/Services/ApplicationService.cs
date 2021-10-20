@@ -31,10 +31,16 @@ namespace LagaltAPI.Services
 
         public async Task<Application> AddAsync(Application newApplication)
         {
-            // TODO - fix skills missing in returned object.
-            newApplication.User = await _context.Users
+            // TODO - Check if skills are missing from returned application.
+            // TODO - Uncomment when ready to log history for applications.
+            var user = await _context.Users
                 .FindAsync(newApplication.UserId);
+            //user.AppliedTo.Add(newApplication.Id);
+            newApplication.User = user;
+
+            //_context.Entry(user).State = EntityState.Modified;
             _context.Applications.Add(newApplication);
+
             await _context.SaveChangesAsync();
             return newApplication;
         }
