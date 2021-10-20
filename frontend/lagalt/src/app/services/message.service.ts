@@ -31,7 +31,7 @@ export class MessageService {
         });
   }
 
-  public postMessage(message: MessagePost): Subscription {
+  public postMessage(message: Object): Subscription {
     return this.http.post<Message>(API_URL, message)
       .subscribe((message: Message) => {
         this.addMessage(message)
