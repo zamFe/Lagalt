@@ -33,6 +33,7 @@ namespace LagaltAPI.Services
             return newUser;
         }
 
+        // TODO - Remove unused functionality.
         public async Task<IEnumerable<User>> GetAllAsync()
         {
             return await _context.Users
@@ -74,10 +75,7 @@ namespace LagaltAPI.Services
 
         public async Task UpdateViews(int userId, int[] projectIds)
         {
-            User updatedUser = await _context.Users
-                .Where(user => user.Id == userId)
-                .FirstAsync();
-
+            var updatedUser = await _context.Users.FindAsync(userId);
             updatedUser.Viewed = updatedUser.Viewed.Union(projectIds).ToArray();
 
             _context.Entry(updatedUser).State = EntityState.Modified;
@@ -86,10 +84,7 @@ namespace LagaltAPI.Services
 
         public async Task UpdateClicks(int userId, int[] projectIds)
         {
-            User updatedUser = await _context.Users
-                .Where(user => user.Id == userId)
-                .FirstAsync();
-
+            var updatedUser = await _context.Users.FindAsync(userId);
             updatedUser.Clicked = updatedUser.Clicked.Union(projectIds).ToArray();
 
             _context.Entry(updatedUser).State = EntityState.Modified;

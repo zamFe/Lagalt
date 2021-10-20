@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LagaltAPI
@@ -53,13 +52,9 @@ namespace LagaltAPI
 
                 if (domainUser != null)
                     return _mapper.Map<UserCompleteReadDTO>(domainUser);
-                else
-                    return NotFound();
             }
-            catch (InvalidOperationException)
-            {
-                return NotFound();
-            }
+            catch (InvalidOperationException) {}
+            return NotFound();
         }
 
         /// <summary> Fetches a user from the database based on username. </summary>
@@ -78,13 +73,9 @@ namespace LagaltAPI
 
                 if (domainUser != null)
                     return _mapper.Map<UserCompleteReadDTO>(domainUser);
-                else
-                    return NotFound();
             }
-            catch (InvalidOperationException)
-            {
-                return NotFound();
-            }
+            catch (InvalidOperationException) {}
+            return NotFound();
         }
 
         /// <summary> Adds a new user entry to the database. </summary>
@@ -100,7 +91,7 @@ namespace LagaltAPI
         public async Task<ActionResult<UserCompleteReadDTO>> PostUser(UserCreateDTO dtoUser)
         {
             User domainUser = _mapper.Map<User>(dtoUser);
-            await _service.AddAsync(domainUser, dtoUser.Skills.ToList());
+            await _service.AddAsync(domainUser, dtoUser.Skills);
 
             return CreatedAtAction("GetUser",
                 new { userId = domainUser.Id },

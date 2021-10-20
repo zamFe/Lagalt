@@ -44,13 +44,9 @@ namespace LagaltAPI.Controllers
 
                 if (domainApplication != null)
                     return _mapper.Map<ApplicationReadDTO>(domainApplication);
-                else
-                    return NotFound();
             }
-            catch (InvalidOperationException)
-            {
-                return NotFound();
-            }
+            catch (InvalidOperationException) {}
+            return NotFound();
         }
 
         /// <summary>

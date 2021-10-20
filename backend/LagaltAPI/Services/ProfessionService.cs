@@ -18,9 +18,7 @@ namespace LagaltAPI.Services
 
         public async Task<IEnumerable<Profession>> GetAllAsync()
         {
-            return await _context.Professions
-                .Include(profession => profession.Projects)
-                .ToListAsync();
+            return await _context.Professions.ToListAsync();
         }
     }
 }

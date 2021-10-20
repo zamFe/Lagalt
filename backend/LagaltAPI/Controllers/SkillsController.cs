@@ -5,7 +5,6 @@ using LagaltAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LagaltAPI.Controllers
@@ -50,13 +49,9 @@ namespace LagaltAPI.Controllers
 
                 if (domainSkill != null)
                     return _mapper.Map<SkillReadDTO>(domainSkill);
-                else
-                    return NotFound();
             }
-            catch (InvalidOperationException)
-            {
-                return NotFound();
-            }
+            catch (InvalidOperationException) {}
+            return NotFound();
         }
 
         /// <summary> Fetches a skill from the database based on skill name. </summary>
