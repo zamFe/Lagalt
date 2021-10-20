@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LagaltAPI.Controllers
@@ -48,13 +47,9 @@ namespace LagaltAPI.Controllers
 
                 if (domainProject != null)
                     return _mapper.Map<ProjectCompleteReadDTO>(domainProject);
-                else
-                    return NotFound();
             }
-            catch (InvalidOperationException)
-            {
-                return NotFound();
-            }
+            catch (InvalidOperationException) {}
+            return NotFound();
         }
 
         /// <summary>
@@ -129,10 +124,11 @@ namespace LagaltAPI.Controllers
         /// </returns>
         // POST: api/Projects
         [HttpPost]
-        public async Task<ActionResult<ProjectCompleteReadDTO>> PostProject(ProjectCreateDTO dtoProject)
+        public async Task<ActionResult<ProjectCompleteReadDTO>> PostProject(
+            ProjectCreateDTO dtoProject)
         {
             Project domainProject = _mapper.Map<Project>(dtoProject);
-            await _projectService.AddAsync(domainProject, dtoProject.Users.ToList(), dtoProject.Skills.ToList());
+            await _projectService.AddAsync(domainProject, dtoProject.Users, dtoProject.Skills);
 
             return CreatedAtAction("GetProject",
                 new { projectId = domainProject.Id },

@@ -45,8 +45,6 @@ namespace LagaltAPI.Services
         public async Task<IEnumerable<Project>> GetPageAsync(PageRange range)
         {
             return await _context.Projects
-                .Include(project => project.Messages)
-                .Include(project => project.Users)
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
                 .Skip(range.Offset - 1)
@@ -66,8 +64,6 @@ namespace LagaltAPI.Services
             // TODO - Include projects joined by fellow contributors.
             //        Currently only looks at projects matching the user's skills.
             return await _context.Projects
-                .Include(project => project.Messages)
-                .Include(project => project.Users)
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
                 .Where(project => !project.Users.Any(projectUser =>
@@ -84,8 +80,6 @@ namespace LagaltAPI.Services
             int userId, PageRange range)
         {
             return await _context.Projects
-                .Include(project => project.Messages)
-                .Include(project => project.Users)
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
                 .Where(project => project.Users.Any(user => user.Id == userId))

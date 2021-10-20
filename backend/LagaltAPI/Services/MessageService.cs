@@ -34,7 +34,8 @@ namespace LagaltAPI.Services
                 .FirstAsync();
         }
 
-        public async Task<IEnumerable<Message>> GetPageByProjectIdAsync(int projectId, PageRange range)
+        public async Task<IEnumerable<Message>> GetPageByProjectIdAsync(
+            int projectId, PageRange range)
         {
             return await _context.Messages
                 .Include(message => message.User)
