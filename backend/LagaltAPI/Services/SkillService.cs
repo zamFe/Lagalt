@@ -17,6 +17,12 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
+        public bool SkillNameExists(string skillName)
+        {
+            var normalizedSkillName = skillName.Trim().ToLower();
+            return _context.Skills.Any(skill => skill.Name == normalizedSkillName);
+        }
+
         public async Task<Skill> AddAsync(
             Skill newSkill, IEnumerable<int> userIds, IEnumerable<int> projectIds)
         {
@@ -26,6 +32,7 @@ namespace LagaltAPI.Services
             newSkill.Projects = await _context.Projects
                 .Where(project => projectIds.Any(projectId => projectId == project.Id))
                 .ToListAsync();
+            newSkill.Name = newSkill.Name.Trim();
 
             _context.Skills.Add(newSkill);
             await _context.SaveChangesAsync();
