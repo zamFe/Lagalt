@@ -111,7 +111,8 @@ namespace LagaltAPI.Controllers
         /// </param>
         /// <returns>
         ///     NoContent on successful database update,
-        ///     BadRequest if the provided id and the id of the user do not match,
+        ///     BadRequest if the applicationId and the id of the dto do not match
+        ///     or if the application has already been accepted,
         ///     or NotFound if the provided id does not match any users in the database.
         /// </returns>
         /// <exception cref="DbUpdateConcurrencyException">
@@ -124,13 +125,13 @@ namespace LagaltAPI.Controllers
         {
             if (applicationId != dtoApplication.Id)
                 return BadRequest();
-
             if (!_applicationService.EntityExists(applicationId))
                 return NotFound();
 
             var domainApplication = await _applicationService.GetByIdAsync(applicationId);
+            if (domainApplication.Accepted)
+                return BadRequest();
             var newlyAccepted = dtoApplication.Accepted && !domainApplication.Accepted;
-
             _mapper.Map<ApplicationEditDTO, Application>(dtoApplication, domainApplication);
 
             try
