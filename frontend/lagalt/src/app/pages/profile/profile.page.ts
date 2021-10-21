@@ -70,6 +70,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.auth.idTokenClaims$.subscribe(data => localStorage.setItem('token', data!.__raw));
     this.auth.user$.subscribe(
       (profile) => {
         (this.user.username = JSON.parse(JSON.stringify(profile?.nickname, null, 2)))
@@ -81,11 +82,9 @@ export class ProfilePage implements OnInit, OnDestroy {
         }, () => {
           this.userService.postUserByUsername(this.user.username)
         });  
-        
       }
     );
-    this.auth.idTokenClaims$.subscribe(data =>
-      localStorage.setItem('token', data!.__raw));
+    
   }
 
 
