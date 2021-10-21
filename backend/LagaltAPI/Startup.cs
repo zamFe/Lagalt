@@ -24,8 +24,6 @@ namespace LagaltAPI
     public class Startup
     {
         private readonly string _clientOrigin = "Client Origin";
-        private readonly string _clientId = "CLIENT_ID";
-        private readonly string _clientSecret = "CLIENT_SECRET";
 
         // This method gets called by the runtime.
         // Use this method to add services to the container.
@@ -99,8 +97,8 @@ namespace LagaltAPI
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = $"https://dev--rmchv2w.eu.auth0.com/";
-                    options.Audience = "OoAzUGX9zMtfwak3auYzMkZCuURGRbA3";
+                    options.Authority = Environment.GetEnvironmentVariable("AUTH_DOMAIN");
+                    options.Audience = Environment.GetEnvironmentVariable("AUTH_AUDIENCE");
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         NameClaimType = ClaimTypes.NameIdentifier
@@ -109,7 +107,7 @@ namespace LagaltAPI
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("read:users", policy => policy.Requirements.Add(new HasScopeRequirement("read:users", $"https://dev--rmchv2w.eu.auth0.com/")));
+                options.AddPolicy("read:users", policy => policy.Requirements.Add(new HasScopeRequirement("read:users", $"https://{Environment.GetEnvironmentVariable("AUTH_DOMAIN")}/")));
             });
 
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
