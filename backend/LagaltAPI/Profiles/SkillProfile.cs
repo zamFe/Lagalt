@@ -17,7 +17,6 @@ namespace LagaltAPI.Profiles
                 .Ignore())
                 .ForMember(sdto => sdto.Projects, opt => opt
                 .Ignore());
-            CreateMap<SkillEditDTO, Skill>();
         }
     }
 }
