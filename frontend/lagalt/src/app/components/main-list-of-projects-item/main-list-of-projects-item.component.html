@@ -4,19 +4,20 @@
       <span class="align-self-center h4">{{project.title}}</span>
       <div class="row mt-3">
         <div class="col-sm-3">
-          <div *ngIf="project.profession.id === 3, else isWeb" class="btn-game filterOption">
+          <div [ngSwitch]="project.profession.id">
+            <div *ngSwitchCase="1" class="filterOption btn-music">
+            <span>Musikk</span>
+          </div>
+          <div *ngSwitchCase="2" class="filterOption btn-film">
+            <span>Film</span>
+          </div>
+          <div *ngSwitchCase="3" class="filterOption btn-game">
             <span>Spill</span>
           </div>
-          <ng-template #isWeb>
-            <div *ngIf="project.profession.id === 4, else isOther" class="btn-web filterOption">
-              <span>Web</span>
-            </div>
-          </ng-template>
-          <ng-template #isOther>
-            <div class="filterOption" [ngClass]="project.profession.id === 1 ? 'btn-music' : 'btn-film'">
-              <span>{{project.profession.name}}</span>
-            </div>
-          </ng-template>
+          <div *ngSwitchCase="4" class="filterOption btn-web">
+            <span>Web</span>
+          </div>
+        </div>
         </div>
         <div class="col-sm-9">
           	<p class="projectDesc">{{project.description}}</p>

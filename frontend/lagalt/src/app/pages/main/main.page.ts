@@ -14,6 +14,12 @@ export class MainPage implements OnInit {
      private readonly skillsService: SkillService, private readonly router : Router) { }
 
   ngOnInit(): void {
+    // if (this.projectService.renderProjects$.value.length !== 0) {
+    //   this.projectService.getProjectsAndSetRender();
+    // }
+    // else {
+      
+    // }
     this.projectService.getProjects();
     this.skillsService.getSkills();
     

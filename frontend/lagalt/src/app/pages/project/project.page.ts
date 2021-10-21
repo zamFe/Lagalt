@@ -5,6 +5,8 @@ import { Project } from 'src/app/models/project.model';
 import { Profession } from 'src/app/models/profession.model';
 import { MessageService } from 'src/app/services/message.service';
 import { Message } from 'src/app/models/message.model';
+import { UserService } from 'src/app/services/user.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -25,6 +27,7 @@ export class ProjectPage implements OnInit, OnDestroy {
   // projecDescription: string = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
   // projectTags: string[] = ['#test', '#lagalt']
 
+  private readonly projectId: number = 0;
   private project$: Subscription
 
   public project: Project = {
@@ -39,8 +42,12 @@ export class ProjectPage implements OnInit, OnDestroy {
     source: null,
     administratorIds: []
   };
+
   constructor(private readonly projectService: ProjectService,
-     private readonly messageService : MessageService) {
+              private readonly messageService : MessageService,
+              private route: ActivatedRoute) {
+
+    this.projectId = Number(this.route.snapshot.params.id)
     this.project$ = this.projectService.project$.subscribe((project: Project) => {
       this.project = project;
     })
@@ -48,11 +55,8 @@ export class ProjectPage implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.projectService.getProjectById(16)
-    this.messageService.getMessagesByProjectId(16)
-
-
-
+    this.projectService.getProjectById(this.projectId)
+    this.messageService.getMessagesByProjectId(this.projectId)
   }
 
   ngOnDestroy(): void {

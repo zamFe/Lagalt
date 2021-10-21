@@ -9,31 +9,12 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-
-
-  private user$: Subscription;
-  public user: UserComplete = {
-    id: 0,
-    username: '',
-    description: '',
-    image: '',
-    portfolio: '',
-    skills: [],
-    projects: []
-  }
-  
-  constructor(private readonly userService: UserService) {
-    this.user$ = this.userService.user$.subscribe(data => {
-      this.user = data
-    })
+  public userId: number = 0;
+  constructor() {
    }
 
   ngOnInit(): void {
-    
-  }
-
-  ngOnDestroy(): void {
-    this.user$.unsubscribe();
+    this.userId = Number(localStorage.getItem('userId'))
   }
 
 

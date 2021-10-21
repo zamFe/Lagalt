@@ -60,9 +60,14 @@ export class ProjectService {
         return this.http.get<ProjectPageWrapper>(API_URL)
             .subscribe((page: ProjectPageWrapper) => {
                 this.setProjects(page.results)
-                this.setRenderProjects(page.results)
+                if (this.renderProjects$.value.length < page.results.length) {
+                    this.setRenderProjects(page.results)
+                }
+               
             });
     }
+
+    
     public getProjectsByUserId(userId : number): Subscription {
         return this.http.get<ProjectPageWrapper>(`${API_URL}/User/${userId}`)
             .subscribe((project: ProjectPageWrapper) => {
