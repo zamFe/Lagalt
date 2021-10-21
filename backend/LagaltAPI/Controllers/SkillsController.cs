@@ -2,6 +2,7 @@
 using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Skill;
 using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -86,6 +87,7 @@ namespace LagaltAPI.Controllers
         ///     or BadRequest on failure.
         /// </returns>
         // POST: api/Skills
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<SkillReadDTO>> PostSkill(SkillCreateDTO dtoSkill)
         {

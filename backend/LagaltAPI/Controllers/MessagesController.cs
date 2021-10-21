@@ -3,6 +3,7 @@ using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Message;
 using LagaltAPI.Models.Wrappers;
 using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ namespace LagaltAPI.Controllers
         ///     If it is not, then NotFound is returned instead.
         /// </returns>
         // GET: api/Messages/5
+        [Authorize]
         [HttpGet("{messageId}")]
         public async Task<ActionResult<MessageReadDTO>> GetMessage(int messageId)
         {
@@ -57,6 +59,7 @@ namespace LagaltAPI.Controllers
         /// <param name="limit"> Specifies how many messages to include. </param>
         /// <returns> An enumerable containing read-specific DTOs of the messages. </returns>
         // GET: api/Messages/Project/5?offset=5&limit=5
+        [Authorize]
         [HttpGet("Project/{projectId}")]
         public async Task<ActionResult<Page<MessageReadDTO>>> GetProjectMessages
             (int projectId, [FromQuery] int offset, [FromQuery] int limit)
@@ -77,6 +80,7 @@ namespace LagaltAPI.Controllers
         ///     or BadRequest on failure.
         /// </returns>
         // POST: api/Messages
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<MessageReadDTO>> PostMessage(MessageCreateDTO dtoMessage)
         {

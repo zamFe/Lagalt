@@ -3,6 +3,7 @@ using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Project;
 using LagaltAPI.Models.Wrappers;
 using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -82,6 +83,7 @@ namespace LagaltAPI.Controllers
         ///     A page containing all available read-specific DTOs for the user.
         /// </returns>
         // GET: api/Projects/Recommended/5
+        [Authorize]
         [HttpGet("Recommended/{userId}")]
         public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetRecommendedProjects(
             int userId, [FromQuery] int offset, [FromQuery] int limit)
@@ -103,6 +105,7 @@ namespace LagaltAPI.Controllers
         ///     An enumerable containing read-specific DTOs of the projects joined by the user.
         /// </returns>
         // GET: api/Projects/User/5
+        [Authorize]
         [HttpGet("User/{userId}")]
         public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetUserProjects(
             int userId, [FromQuery] int offset, [FromQuery] int limit)
@@ -123,6 +126,7 @@ namespace LagaltAPI.Controllers
         ///     or BadRequest on failure.
         /// </returns>
         // POST: api/Projects
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ProjectCompleteReadDTO>> PostProject(
             ProjectCreateDTO dtoProject)
@@ -151,6 +155,7 @@ namespace LagaltAPI.Controllers
         ///     Thrown when the project is found in the database but not able to be updated.
         /// </exception>
         // PUT: api/Projects/5
+        [Authorize]
         [HttpPut("{projectId}")]
         public async Task<IActionResult> PutProject(int projectId, ProjectEditDTO dtoProject)
         {
