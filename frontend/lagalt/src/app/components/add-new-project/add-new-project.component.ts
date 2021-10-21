@@ -21,6 +21,7 @@ export class AddNewProjectComponent implements OnInit, OnDestroy {
   public professions: Profession[] = []
   public createProjectForm: FormGroup
   public modalOpen: boolean = false;
+  public clicked: boolean = false;
 
   constructor(private readonly professionService: ProfessionService, 
     private readonly projectService: ProjectService,
@@ -59,6 +60,7 @@ export class AddNewProjectComponent implements OnInit, OnDestroy {
       skills: []
     }
     this.projectService.postProject(newProject)
+
     this.modalOpen = false;
   }
 
