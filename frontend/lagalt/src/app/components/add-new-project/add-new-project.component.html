@@ -1,7 +1,7 @@
 <div>
     <ng-template #content let-modal>
         <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Create a new project</h4>
+            <h4 class="modal-title" id="modal-basic-title">Lag et nytt prosjekt</h4>
             <button type="button" class="close btn btn-outline-dark" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -9,19 +9,19 @@
         <div class="modal-body">
             <form [formGroup]="createProjectForm">
                 <div>
-                    <label for="title" class="form-label">Enter project title</label>
+                    <label for="title" class="form-label">Skriv in en prosjekt tittel</label>
                     <input type ="text" formControlName="title" ngbAutoFocus required class="form-control"/>
                 </div>
                 <div>
-                    <label for="description" class="form-label">Enter project description</label>
+                    <label for="description" class="form-label">Skriv inn en prosjekt beskrivelse</label>
                     <textarea class ="text-area form-control" formControlName="description"></textarea>
                 </div>
                 <div>
-                    <label for="imageUrl" class="form-label">Enter project image URL</label>
+                    <label for="imageUrl" class="form-label">Skrv inn en bilde URL for prosjektetL</label>
                     <input type ="text" formControlName="imageUrl" class="form-control"/>
                 </div>
                 <div class="mt-2">
-                    <label for="profession" class="form-label">Enter project image URL</label>
+                    <label for="profession" class="form-label">Skrv inn en bilde URL for prosjektet</label>
                     <select formControlName="profession" class="form-select">
                         <option *ngFor="let item of professions">
                             {{item.name}}
