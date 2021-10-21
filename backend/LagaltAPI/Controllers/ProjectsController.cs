@@ -15,6 +15,7 @@ namespace LagaltAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
+    [AllowAnonymous]
     public class ProjectsController : ControllerBase
     {
         private readonly IMapper _mapper;

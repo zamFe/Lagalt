@@ -14,6 +14,7 @@ namespace LagaltAPI
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -29,7 +30,6 @@ namespace LagaltAPI
         /// <summary> Fetches all available users from the database. </summary>
         /// <returns> An enumerable containing read-specific DTOs of the users. </returns>
         // GET: api/Users
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserCompleteReadDTO>>> GetUsers()
         {
@@ -64,7 +64,6 @@ namespace LagaltAPI
         ///     If it is not, then NotFound is returned instead.
         /// </returns>
         // GET: api/Users/<username>
-        [Authorize]
         [HttpGet("username/{username}")]
         public async Task<ActionResult<UserCompleteReadDTO>> GetUserByUsername(string username)
         {
@@ -88,7 +87,6 @@ namespace LagaltAPI
         ///     or BadRequest on failure.
         /// </returns>
         // POST: api/Users
-        [Authorize]
         [HttpPost]
         public async Task<ActionResult<UserCompleteReadDTO>> PostUser(UserCreateDTO dtoUser)
         {
@@ -116,7 +114,6 @@ namespace LagaltAPI
         ///     Thrown when the user is found in the database but not able to be updated.
         /// </exception>
         // PUT: api/Users/5
-        [Authorize]
         [HttpPut("{userId}")]
         public async Task<IActionResult> PutUser(int userId, UserEditDTO dtoUser)
         {
@@ -157,7 +154,6 @@ namespace LagaltAPI
         /// <exception cref="DbUpdateConcurrencyException">
         ///     Thrown when the user is found in the database but not able to be updated.
         /// </exception>
-        [Authorize]
         [HttpPut("{userId}/Viewed")]
         public async Task<IActionResult> RegisterViews(int userId, int[] projectIds)
         {
@@ -191,7 +187,7 @@ namespace LagaltAPI
         /// <exception cref="DbUpdateConcurrencyException">
         ///     Thrown when the user is found in the database but not able to be updated.
         /// </exception>
-        [Authorize]
+        
         [HttpPut("{userId}/Clicked")]
         public async Task<IActionResult> RegisterClicks(int userId, int[] projectIds)
         {
