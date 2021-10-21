@@ -34,19 +34,19 @@ namespace LagaltAPI.Context
 
             var professions = new Profession[]
             {
-                new Profession{Id = 1, Name = "Music"},
+                new Profession{Id = 1, Name = "Musikk"},
                 new Profession{Id = 2, Name = "Film"},
-                new Profession{Id = 3, Name = "Game Development"},
-                new Profession{Id = 4, Name = "Web Development"}
+                new Profession{Id = 3, Name = "Spillutvikling"},
+                new Profession{Id = 4, Name = "Webutvikling"}
             };
             foreach (Profession p in professions)
                 modelBuilder.Entity<Profession>().HasData(p);
 
             var skills = new Skill[]
             {
-                new Skill{Id = 1, Name = "Guitar"},
-                new Skill{Id = 2, Name = "Drums"},
-                new Skill{Id = 3, Name = "Acting"},
+                new Skill{Id = 1, Name = "Gitar"},
+                new Skill{Id = 2, Name = "Trommer"},
+                new Skill{Id = 3, Name = "Skuespill"},
                 new Skill{Id = 4, Name = "Unity"},
                 new Skill{Id = 5, Name = "Unit testing"},
                 new Skill{Id = 6, Name = "TypeScript"}
@@ -73,7 +73,7 @@ namespace LagaltAPI.Context
                     Id = 2,
                     Hidden = false,
                     Username = "Grohl",
-                    Description = "Currently learning to fly",
+                    Description = "Lærer å fly for øyeblikket",
                     Portfolio = "https://en.wikipedia.org/wiki/Dave_Grohl#Career",
                     Viewed = new int[] { 1 },
                     Clicked = new int[] { 1 },
@@ -104,7 +104,7 @@ namespace LagaltAPI.Context
                     Id = 5,
                     Hidden = false,
                     Username = "Rob",
-                    Description = "Game dev, I guess",
+                    Description = "Spillutvikler, elns",
                     Viewed = new int[] { 3 },
                     Clicked = new int[] { 3 },
                     ContributedTo = new int[] { 3 }
@@ -130,8 +130,8 @@ namespace LagaltAPI.Context
                     Id = 1,
                     ProfessionId = professions[0].Id,
                     AdministratorIds = new int[] {1},
-                    Title = "Writing an album on a Submarine",
-                    Description = "I've always wanted to travel by submarine and I've also got to make new songs",
+                    Title = "Skrive et album på en ubåt",
+                    Description = "Jeg har alltid hatt lyst til å reise i en ubåt, og jeg må også skrive låter",
                     Progress = "In Progress",
                     Image = "https://upload.wikimedia.org/wikipedia/commons/d/d8/Submarine_Vepr_by_Ilya_Kurganov_crop.jpg"
                 },
@@ -140,16 +140,16 @@ namespace LagaltAPI.Context
                     Id = 2,
                     ProfessionId = professions[1].Id,
                     AdministratorIds = new int[] {4},
-                    Title = "The Cinematic Movie Film",
-                    Description = "Some call them movies and some call them films. But what if both were correct?"
+                    Title = "Den Filmiske Film Filmen",
+                    Description = "Some call them movies and some call them films. På norsk gjør vi det litt enklere"
                 },
                 new Project
                 {
                     Id = 3,
                     ProfessionId = professions[2].Id,
                     AdministratorIds = new int[] {5},
-                    Title = "Yet Another Tetris Game",
-                    Description = "What could go wrong?",
+                    Title = "Enda et tetris spill",
+                    Description = "Hva kan gå galt?",
                     Progress =  "Completed",
                     Source = "https://github.com/vocollapse/Blockinger"
                 },
@@ -158,8 +158,8 @@ namespace LagaltAPI.Context
                     Id = 4,
                     ProfessionId = professions[2].Id,
                     AdministratorIds = new int[] {6},
-                    Title = "Minecraft Nostalgia",
-                    Description = "It was better before",
+                    Title = "Minecraft Nostalgi",
+                    Description = "Alt var bedre før",
                     Progress = "Stalled",
                     Source = "https://github.com/ddevault/TrueCraft"
                 },
@@ -168,7 +168,7 @@ namespace LagaltAPI.Context
                     Id = 5,
                     ProfessionId = professions[3].Id,
                     Title = "Reddit API",
-                    Description = "I did indeed read it",
+                    Description = "Jeg har definitivt lest det",
                     Progress = "Stalled",
                     Image = "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png",
                     Source = "https://github.com/ddevault/RedditSharp"
@@ -185,7 +185,7 @@ namespace LagaltAPI.Context
                     Id = 1,
                     UserId = users[0].Id,
                     ProjectId = projects[0].Id,
-                    Content = "Anyone else like submarines?",
+                    Content = "Andre enn meg som liker ubåter?",
                     PostedTime = new DateTime(2021, 10, 2, 12, 30, 52)
                 },
                 new Message
@@ -193,7 +193,7 @@ namespace LagaltAPI.Context
                     Id = 2,
                     UserId = users[1].Id,
                     ProjectId = projects[0].Id,
-                    Content = "Yeah",
+                    Content = "Jaa",
                     PostedTime = new DateTime(2021, 10, 2, 12, 40, 33)
                 },
                 new Message
@@ -201,7 +201,7 @@ namespace LagaltAPI.Context
                     Id = 3,
                     UserId = users[2].Id,
                     ProjectId = projects[0].Id,
-                    Content = "Not sure yet. We will see",
+                    Content = "Usikker, vi må se an",
                     PostedTime = new DateTime(2021, 10, 3, 8, 20, 03)
                 },
             };
@@ -216,7 +216,7 @@ namespace LagaltAPI.Context
                     ProjectId = projects[0].Id,
                     UserId = users[1].Id,
                     Accepted = true,
-                    Motivation = "I also love submarines",
+                    Motivation = "Jeg elsker også ubåter!!!",
                 },
                 new Application
                 {
@@ -224,7 +224,7 @@ namespace LagaltAPI.Context
                     ProjectId = projects[0].Id,
                     UserId = users[2].Id,
                     Accepted = true,
-                    Motivation = "Trying to figure out if i like submarines",
+                    Motivation = "Prøver å finne ut om jeg liker ubåter...",
                 },
                 new Application
                 {
@@ -232,7 +232,7 @@ namespace LagaltAPI.Context
                     ProjectId = projects[0].Id,
                     UserId = users[4].Id,
                     Accepted = false,
-                    Motivation = "What's a submarine?",
+                    Motivation = "Hva er en ubåt?",
                 },
             };
             foreach (Application a in applications)
