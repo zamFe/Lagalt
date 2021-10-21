@@ -31,17 +31,17 @@ namespace LagaltAPI.Services
 
         public async Task<Application> AddAsync(Application newApplication)
         {
-            // TODO - Uncomment when ready to log history for applications.
             var user = await _context.Users
                 .Include(user => user.Skills)
                 .Where(user => user.Id == newApplication.UserId)
                 .FirstAsync();
-            //user.AppliedTo.Add(newApplication.Id);
+            user.AppliedTo = user.AppliedTo != null
+                ? user.AppliedTo.Union(new int[] { newApplication.ProjectId }).ToArray()
+                : new int[] { newApplication.ProjectId };
             newApplication.User = user;
 
-            //_context.Entry(user).State = EntityState.Modified;
+            _context.Entry(user).State = EntityState.Modified;
             _context.Applications.Add(newApplication);
-
             await _context.SaveChangesAsync();
             return newApplication;
         }
