@@ -4,8 +4,13 @@ import { NgForm, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '@auth0/auth0-angular';
 import { UserService } from 'src/app/services/user.service';
+import { SkillService } from 'src/app/services/skill.service';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import { PostSkill, Skill } from 'src/app/models/skill.model';
+import { Project } from 'src/app/models/project.model';
+import { Profession } from 'src/app/models/profession.model';
+import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-profile',
@@ -15,6 +20,7 @@ import { finalize } from 'rxjs/operators';
 export class ProfilePage implements OnInit, OnDestroy {
   public profileJson: string = '';
   private user$: Subscription;
+  private skills$: Subscription;
   public user: UserComplete = {
     id: 0,
     username: '',
@@ -24,17 +30,47 @@ export class ProfilePage implements OnInit, OnDestroy {
     skills: [],
     projects: []
   }
+
+  public skill: Skill = {
+    id: 0,
+    name: ''
+  }
+
+  public skillPost: PostSkill = {
+    id: 0,
+    name: '',
+    user: [],
+    project: []
+  }
+
+  public profession : Profession = {
+    id: 0,
+    name: ''
+  }
+  
+  
   public isChecked = true;
   public color = 'accent';
 
+  public skills : Skill[] = []
+  public users : UserComplete[] = []
+  public projects : Project[] = []
 
-  constructor(private readonly userService : UserService, public auth: AuthService) {
+
+  constructor(private readonly userService : UserService, public auth: AuthService, 
+    private readonly skillService : SkillService, private readonly projectService: ProjectService) {
     this.user$ = this.userService.user$.subscribe((user: UserComplete) => {
       this.user = user;
     })
+
+    this.skills$ = this.userService.user$.subscribe((user: UserComplete) => {
+      this.user.skills = user.skills
+    })    
+    
   }
 
   ngOnInit(): void {
+    this.auth.idTokenClaims$.subscribe(data => localStorage.setItem('token', data!.__raw));
     this.auth.user$.subscribe(
       (profile) => {
         (this.user.username = JSON.parse(JSON.stringify(profile?.nickname, null, 2)))
@@ -46,11 +82,9 @@ export class ProfilePage implements OnInit, OnDestroy {
         }, () => {
           this.userService.postUserByUsername(this.user.username)
         });  
-        
       }
     );
-    this.auth.idTokenClaims$.subscribe(data =>
-      localStorage.setItem('token', data!.__raw));
+    
   }
 
 
@@ -66,6 +100,21 @@ export class ProfilePage implements OnInit, OnDestroy {
   //Adds skill to a list in the user profile
   addSkill(addSkillForm : NgForm){
 
+    
+    this.userService.user$.subscribe((user : UserComplete) => {
+      this.skillPost.user = [user.id]
+    })
+
+    this.skillPost.name = addSkillForm.value;
+
+    this.skillPost.project = []
+    console.log(this.skillPost.name)
+
+
+    
+    this.skillService.postSkill(this.skill)
+
+    //this.skillService.addSkill(addSkillForm)
     // WAIT WITH IMPLEMENTING TILL USER MODEL IS UPDATED with skill[] instead of array of ids
 
     // if(addSkillForm){
@@ -91,9 +140,8 @@ export class ProfilePage implements OnInit, OnDestroy {
     // RUN PUT USER API CALL so we can update description
     this.userService.getTest();
   }
-
-
   saveUser() {
     //this.userService.putUser(this.user)
   }
+
 }
