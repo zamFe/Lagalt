@@ -6,7 +6,7 @@
       <p style="font-weight: bold;"> </p>
     </li>
   </ul>
-  <form #newMessageForm="ngForm" (ngSubmit)="postMessage(newMessageForm)">
+  <form #newMessageForm="ngForm" (ngSubmit)="postMessage(newMessageForm); newMessageForm.resetForm()">
     <input
     ngModel
     class="form-control"
