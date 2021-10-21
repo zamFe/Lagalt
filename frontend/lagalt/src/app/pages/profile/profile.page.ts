@@ -38,7 +38,6 @@ export class ProfilePage implements OnInit, OnDestroy {
     this.auth.user$.subscribe(
       (profile) => {
         (this.user.username = JSON.parse(JSON.stringify(profile?.nickname, null, 2)))
-
         this.userService.userExists(this.user.username).pipe(finalize(() => {
         })).subscribe(res => {
           if(res){
@@ -46,10 +45,12 @@ export class ProfilePage implements OnInit, OnDestroy {
          }
         }, () => {
           this.userService.postUserByUsername(this.user.username)
-        });
+        });  
+        
       }
     );
-    //this.userService.getUserById(1) // CHANGE TO IMPLEMENT ON LOGIN
+    this.auth.idTokenClaims$.subscribe(data =>
+      localStorage.setItem('token', data!.__raw));
   }
 
 
@@ -88,7 +89,9 @@ export class ProfilePage implements OnInit, OnDestroy {
     // maybe check that description is changed, and that description is not equal to empty string or white spaces
     this.user.description = handleDescriptionForm.value.description
     // RUN PUT USER API CALL so we can update description
+    this.userService.getTest();
   }
+
 
   saveUser() {
     //this.userService.putUser(this.user)
