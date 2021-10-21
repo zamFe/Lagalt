@@ -4,8 +4,10 @@ import { NgForm, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '@auth0/auth0-angular';
 import { UserService } from 'src/app/services/user.service';
+import { SkillService } from 'src/app/services/skill.service';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import { Skill } from 'src/app/models/skill.model';
 
 @Component({
   selector: 'app-profile',
@@ -15,6 +17,7 @@ import { finalize } from 'rxjs/operators';
 export class ProfilePage implements OnInit, OnDestroy {
   public profileJson: string = '';
   private user$: Subscription;
+  private skills$: Subscription;
   public user: UserComplete = {
     id: 0,
     username: '',
@@ -24,14 +27,27 @@ export class ProfilePage implements OnInit, OnDestroy {
     skills: [],
     projects: []
   }
+
+  public skill: Skill = {
+    id: 0,
+    name: ''
+  }
   public isChecked = true;
   public color = 'accent';
+  public skills : Skill[] = []
   
 
-  constructor(private readonly userService : UserService, public auth: AuthService) {
+  constructor(private readonly userService : UserService, public auth: AuthService, 
+    private readonly skillService : SkillService) {
     this.user$ = this.userService.user$.subscribe((user: UserComplete) => {
       this.user = user;
     })
+
+    this.skills$ = this.userService.user$.subscribe((user: UserComplete) => {
+      this.user.skills = user.skills
+    })
+    
+    
   }
 
   ngOnInit(): void {
@@ -52,8 +68,15 @@ export class ProfilePage implements OnInit, OnDestroy {
       }
     );
     this.auth.idTokenClaims$.subscribe(data =>
-      console.log(data))
+      console.log(data)) 
+
+      this.userService.getUserById(2)
+      console.log("Skills" + this.user.skills);
+      
+
+      //console.log("Skills" + this.user.skills[1]);
     //this.userService.getUserById(1) // CHANGE TO IMPLEMENT ON LOGIN
+
   }
   
     
@@ -70,6 +93,14 @@ export class ProfilePage implements OnInit, OnDestroy {
   //Adds skill to a list in the user profile
   addSkill(addSkillForm : NgForm){
 
+    this.skill.name = addSkillForm.value;
+    console.log(this.skill.name)
+
+    //Spør hvorfor man må ha user og project når man adder ny skill
+    
+    this.skillService.postSkill(this.skill)
+
+    //this.skillService.addSkill(addSkillForm)
     // WAIT WITH IMPLEMENTING TILL USER MODEL IS UPDATED with skill[] instead of array of ids
 
     // if(addSkillForm){
@@ -95,7 +126,4 @@ export class ProfilePage implements OnInit, OnDestroy {
     // RUN PUT USER API CALL so we can update description
   }
 
-  saveUser() {
-    //this.userService.putUser(this.user)
-  }
 }
