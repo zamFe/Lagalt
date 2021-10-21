@@ -97,9 +97,9 @@ namespace LagaltAPI
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = Environment.GetEnvironmentVariable("AUTH_DOMAIN");
+                    options.Authority = $"https://{Environment.GetEnvironmentVariable("AUTH_DOMAIN")}/";
                     options.Audience = Environment.GetEnvironmentVariable("AUTH_AUDIENCE");
-                    options.RequireHttpsMetadata = true;
+                    //options.RequireHttpsMetadata = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         NameClaimType = ClaimTypes.NameIdentifier
