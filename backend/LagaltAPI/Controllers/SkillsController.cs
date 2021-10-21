@@ -13,6 +13,7 @@ namespace LagaltAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
+    [AllowAnonymous]
     public class SkillsController : ControllerBase
     {
         private readonly IMapper _mapper;

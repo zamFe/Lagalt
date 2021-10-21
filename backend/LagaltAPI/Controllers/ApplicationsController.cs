@@ -3,6 +3,7 @@ using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Application;
 using LagaltAPI.Models.Wrappers;
 using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,6 +15,7 @@ namespace LagaltAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
+    [Authorize]
     public class ApplicationsController : ControllerBase
     {
         private readonly IMapper _mapper;

@@ -3,8 +3,8 @@ using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Update;
 using LagaltAPI.Models.Wrappers;
 using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,6 +13,7 @@ namespace LagaltAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class UpdatesController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -83,6 +84,7 @@ namespace LagaltAPI.Controllers
         /// </returns>
         // POST: api/Updates
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<UpdateReadDTO>> PostUpdate(UpdateCreateDTO dtoUpdate)
         {
             var domainUpdate = _mapper.Map<Update>(dtoUpdate);
