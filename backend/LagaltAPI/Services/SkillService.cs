@@ -20,7 +20,8 @@ namespace LagaltAPI.Services
         public bool SkillNameExists(string skillName)
         {
             var normalizedSkillName = skillName.Trim().ToLower();
-            return _context.Skills.Any(skill => skill.Name == normalizedSkillName);
+            return _context.Skills
+                .Any(skill =>skill.Name.Trim().ToLower() == normalizedSkillName);
         }
 
         public async Task<Skill> AddAsync(

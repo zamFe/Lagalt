@@ -2,14 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace LagaltAPI.Context
 {
     /// <summary>
     ///     Simple representation of a database session.
-    ///     Data source is picked up from an environment variable
-    ///     or a local ".env" file.
+    ///     Data source is picked up from an environment variable.
     /// </summary>
     public class LagaltContext : DbContext
     {
@@ -19,7 +17,8 @@ namespace LagaltAPI.Context
         public DbSet<Project> Projects { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<User> Users { get; set; }
-        
+        public DbSet<Update> Updates { get; set; }
+
         // Constructor.
         public LagaltContext(DbContextOptions options) : base(options) {}
 
@@ -208,6 +207,21 @@ namespace LagaltAPI.Context
             foreach (Message m in messages)
                 modelBuilder.Entity<Message>().HasData(m);
 
+            var updates = new Update[]
+            {
+                // Submarine project updates
+                new Update
+                {
+                    Id = 1,
+                    UserId = users[0].Id,
+                    ProjectId = projects[0].Id,
+                    Content = "Nå har vi fått leid en ubåt!",
+                    PostedTime = new DateTime(2021, 10, 9, 2, 30, 32)
+                },
+            };
+            foreach (Update u in updates)
+                modelBuilder.Entity<Update>().HasData(u);
+
             var applications = new Application[]
             {
                 new Application
@@ -239,8 +253,8 @@ namespace LagaltAPI.Context
                 modelBuilder.Entity<Application>().HasData(a);
 
             modelBuilder.Entity<User>()
-                .HasMany(u => u.Skills)
-                .WithMany(s => s.Users)
+                .HasMany(user => user.Skills)
+                .WithMany(skill => skill.Users)
                 .UsingEntity<Dictionary<string, object>>
                 (
                     "UserSkills",
@@ -269,8 +283,8 @@ namespace LagaltAPI.Context
                 );
 
             modelBuilder.Entity<Project>()
-                .HasMany(p => p.Skills)
-                .WithMany(s => s.Projects)
+                .HasMany(project => project.Skills)
+                .WithMany(skill => skill.Projects)
                 .UsingEntity<Dictionary<string, object>>
                 (
                     "ProjectSkills",
@@ -292,8 +306,8 @@ namespace LagaltAPI.Context
                 );
 
             modelBuilder.Entity<Project>()
-                .HasMany(p => p.Users)
-                .WithMany(u => u.Projects)
+                .HasMany(project => project.Users)
+                .WithMany(user => user.Projects)
                 .UsingEntity<Dictionary<string, object>>
                 (
                     "ProjectUsers",

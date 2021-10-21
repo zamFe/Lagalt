@@ -69,6 +69,8 @@ namespace LagaltAPI.Services
         {
             if (newlyAccepted)
             {
+                updatedApplication.Seen = true;
+
                 var user = await _context.Users
                     .Include(user => user.Projects)
                     .FirstAsync(user => user.Id == updatedApplication.UserId);
