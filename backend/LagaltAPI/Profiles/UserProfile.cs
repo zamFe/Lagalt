@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.User;
-using System.Linq;
 
 namespace LagaltAPI.Profiles
 {
@@ -10,10 +9,7 @@ namespace LagaltAPI.Profiles
         // Constructor.
         public UserProfile()
         {
-            CreateMap<User, UserCompleteReadDTO>()
-                .ForMember(udto => udto.Skills, opt => opt
-                .MapFrom(u => u.Skills.ToList()))
-                .ReverseMap();
+            CreateMap<User, UserCompleteReadDTO>();
             CreateMap<User, UserCompactReadDTO>();
 
             CreateMap<UserCreateDTO, User>()

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LagaltAPI
@@ -27,15 +26,6 @@ namespace LagaltAPI
             _service = service;
         }
 
-        /// <summary> Fetches all available users from the database. </summary>
-        /// <returns> An enumerable containing read-specific DTOs of the users. </returns>
-        // GET: api/Users
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserCompleteReadDTO>>> GetUsers()
-        {
-            return _mapper.Map<List<UserCompleteReadDTO>>(await _service.GetAllAsync());
-        }
-
         /// <summary> Fetches a user from the database based on user id. </summary>
         /// <param name="userId"> The id of the user to retrieve. </param>
         /// <returns>
@@ -48,7 +38,7 @@ namespace LagaltAPI
         {
             try
             {
-                var domainUser = await _service.GetByIdAsync(userId);
+                var domainUser = await _service.GetReadonlyByIdAsync(userId);
 
                 if (domainUser != null)
                     return _mapper.Map<UserCompleteReadDTO>(domainUser);
@@ -69,7 +59,7 @@ namespace LagaltAPI
         {
             try
             {
-                var domainUser = await _service.GetByUsernameAsync(username);
+                var domainUser = await _service.GetReadonlyByUsernameAsync(username);
 
                 if (domainUser != null)
                     return _mapper.Map<UserCompleteReadDTO>(domainUser);
@@ -124,7 +114,7 @@ namespace LagaltAPI
                 return NotFound();
 
 
-            var domainUser = await _service.GetByIdAsync(userId);
+            var domainUser = await _service.GetWriteableByIdAsync(userId);
             _mapper.Map<UserEditDTO, User>(dtoUser, domainUser);
 
             try

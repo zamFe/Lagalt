@@ -83,8 +83,8 @@ namespace LagaltAPI.Controllers
         ///     or BadRequest on failure.
         /// </returns>
         // POST: api/Updates
-        [HttpPost]
         [Authorize]
+        [HttpPost]
         public async Task<ActionResult<UpdateReadDTO>> PostUpdate(UpdateCreateDTO dtoUpdate)
         {
             var domainUpdate = _mapper.Map<Update>(dtoUpdate);

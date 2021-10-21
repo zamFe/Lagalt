@@ -1,4 +1,5 @@
-﻿using LagaltAPI.Models.DTOs.Skill;
+﻿using LagaltAPI.Models.DTOs.Project;
+using LagaltAPI.Models.DTOs.Skill;
 
 namespace LagaltAPI.Models.DTOs.User
 {
@@ -8,8 +9,16 @@ namespace LagaltAPI.Models.DTOs.User
         /// <summary> The user's id. </summary>
         public int Id { get; set; }
 
+        /// <summary> The projects joined by the user. </summary>
+        public ProjectCompactReadDTO[] Projects { get; set; }
+
         /// <summary> The skills which the user posesses. </summary>
         public SkillReadDTO[] Skills { get; set; }
+
+        /// <summary>
+        ///     Whether the user wants to hide their projects, skills, description and portfolio.
+        /// </summary>
+        public bool Hidden { get; set; }
 
         /// <summary> The name the user is referred to as. </summary>
         public string Username { get; set; }

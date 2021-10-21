@@ -42,18 +42,24 @@ namespace LagaltAPI.Services
 
         public async Task<IEnumerable<Skill>> GetAllAsync()
         {
-            return await _context.Skills.Include(skill => skill.Users).ToListAsync();
+            return await _context.Skills
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Skill> GetByIdAsync(int skillId)
         {
-            return await _context.Skills.FindAsync(skillId);
+            return await _context.Skills
+                .AsNoTracking()
+                .Where(skill => skill.Id == skillId)
+                .FirstAsync();
         }
 
         public async Task<Skill> GetByNameAsync(string skillName)
         {
             var normalizedSkillName = skillName.Trim().ToLower();
             return await _context.Skills
+                .AsNoTracking()
                 .Where(skill => skill.Name.ToLower() == normalizedSkillName)
                 .FirstAsync();
         }

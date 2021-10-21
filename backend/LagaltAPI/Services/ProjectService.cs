@@ -42,9 +42,33 @@ namespace LagaltAPI.Services
             return newProject;
         }
 
+        public async Task<Project> GetReadonlyByIdAsync(int projectId)
+        {
+            return await _context.Projects
+                .AsNoTracking()
+                .Include(project => project.Messages)
+                .Include(project => project.Users)
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .Where(project => project.Id == projectId)
+                .FirstAsync();
+        }
+
+        public async Task<Project> GetWriteableByIdAsync(int projectId)
+        {
+            return await _context.Projects
+                .Include(project => project.Messages)
+                .Include(project => project.Users)
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .Where(project => project.Id == projectId)
+                .FirstAsync();
+        }
+
         public async Task<IEnumerable<Project>> GetPageAsync(PageRange range)
         {
             return await _context.Projects
+                .AsNoTracking()
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
                 .Skip(range.Offset - 1)
@@ -53,17 +77,20 @@ namespace LagaltAPI.Services
                 .ToListAsync();
         }
 
+        // Currently only looks at projects matching the user's skills.
+        // Other factors could be popularity (general and among fellow project members),
+        // surges in activity, how recent the project is, etc.
         public async Task<IEnumerable<Project>> GetRecommendedProjectsPageAsync(
             int userId, PageRange range)
         {
             var userSkillIds = await _context.Skills
+                .AsNoTracking()
                 .Where(skill => skill.Users.Any(user => user.Id == userId))
                 .Select(skill => skill.Id)
                 .ToListAsync();
 
-            // TODO - Include projects joined by fellow contributors.
-            //        Currently only looks at projects matching the user's skills.
             return await _context.Projects
+                .AsNoTracking()
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
                 .Where(project => !project.Users.Any(projectUser =>
@@ -80,6 +107,7 @@ namespace LagaltAPI.Services
             int userId, PageRange range)
         {
             return await _context.Projects
+                .AsNoTracking()
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
                 .Where(project => project.Users.Any(user => user.Id == userId))
@@ -87,17 +115,6 @@ namespace LagaltAPI.Services
                 .Take(range.Limit)
                 .OrderByDescending(project => project.Id)
                 .ToListAsync();
-        }
-
-        public async Task<Project> GetByIdAsync(int projectId)
-        {
-            return await _context.Projects
-                .Include(project => project.Messages)
-                .Include(project => project.Users)
-                .Include(project => project.Skills)
-                .Include(project => project.Profession)
-                .Where(project => project.Id == projectId)
-                .FirstAsync();
         }
 
         public async Task UpdateAsync(Project updatedProject, IEnumerable<int> skillIds)

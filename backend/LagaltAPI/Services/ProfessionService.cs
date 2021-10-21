@@ -18,7 +18,9 @@ namespace LagaltAPI.Services
 
         public async Task<IEnumerable<Profession>> GetAllAsync()
         {
-            return await _context.Professions.ToListAsync();
+            return await _context.Professions
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }

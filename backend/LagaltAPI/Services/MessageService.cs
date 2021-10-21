@@ -29,6 +29,7 @@ namespace LagaltAPI.Services
         public async Task<Message> GetByIdAsync(int messageId)
         {
             return await _context.Messages
+                .AsNoTracking()
                 .Include(message => message.User)
                 .Where(message => message.Id == messageId)
                 .FirstAsync();
@@ -38,6 +39,7 @@ namespace LagaltAPI.Services
             int projectId, PageRange range)
         {
             return await _context.Messages
+                .AsNoTracking()
                 .Include(message => message.User)
                 .Where(message => message.ProjectId == projectId)
                 .Skip(range.Offset - 1)

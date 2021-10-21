@@ -42,7 +42,7 @@ namespace LagaltAPI.Controllers
         {
             try
             {
-                var domainApplication = await _applicationService.GetByIdAsync(applicationId);
+                var domainApplication = await _applicationService.GetReadonlyByIdAsync(applicationId);
 
                 if (domainApplication != null)
                     return _mapper.Map<ApplicationReadDTO>(domainApplication);
@@ -126,7 +126,7 @@ namespace LagaltAPI.Controllers
             if (!_applicationService.EntityExists(applicationId))
                 return NotFound();
 
-            var domainApplication = await _applicationService.GetByIdAsync(applicationId);
+            var domainApplication = await _applicationService.GetWriteableByIdAsync(applicationId);
             if (domainApplication.Accepted)
                 return BadRequest("Application has already been accepted");
             var newlyAccepted = dtoApplication.Accepted && !domainApplication.Accepted;

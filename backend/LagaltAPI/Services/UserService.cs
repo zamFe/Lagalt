@@ -17,6 +17,31 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
+        private async Task<User> HandleUserPrivacy(User user)
+        {
+            if (user.Hidden)
+            {
+                user.Description = null;
+                user.Portfolio = null;
+            }
+            else
+            {
+                user.Skills = await _context.Skills
+                    .AsNoTracking()
+                    .Where(skill => skill.Users.Any(skillUser =>
+                        skillUser.Id == user.Id))
+                    .ToListAsync();
+                user.Projects = await _context.Projects
+                    .AsNoTracking()
+                    .Include(project => project.Profession)
+                    .Include(project => project.Skills)
+                    .Where(project => project.Users.Any(projectUser =>
+                        projectUser.Id == user.Id))
+                    .ToListAsync();
+            }
+            return user;
+        }
+
         public bool EntityExists(int userId)
         {
             return _context.Users.Any(user => user.Id == userId);
@@ -33,40 +58,40 @@ namespace LagaltAPI.Services
             return newUser;
         }
 
-        // TODO - Remove unused functionality.
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<User> GetReadonlyByIdAsync(int userId)
         {
-            return await _context.Users
-                .Include(user => user.Messages)
-                .Include(user => user.Skills)
-                .Include(user => user.Projects)
-                .ToListAsync();
-        }
-
-        public async Task<User> GetByIdAsync(int userId)
-        {
-            return await _context.Users
-                .Include(user => user.Messages)
-                .Include(user => user.Skills)
-                .Include(user => user.Projects)
+            var user = await _context.Users
+                .AsNoTracking()
                 .Where(user => user.Id == userId)
                 .FirstAsync();
+            if (user != null)
+                user = await HandleUserPrivacy(user);
+            return user;
         }
 
-        public async Task<User> GetByUsernameAsync(string username)
+        public async Task<User> GetReadonlyByUsernameAsync(string username)
+        {
+            var user = await _context.Users
+                .AsNoTracking()
+                .Where(user => user.Username == username)
+                .FirstAsync();
+            if (user != null)
+                user = await HandleUserPrivacy(user);
+            return user;
+        }
+
+        public async Task<User> GetWriteableByIdAsync(int userId)
         {
             return await _context.Users
-                .Include(user => user.Messages)
                 .Include(user => user.Skills)
-                .Include(user => user.Projects)
-                .Where(user => user.Username == username)
+                .Where(user => user.Id == userId)
                 .FirstAsync();
         }
 
         public async Task UpdateAsync(User updatedUser, IEnumerable<int> skillIds)
         {
             updatedUser.Skills = await _context.Skills
-                .Where(skill => skillIds.Any(id => id == skill.Id))
+                .Where(skill => skillIds.Any(skillId => skillId == skill.Id))
                 .ToListAsync();
 
             _context.Entry(updatedUser).State = EntityState.Modified;
