@@ -13,7 +13,8 @@ import { ProfileUserInfoComponent } from './components/profile-user-info/profile
 import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
 import { ProjectPage } from "./pages/project/project.page";
 import { ProjectChatComponent } from './components/project-chat/project-chat.component';
-import { HttpClientModule} from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS} from "@angular/common/http";
+import { TokenInterceptor } from './token-interceptor';
 import { ProjectApplyPopUpComponent } from './components/project-apply-pop-up/project-apply-pop-up.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -23,7 +24,7 @@ import { LoginButtonComponent } from './components/login-button/login-button.com
 import { AuthButtonComponent } from './components/auth-button/auth-button.component';
 import { LogoutButtonComponent } from './components/logout-button/logout-button.component';
 import { AuthNavComponent } from './components/auth-nav/auth-nav.component';
-
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { ProjectStatusComponent } from './components/project-status/project-status.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -84,7 +85,18 @@ import { GetRecommendedComponent } from './components/get-recommended/get-recomm
     MatSlideToggleModule,
     BrowserAnimationsModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    { 
+      provide: JWT_OPTIONS, 
+      useValue: JWT_OPTIONS
+    },
+    JwtHelperService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
