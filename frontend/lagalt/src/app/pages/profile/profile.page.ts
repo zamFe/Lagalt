@@ -7,7 +7,10 @@ import { UserService } from 'src/app/services/user.service';
 import { SkillService } from 'src/app/services/skill.service';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { Skill } from 'src/app/models/skill.model';
+import { PostSkill, Skill } from 'src/app/models/skill.model';
+import { Project } from 'src/app/models/project.model';
+import { Profession } from 'src/app/models/profession.model';
+import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-profile',
@@ -32,21 +35,36 @@ export class ProfilePage implements OnInit, OnDestroy {
     id: 0,
     name: ''
   }
+
+  public skillPost: PostSkill = {
+    id: 0,
+    name: '',
+    user: [],
+    project: []
+  }
+
+  public profession : Profession = {
+    id: 0,
+    name: ''
+  }
+  
+  
   public isChecked = true;
   public color = 'accent';
   public skills : Skill[] = []
+  public users : UserComplete[] = []
+  public projects : Project[] = []
   
 
   constructor(private readonly userService : UserService, public auth: AuthService, 
-    private readonly skillService : SkillService) {
+    private readonly skillService : SkillService, private readonly projectService: ProjectService) {
     this.user$ = this.userService.user$.subscribe((user: UserComplete) => {
       this.user = user;
     })
 
     this.skills$ = this.userService.user$.subscribe((user: UserComplete) => {
       this.user.skills = user.skills
-    })
-    
+    })    
     
   }
 
@@ -93,10 +111,17 @@ export class ProfilePage implements OnInit, OnDestroy {
   //Adds skill to a list in the user profile
   addSkill(addSkillForm : NgForm){
 
-    this.skill.name = addSkillForm.value;
-    console.log(this.skill.name)
+    
+    this.userService.user$.subscribe((user : UserComplete) => {
+      this.skillPost.user = [user.id]
+    })
 
-    //Spør hvorfor man må ha user og project når man adder ny skill
+    this.skillPost.name = addSkillForm.value;
+
+    this.skillPost.project = []
+    console.log(this.skillPost.name)
+
+
     
     this.skillService.postSkill(this.skill)
 
