@@ -5,9 +5,12 @@
 
 .btn-decline {
     background-color: #D08770;
+    color:white;
+    padding: 10px 20px;
   }
-  
+
   .btn-accept {
     background-color: #A3BE8C;
+    color:white;
+    padding: 10px 20px;
   }
-  

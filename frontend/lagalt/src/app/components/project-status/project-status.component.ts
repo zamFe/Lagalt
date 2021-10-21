@@ -19,31 +19,33 @@ export class ProjectStatusComponent implements OnInit, OnDestroy {
   private user$ : Subscription
   public progress: string = "";
   public status : string[] = ['Founding', 'In progress', 'Stalled', 'Completed'];
-  public adminId : number[] | undefined;
-  public userId : number | undefined;
+  public administratorIds : number[] = [];
+  public userId : number = 0;
   public userRole: string = ""
   constructor(private readonly projectService: ProjectService, private readonly userService: UserService) {
+
     this.progress$ = this.projectService.project$.subscribe((project: Project) => {
       this.progress = project.progress
 
     })
     this.project$ = this.projectService.project$.subscribe((project : Project) => {
-      this.adminId = project.administratorIds
-
+      this.administratorIds = project.administratorIds
 
     })
     this.user$ = this.userService.user$.subscribe((user : UserComplete) => {
       this.userId = user.id
 
     })
-    if (this.userId && this.adminId?.includes(this.userId)) {
+    if (this.userId !== 0 && this.administratorIds.includes(this.userId)) {
       this.userRole = "admin"
     }
-    else if (this.userId) {
+    else if (this.userId !== 0) {
       this.userRole = "user"
+
     }
     else {
       this.userRole = "guest"
+
     }
   }
 

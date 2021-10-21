@@ -4,6 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Project } from 'src/app/models/project.model';
 import { Profession } from 'src/app/models/profession.model';
 import { MessageService } from 'src/app/services/message.service';
+import { Message } from 'src/app/models/message.model';
 
 
 
@@ -25,6 +26,7 @@ export class ProjectPage implements OnInit, OnDestroy {
   // projectTags: string[] = ['#test', '#lagalt']
 
   private project$: Subscription
+
   public project: Project = {
     id: 0,
     profession: {id : 0, name : "Music"},
@@ -37,15 +39,19 @@ export class ProjectPage implements OnInit, OnDestroy {
     source: null,
     administratorIds: []
   };
-  constructor(private readonly projectService: ProjectService, private readonly messageService : MessageService) {
+  constructor(private readonly projectService: ProjectService,
+     private readonly messageService : MessageService) {
     this.project$ = this.projectService.project$.subscribe((project: Project) => {
       this.project = project;
     })
+
   }
 
   ngOnInit(): void {
-    this.projectService.getProjectById(1)
-    this.messageService.getMessagesByProjectId(1)
+    this.projectService.getProjectById(16)
+    this.messageService.getMessagesByProjectId(16)
+
+
 
   }
 

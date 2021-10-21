@@ -1,5 +1,5 @@
 import { Component, NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, NavigationExtras } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 
 import { ProjectPage } from './pages/project/project.page';
@@ -28,7 +28,7 @@ const routes: Routes = [
       component : ProjectPage,
   },
   {
-    path : 'approval',
+    path : 'project/:id/applications',
     component : AdminGiveAccessPage,
   },
   {

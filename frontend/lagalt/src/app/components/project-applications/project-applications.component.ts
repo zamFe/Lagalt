@@ -17,10 +17,10 @@ export class ProjectApplicationsComponent implements OnInit, OnDestroy {
   private project$: Subscription
   private user$ : Subscription
   public progress: string = "";
-  public adminId : number[] | undefined;
-  public userId : number | undefined;
+  public adminId : number[] = [];
+  public userId : number = 0;
   public userRole: string = ""
-  public projectId: number | undefined;
+  public projectId: number = 0;
 
 
   constructor(private modalService: NgbModal, private readonly projectService: ProjectService,
@@ -57,8 +57,8 @@ export class ProjectApplicationsComponent implements OnInit, OnDestroy {
   // Check if current user is in the projects admin id list
   }
 
-  goToapplication(){
-    this.router.navigate(["approval"])
+  goToApplication(id : number){
+    this.router.navigate([`project/${id}/applications`])
   }
   ngOnInit(): void {
   }

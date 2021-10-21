@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Project } from 'src/app/models/project.model';
+import { UserComplete } from 'src/app/models/user/user-complete.model';
 import { MessageService } from 'src/app/services/message.service';
 import { ProjectService } from 'src/app/services/project.service';
 import { SkillService } from 'src/app/services/skill.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-my-projects',
@@ -11,15 +14,25 @@ import { SkillService } from 'src/app/services/skill.service';
 })
 export class MyProjectsComponent implements OnInit{
 
-  constructor(private readonly projectService: ProjectService, private readonly skillsService: SkillService, private readonly messageService : MessageService) {
+  private user$ : Subscription
+  public user!: UserComplete;
 
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly skillsService: SkillService,
+    private readonly messageService : MessageService,
+    private readonly userService : UserService) {
+
+      this.user$ = this.userService.user$.subscribe((user : UserComplete) =>{
+        this.user = user
+      })
 
    }
 
   ngOnInit(): void {
-    this.projectService.getProjectsByUserId(5);
+    this.projectService.getProjectsByUserId(this.user.id);
     this.skillsService.getSkills();
-    this.messageService.getMessagesByProjectId(1)
+    this.messageService.getMessagesByProjectId(this.user.id)
 
   }
 

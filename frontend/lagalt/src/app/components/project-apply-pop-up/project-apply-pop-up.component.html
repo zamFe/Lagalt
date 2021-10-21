@@ -46,7 +46,7 @@
           </button>
         </div>
         <div class="check">
-          <mat-checkbox class="example-margin">
+          <mat-checkbox class="example-margin" [(ngModel)]="userAccept">
            <h5>
             Jeg godkjenner at prosjektleder kan  <br/>  see brukernavnet mitt
            </h5>
@@ -62,8 +62,9 @@
             <textarea class ="text-area" formControlName="textArea"></textarea>
          </form>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn" (click)="modal.close('Apply click')">Apply</button>
+        <div *ngIf="userAccept" class="modal-footer">
+          <button type="button" class="btn" (click)="applyToProject()">Apply</button>
+          <!-- <button type="button" class="btn" (click)="modal.close('Apply click')">Apply</button> -->
         </div>
       </ng-template>
 
