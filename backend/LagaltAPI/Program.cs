@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using System.IO;
-using LagaltAPI;
 using System;
 
 namespace LagaltAPI
@@ -14,11 +12,7 @@ namespace LagaltAPI
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             if (env == "Development")
             {
-                var root = Directory.GetCurrentDirectory();
-                var dotenv = Path.Combine(root, ".env");
-                DotEnv.Load(dotenv);
-                _ =
-                    new ConfigurationBuilder()
+                _ = new ConfigurationBuilder()
                     .AddEnvironmentVariables()
                     .Build();
             }
@@ -30,9 +24,6 @@ namespace LagaltAPI
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
     }
 }

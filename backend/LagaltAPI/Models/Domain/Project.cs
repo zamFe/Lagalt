@@ -16,13 +16,15 @@ namespace LagaltAPI.Models.Domain
         // Collection navigation property for relationship with messages.
         public ICollection<Message> Messages { get; set; }
 
-        // Collection navigation property for relationship with users.
-        public ICollection<UserProject> UserProjects { get; set; }
-
         // Collection navigation property for relationship with skills.
         public ICollection<Skill> Skills { get; set; }
 
+        // Collection navigation property for relationship with users.
+        public ICollection<User> Users { get; set; }
+
         // Data.
+        public int[] AdministratorIds { get; set; }
+
         [MaxLength(40), Required]
         public string Title { get; set; }
 

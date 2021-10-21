@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Message;
+using LagaltAPI.Models.Wrappers;
 using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,22 +18,57 @@ namespace LagaltAPI.Controllers
     {
         private readonly IMapper _mapper;
         private readonly MessageService _service;
+        private readonly UriService _uriService;
 
         // Constructor.
-        public MessagesController(IMapper mapper, MessageService service)
+        public MessagesController(IMapper mapper, MessageService service, UriService uriService)
         {
             _mapper = mapper;
             _service = service;
+            _uriService = uriService;
         }
 
-        /// <summary> Fetches messages from the database based on project id. </summary>
-        /// <param name="id"> The id of the project to retrieve messages from. </param>
-        /// <returns> An enumerable containing read-specific DTOs of the messages. </returns>
-        // GET: api/Messages/Project/5
-        [HttpGet("Project/{id}")]
-        public async Task<ActionResult<IEnumerable<MessageReadDTO>>> GetProjectMessages(int id)
+        /// <summary> Fetches a message from the database based on message id. </summary>
+        /// <param name="messageId"> The id of the message to retrieve. </param>
+        /// <returns>
+        ///     A read-specific DTO of the message if it is found in the database.
+        ///     If it is not, then NotFound is returned instead.
+        /// </returns>
+        // GET: api/Messages/5
+        [Authorize]
+        [HttpGet("{messageId}")]
+        public async Task<ActionResult<MessageReadDTO>> GetMessage(int messageId)
         {
-            return _mapper.Map<List<MessageReadDTO>>(await _service.GetByProjectIdAsync(id));
+            try
+            {
+                var domainMessage = await _service.GetByIdAsync(messageId);
+
+                if (domainMessage != null)
+                    return _mapper.Map<MessageReadDTO>(domainMessage);
+            }
+            catch (InvalidOperationException) {}
+            return NotFound();
+        }
+
+        /// <summary>
+        ///     Fetches messages from the database based on project id,
+        ///     according to the specified offset and limit.
+        ///     </summary>
+        /// <param name="projectId"> The id of the project to retrieve messages from. </param>
+        /// <param name="offset"> Specifies the index of the first message to be included. </param>
+        /// <param name="limit"> Specifies how many messages to include. </param>
+        /// <returns> An enumerable containing read-specific DTOs of the messages. </returns>
+        // GET: api/Messages/Project/5?offset=5&limit=5
+        [Authorize]
+        [HttpGet("Project/{projectId}")]
+        public async Task<ActionResult<Page<MessageReadDTO>>> GetProjectMessages
+            (int projectId, [FromQuery] int offset, [FromQuery] int limit)
+        {
+            var range = new PageRange(offset, limit);
+            var messages = _mapper.Map<List<MessageReadDTO>>(
+                await _service.GetPageByProjectIdAsync(projectId, range));
+            var baseUri = _uriService.GetBaseUrl() + $"api/Messages/Project/{projectId}";
+            return new Page<MessageReadDTO>(messages, range, baseUri);
         }
 
         /// <summary> Adds a new message entry to the database. </summary>
@@ -42,14 +80,15 @@ namespace LagaltAPI.Controllers
         ///     or BadRequest on failure.
         /// </returns>
         // POST: api/Messages
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<MessageReadDTO>> PostMessage(MessageCreateDTO dtoMessage)
         {
             var domainMessage = _mapper.Map<Message>(dtoMessage);
-            await _service.AddAsync(domainMessage);
+            domainMessage = await _service.AddAsync(domainMessage);
 
             return CreatedAtAction("GetMessage", 
-                new { id = domainMessage.Id }, 
+                new { messageId = domainMessage.Id }, 
                 _mapper.Map<MessageReadDTO>(domainMessage));
         }
     }

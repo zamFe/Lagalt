@@ -2,8 +2,9 @@
 using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Skill;
 using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -33,51 +34,50 @@ namespace LagaltAPI.Controllers
             return _mapper.Map<List<SkillReadDTO>>(await _service.GetAllAsync());
         }
 
-
-        // TODO - Add support for getting a range of skills (offset + limit).
-        //        Would this replace GetSkills?
-
-
-        /// <summary>
-        ///     Updates the specified skill in the database to match the provided DTO.
-        /// </summary>
-        /// <param name="id"> The id of the skill to replace. </param>
-        /// <param name="dtoSkill">
-        ///     An edit-specific DTO containing the updated version of the skill.
-        /// </param>
+        /// <summary> Fetches a skill from the database based on skill id. </summary>
+        /// <param name="skillId"> The id of the skill to retrieve. </param>
         /// <returns>
-        ///     NoContent on successful database update,
-        ///     BadRequest if the provided id and the id of the skill do not match,
-        ///     or NotFound if the provided id does not match any skills in the database.
+        ///     A read-specific DTO of the skill if it is found in the database.
+        ///     If it is not, then NotFound is returned instead.
         /// </returns>
-        /// <exception cref="DbUpdateConcurrencyException">
-        ///     Thrown when the skill is found in the database but not able to be updated.
-        /// </exception>
-        // PUT: api/Skills/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSkill(int id, SkillEditDTO dtoSkill)
+        // GET: api/Skills/Id/5
+        [HttpGet("Id/{skillId}")]
+        public async Task<ActionResult<SkillReadDTO>> GetSkillById(int skillId)
         {
-            if (id != dtoSkill.Id)
-                return BadRequest();
-
-            if (!_service.EntityExists(id))
-                return NotFound();
-
-            var domainSkill = _mapper.Map<Skill>(dtoSkill);
-
             try
             {
-                await _service.UpdateAsync(domainSkill);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_service.EntityExists(id))
-                    return NotFound();
-                else
-                    throw;
-            }
+                var domainSkill = await _service.GetByIdAsync(skillId);
 
-            return NoContent();
+                if (domainSkill != null)
+                    return _mapper.Map<SkillReadDTO>(domainSkill);
+            }
+            catch (InvalidOperationException) {}
+            return NotFound();
+        }
+
+        /// <summary> Fetches a skill from the database based on skill name. </summary>
+        /// <param name="skillName"> The name of the skill to retrieve. </param>
+        /// <returns>
+        ///     A read-specific DTO of the skill if it is found in the database.
+        ///     If it is not, then NotFound is returned instead.
+        /// </returns>
+        // GET: api/Skills/Name/Python
+        [HttpGet("Name/{skillName}")]
+        public async Task<ActionResult<SkillReadDTO>> GetSkillByName(string skillName)
+        {
+            try
+            {
+                var domainSkill = await _service.GetByNameAsync(skillName);
+
+                if (domainSkill != null)
+                    return _mapper.Map<SkillReadDTO>(domainSkill);
+                else
+                    return NotFound();
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
+            }
         }
 
         /// <summary> Adds a new skill entry to the database. </summary>
@@ -87,14 +87,18 @@ namespace LagaltAPI.Controllers
         ///     or BadRequest on failure.
         /// </returns>
         // POST: api/Skills
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<SkillCreateDTO>> PostSkill(SkillCreateDTO dtoSkill)
+        public async Task<ActionResult<SkillReadDTO>> PostSkill(SkillCreateDTO dtoSkill)
         {
-            var domainSkill = _mapper.Map<Skill>(dtoSkill);
-            await _service.AddAsync(domainSkill);
+            if (_service.SkillNameExists(dtoSkill.Name))
+                return BadRequest("Skill name already exists");
 
-            return CreatedAtAction("GetUser",
-                new { id = domainSkill.Id },
+            var domainSkill = _mapper.Map<Skill>(dtoSkill);
+            await _service.AddAsync(domainSkill, dtoSkill.Users, dtoSkill.Projects);
+
+            return CreatedAtAction("GetSkillById",
+                new { skillId = domainSkill.Id },
                 _mapper.Map<SkillReadDTO>(domainSkill));
         }
     }

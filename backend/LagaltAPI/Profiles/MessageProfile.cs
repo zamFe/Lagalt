@@ -6,19 +6,12 @@ namespace LagaltAPI.Profiles
 {
     public class MessageProfile : Profile
     {
+        // Constructor.
         public MessageProfile()
         {
-            CreateMap<Message, MessageCreateDTO>()
-                .ForMember(mdto => mdto.User, opt => opt
-                .MapFrom(m => m.UserId))
-                .ForMember(mdto => mdto.Project, opt => opt
-                .MapFrom(m => m.ProjectId))
-                .ReverseMap();
+            CreateMap<Message, MessageReadDTO>();
 
-            CreateMap<Message, MessageReadDTO>()
-                .ForMember(mdto => mdto.User, opt => opt
-                .MapFrom(m => m.UserId))
-                .ReverseMap();
+            CreateMap<MessageCreateDTO, Message>();
         }
     }
 }

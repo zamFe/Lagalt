@@ -10,22 +10,18 @@ namespace LagaltAPI.Profiles
         // Constructor.
         public UserProfile()
         {
-            CreateMap<User, UserReadDTO>()
+            CreateMap<User, UserCompleteReadDTO>()
                 .ForMember(udto => udto.Skills, opt => opt
                 .MapFrom(u => u.Skills.ToList()))
-                .ForMember(udto => udto.Projects, opt => opt
-                .MapFrom(u => u.UserProjects.Select(up => up.ProjectID).ToList()))
                 .ReverseMap();
+            CreateMap<User, UserCompactReadDTO>();
 
-            CreateMap<User, UserEditDTO>()
+            CreateMap<UserCreateDTO, User>()
                 .ForMember(udto => udto.Skills, opt => opt
-                .MapFrom(u => u.Skills.Select(s => s.Id).ToList()))
-                .ReverseMap();
-
-            CreateMap<User, UserCreateDTO>()
-                .ForMember(udto => udto.Skills, opt => opt
-                .MapFrom(u => u.Skills.Select(s => s.Id).ToList()))
-                .ReverseMap();
+                .Ignore());
+            CreateMap<UserEditDTO, User>()
+            .ForMember(udto => udto.Skills, opt => opt
+                .Ignore());
         }
     }
 }

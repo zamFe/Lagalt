@@ -1,13 +1,15 @@
-﻿namespace LagaltAPI.Models.DTOs.User
+﻿using LagaltAPI.Models.DTOs.Skill;
+
+namespace LagaltAPI.Models.DTOs.User
 {
-    /// <summary> An edit-specific DTO representing changes to make to a user. </summary>
-    public class UserEditDTO
+    /// <summary> A larger, read-specific DTO of a user. </summary>
+    public class UserCompleteReadDTO
     {
         /// <summary> The user's id. </summary>
         public int Id { get; set; }
 
-        /// <summary> The ids of the skills which the user posesses. </summary>
-        public int[] Skills { get; set; }
+        /// <summary> The skills which the user posesses. </summary>
+        public SkillReadDTO[] Skills { get; set; }
 
         /// <summary> The name the user is referred to as. </summary>
         public string Username { get; set; }

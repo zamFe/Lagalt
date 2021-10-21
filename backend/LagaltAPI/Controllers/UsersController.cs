@@ -2,6 +2,7 @@
 using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.User;
 using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,41 +29,81 @@ namespace LagaltAPI
         /// <summary> Fetches all available users from the database. </summary>
         /// <returns> An enumerable containing read-specific DTOs of the users. </returns>
         // GET: api/Users
+        [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserCompleteReadDTO>>> GetUsers()
         {
-            return _mapper.Map<List<UserReadDTO>>(await _service.GetAllAsync());
+            return _mapper.Map<List<UserCompleteReadDTO>>(await _service.GetAllAsync());
         }
 
-        /// <summary> Fetches a user from the database based on id. </summary>
-        /// <param name="id"> The id of the user to retrieve. </param>
+        /// <summary> Fetches a user from the database based on user id. </summary>
+        /// <param name="userId"> The id of the user to retrieve. </param>
         /// <returns>
         ///     A read-specific DTO of the user if it is found in the database.
         ///     If it is not, then NotFound is returned instead.
         /// </returns>
         // GET: api/Users/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserReadDTO>> GetUser(int id)
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<UserCompleteReadDTO>> GetUser(int userId)
         {
             try
             {
-                var domainUser = await _service.GetByIdAsync(id);
+                var domainUser = await _service.GetByIdAsync(userId);
 
                 if (domainUser != null)
-                    return _mapper.Map<UserReadDTO>(domainUser);
-                else
-                    return NotFound();
+                    return _mapper.Map<UserCompleteReadDTO>(domainUser);
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException) {}
+            return NotFound();
+        }
+
+        /// <summary> Fetches a user from the database based on username. </summary>
+        /// <param name="username"> The username of the user to retrieve. </param>
+        /// <returns>
+        ///     A read-specific DTO of the user if it is found in the database.
+        ///     If it is not, then NotFound is returned instead.
+        /// </returns>
+        // GET: api/Users/<username>
+        [Authorize]
+        [HttpGet("username/{username}")]
+        public async Task<ActionResult<UserCompleteReadDTO>> GetUserByUsername(string username)
+        {
+            try
             {
-                return NotFound();
+                var domainUser = await _service.GetByUsernameAsync(username);
+
+                if (domainUser != null)
+                    return _mapper.Map<UserCompleteReadDTO>(domainUser);
             }
+            catch (InvalidOperationException) {}
+            return NotFound();
+        }
+
+        /// <summary> Adds a new user entry to the database. </summary>
+        /// <param name="dtoUser">
+        ///     A creation-specific DTO representing the new user.
+        /// </param>
+        /// <returns>
+        ///     A read-specific DTO of the user just added to the database on success,
+        ///     or BadRequest on failure.
+        /// </returns>
+        // POST: api/Users
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<UserCompleteReadDTO>> PostUser(UserCreateDTO dtoUser)
+        {
+            User domainUser = _mapper.Map<User>(dtoUser);
+            await _service.AddAsync(domainUser, dtoUser.Skills);
+
+            return CreatedAtAction("GetUser",
+                new { userId = domainUser.Id },
+                _mapper.Map<UserCompleteReadDTO>(domainUser));
         }
 
         /// <summary>
         ///     Updates the specified user in the database to match the provided DTO.
         /// </summary>
-        /// <param name="id"> The id of the user to update. </param>
+        /// <param name="userId"> The id of the user to update. </param>
         /// <param name="dtoUser">
         ///     An edit-specific DTO containing the updated version of the user.
         /// </param>
@@ -75,24 +116,27 @@ namespace LagaltAPI
         ///     Thrown when the user is found in the database but not able to be updated.
         /// </exception>
         // PUT: api/Users/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, UserEditDTO dtoUser)
+        [Authorize]
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> PutUser(int userId, UserEditDTO dtoUser)
         {
-            if (id != dtoUser.Id)
+            if (userId != dtoUser.Id)
                 return BadRequest();
 
-            if (!_service.EntityExists(id))
+            if (!_service.EntityExists(userId))
                 return NotFound();
 
-            User domainUser = _mapper.Map<User>(dtoUser);
+
+            var domainUser = await _service.GetByIdAsync(userId);
+            _mapper.Map<UserEditDTO, User>(dtoUser, domainUser);
 
             try
             {
-                await _service.UpdateAsync(domainUser);
+                await _service.UpdateAsync(domainUser, dtoUser.Skills);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_service.EntityExists(id))
+                if (!_service.EntityExists(userId))
                     return NotFound();
                 else
                     throw;
@@ -101,24 +145,72 @@ namespace LagaltAPI
             return NoContent();
         }
 
-        /// <summary> Adds a new user entry to the database. </summary>
-        /// <param name="dtoUser">
-        ///     A creation-specific DTO representing the new user.
-        /// </param>
+        /// <summary>
+        /// Updates the list of viewed projects for a specified user by Id,
+        /// </summary>
+        /// <param name="userId"> The id of the user to update. </param>
+        /// <param name="projectIds"> The array of projects that have been viewed </param>
         /// <returns>
-        ///     A read-specific DTO of the user just added to the database on success,
-        ///     or BadRequest on failure.
+        ///     NoContent on successful database update,
+        ///     or NotFound if the provided id does not match any users in the database.
         /// </returns>
-        // POST: api/Users
-        [HttpPost]
-        public async Task<ActionResult<UserCreateDTO>> PostUser(UserCreateDTO dtoUser)
+        /// <exception cref="DbUpdateConcurrencyException">
+        ///     Thrown when the user is found in the database but not able to be updated.
+        /// </exception>
+        [Authorize]
+        [HttpPut("{userId}/Viewed")]
+        public async Task<IActionResult> RegisterViews(int userId, int[] projectIds)
         {
-            User domainUser = _mapper.Map<User>(dtoUser);
-            await _service.AddAsync(domainUser);
+            if (!_service.EntityExists(userId))
+                return NotFound();
 
-            return CreatedAtAction("GetUser", 
-                new { id = domainUser.Id }, 
-                _mapper.Map<UserReadDTO>(domainUser));
+            try
+            {
+                await _service.UpdateViews(userId, projectIds);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_service.EntityExists(userId))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Updates the list of clicked projects for a specified user by Id,
+        /// </summary>
+        /// <param name="userId"> The id of the user to update. </param>
+        /// <param name="projectIds"> The array of projects that have been clicked </param>
+        /// <returns>
+        ///     NoContent on successful database update,
+        ///     or NotFound if the provided id does not match any users in the database.
+        /// </returns>
+        /// <exception cref="DbUpdateConcurrencyException">
+        ///     Thrown when the user is found in the database but not able to be updated.
+        /// </exception>
+        [Authorize]
+        [HttpPut("{userId}/Clicked")]
+        public async Task<IActionResult> RegisterClicks(int userId, int[] projectIds)
+        {
+            if (!_service.EntityExists(userId))
+                return NotFound();
+
+            try
+            {
+                await _service.UpdateClicks(userId, projectIds);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_service.EntityExists(userId))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
         }
     }
 }

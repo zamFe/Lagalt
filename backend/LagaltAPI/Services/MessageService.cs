@@ -1,5 +1,6 @@
 ﻿using LagaltAPI.Context;
 using LagaltAPI.Models.Domain;
+using LagaltAPI.Models.Wrappers;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,59 +8,42 @@ using System.Threading.Tasks;
 
 namespace LagaltAPI.Services
 {
-    public class MessageService : IService<Message>
+    public class MessageService
     {
-
         private readonly LagaltContext _context;
 
+        // Constructor.
         public MessageService(LagaltContext context)
         {
             _context = context;
         }
 
-        public async Task<IEnumerable<Message>> GetAllAsync()
+        public async Task<Message> AddAsync(Message newMessage)
         {
-            return await _context.Messages
-                .ToListAsync();
+            _context.Messages.Add(newMessage);
+            await _context.SaveChangesAsync();
+            newMessage.User = await _context.Users.FindAsync(newMessage.UserId);
+            return newMessage;
         }
 
-        public async Task<IEnumerable<Message>> GetByProjectIdAsync(int pId) {
-            return await _context.Messages
-                .Where(m => m.ProjectId == pId)
-                .ToListAsync();
-        }
-
-        public async Task<Message> GetByIdAsync(int Id)
+        public async Task<Message> GetByIdAsync(int messageId)
         {
             return await _context.Messages
-                .Where(m => m.Id == Id)
+                .Include(message => message.User)
+                .Where(message => message.Id == messageId)
                 .FirstAsync();
         }
 
-        public async Task<Message> AddAsync(Message entity)
+        public async Task<IEnumerable<Message>> GetPageByProjectIdAsync(
+            int projectId, PageRange range)
         {
-            _context.Messages.Add(entity);
-            await _context.SaveChangesAsync();
-            return entity;
+            return await _context.Messages
+                .Include(message => message.User)
+                .Where(message => message.ProjectId == projectId)
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
+                .OrderByDescending(message => message.Id)
+                .ToListAsync();
         }
-
-        public async Task DeleteAsync(int id)
-        {
-            var message = await _context.Messages.FindAsync(id);
-            _context.Messages.Remove(message);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(Message entity)
-        {
-            _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        public bool EntityExists(int id)
-        {
-            return _context.Messages.Any(m => m.Id == id);
-        }
-
     }
 }

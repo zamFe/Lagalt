@@ -1,16 +1,23 @@
+using Google.Apis.Auth.AspNetCore3;
+using LagaltAPI.Auth;
 using LagaltAPI.Context;
 using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace LagaltAPI
 {
@@ -29,9 +36,14 @@ namespace LagaltAPI
             services.AddCors(options =>
             {
                 options.AddPolicy(name: _clientOrigin,
-                                  builder => builder.WithOrigins("http://localhost:4200"));
+                                  builder => builder
+                                  .WithOrigins("http://localhost:4200")
+                                  .AllowAnyHeader()
+                                  .AllowAnyMethod()
+                                  );
             });
 
+            services.AddScoped(typeof(ApplicationService));
             services.AddScoped(typeof(MessageService));
             services.AddScoped(typeof(ProjectService));
             services.AddScoped(typeof(ProfessionService));
@@ -40,21 +52,13 @@ namespace LagaltAPI
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddEntityFrameworkNpgsql().AddDbContext<LagaltContext>(options =>
+            services.AddDbContext<LagaltContext>(options =>
             {
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 string connStr;
                 if (env == "Development")
-                {
-                    // Use local connection while developing.
-                    var dotEnv = Path.Combine(Directory.GetCurrentDirectory(), ".env");
-                    DotEnv.Load(dotEnv);
-                    _ =
-                        new ConfigurationBuilder()
-                        .AddEnvironmentVariables()
-                        .Build();
+                    // Use Local Variable during development.
                     connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
-                }
                 else
                 {
                     // Use Heroku while deployed.
@@ -78,6 +82,35 @@ namespace LagaltAPI
                 }
                 options.UseNpgsql(connStr);
             });
+
+            services.AddHttpContextAccessor();
+            services.AddScoped(typeof(UriService), options =>
+            {
+                var accessor = options.GetRequiredService<IHttpContextAccessor>();
+                var request = accessor.HttpContext.Request;
+                var baseUri = request.Scheme + "://" + request.Host.ToUriComponent();
+                return new UriService(baseUri);
+            });
+
+            //Auth0
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = Environment.GetEnvironmentVariable("AUTH_DOMAIN");
+                    options.Audience = Environment.GetEnvironmentVariable("AUTH_AUDIENCE");
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = ClaimTypes.NameIdentifier
+                    };
+                });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("read:users", policy => policy.Requirements.Add(new HasScopeRequirement("read:users", $"https://{Environment.GetEnvironmentVariable("AUTH_DOMAIN")}/")));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
             services.AddSwaggerGen(c =>
             {
@@ -112,6 +145,7 @@ namespace LagaltAPI
 
             app.UseCors(_clientOrigin);
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => endpoints.MapControllers());

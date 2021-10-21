@@ -44,7 +44,11 @@ namespace LagaltAPI.Migrations
                     Username = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     Description = table.Column<string>(type: "character varying(140)", maxLength: 140, nullable: true),
                     Image = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Portfolio = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
+                    Portfolio = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Viewed = table.Column<int[]>(type: "integer[]", nullable: true),
+                    Clicked = table.Column<int[]>(type: "integer[]", nullable: true),
+                    AppliedTo = table.Column<int[]>(type: "integer[]", nullable: true),
+                    ContributedTo = table.Column<int[]>(type: "integer[]", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,6 +62,7 @@ namespace LagaltAPI.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ProfessionId = table.Column<int>(type: "integer", nullable: false),
+                    AdministratorIds = table.Column<int[]>(type: "integer[]", nullable: true),
                     Title = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
                     Description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     Progress = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
@@ -93,6 +98,35 @@ namespace LagaltAPI.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserSkills_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Applications",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProjectId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    Accepted = table.Column<bool>(type: "boolean", nullable: false),
+                    Seen = table.Column<bool>(type: "boolean", nullable: false),
+                    Motivation = table.Column<string>(type: "character varying(140)", maxLength: 140, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Applications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Applications_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Applications_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -152,30 +186,24 @@ namespace LagaltAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserProjects",
+                name: "ProjectUsers",
                 columns: table => new
                 {
-                    UserID = table.Column<int>(type: "integer", nullable: false),
-                    ProjectID = table.Column<int>(type: "integer", nullable: false),
-                    Viewed = table.Column<bool>(type: "boolean", nullable: false),
-                    Clicked = table.Column<bool>(type: "boolean", nullable: false),
-                    Applied = table.Column<bool>(type: "boolean", nullable: false),
-                    Contributed = table.Column<bool>(type: "boolean", nullable: false),
-                    Administrator = table.Column<bool>(type: "boolean", nullable: false),
-                    Application = table.Column<string>(type: "character varying(140)", maxLength: 140, nullable: true)
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    ProjectId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserProjects", x => new { x.UserID, x.ProjectID });
+                    table.PrimaryKey("PK_ProjectUsers", x => new { x.UserId, x.ProjectId });
                     table.ForeignKey(
-                        name: "FK_UserProjects_Projects_ProjectID",
-                        column: x => x.ProjectID,
+                        name: "FK_ProjectUsers_Projects_ProjectId",
+                        column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserProjects_Users_UserID",
-                        column: x => x.UserID,
+                        name: "FK_ProjectUsers_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -207,27 +235,27 @@ namespace LagaltAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Description", "Hidden", "Image", "Portfolio", "Username" },
+                columns: new[] { "Id", "AppliedTo", "Clicked", "ContributedTo", "Description", "Hidden", "Image", "Portfolio", "Username", "Viewed" },
                 values: new object[,]
                 {
-                    { 1, "Looking for my friend, Mr. Tambourine", false, "https://upload.wikimedia.org/wikipedia/commons/0/02/Bob_Dylan_-_Azkena_Rock_Festival_2010_2.jpg", "https://en.wikipedia.org/wiki/Bob_Dylan_discography", "Bob" },
-                    { 2, "Currently learning to fly", false, null, "https://en.wikipedia.org/wiki/Dave_Grohl#Career", "Grohl" },
-                    { 3, null, true, "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg", null, "DoubleOh" },
-                    { 4, null, false, null, "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/", "ManOfEgg" },
-                    { 5, "Game dev, I guess", false, null, null, "Rob" },
-                    { 6, null, false, "https://avatars.githubusercontent.com/u/1310872", "https://git.sr.ht/~sircmpwn", "Drew" }
+                    { 1, null, new[] { 1 }, new[] { 1 }, "Looking for my friend, Mr. Tambourine", false, "https://upload.wikimedia.org/wikipedia/commons/0/02/Bob_Dylan_-_Azkena_Rock_Festival_2010_2.jpg", "https://en.wikipedia.org/wiki/Bob_Dylan_discography", "Bob", new[] { 1 } },
+                    { 2, new[] { 1 }, new[] { 1 }, new[] { 1 }, "Currently learning to fly", false, null, "https://en.wikipedia.org/wiki/Dave_Grohl#Career", "Grohl", new[] { 1 } },
+                    { 3, new[] { 1 }, new[] { 1 }, null, null, true, "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg", null, "DoubleOh", new[] { 1 } },
+                    { 4, null, new[] { 2 }, new[] { 2 }, null, false, null, "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/", "ManOfEgg", new[] { 2 } },
+                    { 5, null, new[] { 3 }, new[] { 3 }, "Game dev, I guess", false, null, null, "Rob", new[] { 3 } },
+                    { 6, null, new[] { 4 }, new[] { 4 }, null, false, "https://avatars.githubusercontent.com/u/1310872", "https://git.sr.ht/~sircmpwn", "Drew", new[] { 4 } }
                 });
 
             migrationBuilder.InsertData(
                 table: "Projects",
-                columns: new[] { "Id", "Description", "Image", "ProfessionId", "Progress", "Source", "Title" },
+                columns: new[] { "Id", "AdministratorIds", "Description", "Image", "ProfessionId", "Progress", "Source", "Title" },
                 values: new object[,]
                 {
-                    { 1, "I've always wanted to travel by submarine and I've also got to make new songs", "https://upload.wikimedia.org/wikipedia/commons/d/d8/Submarine_Vepr_by_Ilya_Kurganov_crop.jpg", 1, "In Progress", null, "Writing an album on a Submarine" },
-                    { 2, "Some call them movies and some call them films. But what if both were correct?", null, 2, "Founding", null, "The Cinematic Movie Film" },
-                    { 3, "What could go wrong?", null, 3, "Completed", "https://github.com/vocollapse/Blockinger", "Yet Another Tetris Game" },
-                    { 4, "It was better before", null, 3, "Stalled", "https://github.com/ddevault/TrueCraft", "Minecraft Nostalgia" },
-                    { 5, "I did indeed read it", "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png", 4, "Stalled", "https://github.com/ddevault/RedditSharp", "Reddit API" }
+                    { 1, new[] { 1 }, "I've always wanted to travel by submarine and I've also got to make new songs", "https://upload.wikimedia.org/wikipedia/commons/d/d8/Submarine_Vepr_by_Ilya_Kurganov_crop.jpg", 1, "In Progress", null, "Writing an album on a Submarine" },
+                    { 2, new[] { 4 }, "Some call them movies and some call them films. But what if both were correct?", null, 2, "Founding", null, "The Cinematic Movie Film" },
+                    { 3, new[] { 5 }, "What could go wrong?", null, 3, "Completed", "https://github.com/vocollapse/Blockinger", "Yet Another Tetris Game" },
+                    { 4, new[] { 6 }, "It was better before", null, 3, "Stalled", "https://github.com/ddevault/TrueCraft", "Minecraft Nostalgia" },
+                    { 5, null, "I did indeed read it", "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png", 4, "Stalled", "https://github.com/ddevault/RedditSharp", "Reddit API" }
                 });
 
             migrationBuilder.InsertData(
@@ -251,6 +279,16 @@ namespace LagaltAPI.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Applications",
+                columns: new[] { "Id", "Accepted", "Motivation", "ProjectId", "Seen", "UserId" },
+                values: new object[,]
+                {
+                    { 1, true, "I also love submarines", 1, false, 2 },
+                    { 2, true, "Trying to figure out if i like submarines", 1, false, 3 },
+                    { 3, false, "What's a submarine?", 1, false, 5 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Messages",
                 columns: new[] { "Id", "Content", "PostedTime", "ProjectId", "UserId" },
                 values: new object[,]
@@ -265,25 +303,36 @@ namespace LagaltAPI.Migrations
                 columns: new[] { "ProjectId", "SkillId" },
                 values: new object[,]
                 {
-                    { 1, 1 },
-                    { 1, 2 },
-                    { 2, 3 },
-                    { 3, 4 },
                     { 4, 5 },
-                    { 5, 6 }
+                    { 3, 4 },
+                    { 2, 3 },
+                    { 5, 6 },
+                    { 1, 2 },
+                    { 1, 1 }
                 });
 
             migrationBuilder.InsertData(
-                table: "UserProjects",
-                columns: new[] { "ProjectID", "UserID", "Administrator", "Application", "Applied", "Clicked", "Contributed", "Viewed" },
+                table: "ProjectUsers",
+                columns: new[] { "ProjectId", "UserId" },
                 values: new object[,]
                 {
-                    { 1, 1, true, null, true, true, false, true },
-                    { 1, 2, false, "Plz i luv submarinezz!!!1!!1!!", true, true, false, true },
-                    { 1, 3, false, "Request Access", true, true, false, true },
-                    { 1, 4, false, null, false, false, false, true },
-                    { 1, 5, false, null, false, true, false, true }
+                    { 1, 3 },
+                    { 4, 6 },
+                    { 2, 4 },
+                    { 3, 5 },
+                    { 1, 2 },
+                    { 1, 1 }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Applications_ProjectId",
+                table: "Applications",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Applications_UserId",
+                table: "Applications",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_ProjectId",
@@ -306,9 +355,9 @@ namespace LagaltAPI.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserProjects_ProjectID",
-                table: "UserProjects",
-                column: "ProjectID");
+                name: "IX_ProjectUsers_ProjectId",
+                table: "ProjectUsers",
+                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserSkills_UserId",
@@ -319,13 +368,16 @@ namespace LagaltAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Applications");
+
+            migrationBuilder.DropTable(
                 name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "ProjectSkills");
 
             migrationBuilder.DropTable(
-                name: "UserProjects");
+                name: "ProjectUsers");
 
             migrationBuilder.DropTable(
                 name: "UserSkills");
