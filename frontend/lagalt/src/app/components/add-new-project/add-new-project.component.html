@@ -1,7 +1,7 @@
 <div>
     <ng-template #content let-modal>
         <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Create a new project</h4>
+            <h4 class="modal-title" id="modal-basic-title">Legg til et nytt prosjekt</h4>
             <button type="button" class="close btn btn-outline-dark" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -9,19 +9,19 @@
         <div class="modal-body">
             <form [formGroup]="createProjectForm">
                 <div>
-                    <label for="title" class="form-label">Enter project title</label>
+                    <label for="title" class="form-label">Skriv inn tittel</label>
                     <input type ="text" formControlName="title" ngbAutoFocus required class="form-control"/>
                 </div>
                 <div>
-                    <label for="description" class="form-label">Enter project description</label>
+                    <label for="description" class="form-label">Skriv inn beskrivelse</label>
                     <textarea class ="text-area form-control" formControlName="description"></textarea>
                 </div>
                 <div>
-                    <label for="imageUrl" class="form-label">Enter project image URL</label>
+                    <label for="imageUrl" class="form-label">Legg til bilde-URL</label>
                     <input type ="text" formControlName="imageUrl" class="form-control"/>
                 </div>
                 <div class="mt-2">
-                    <label for="profession" class="form-label">Enter project image URL</label>
+                    <label for="profession" class="form-label">Velg kategori for prosjektet</label>
                     <select formControlName="profession" class="form-select">
                         <option *ngFor="let item of professions">
                             {{item.name}}
@@ -33,13 +33,15 @@
             </form>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="submitForm()">Submit</button>
-            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Apply click')">Apply</button>
+            <button type="button" [disabled]="clicked" class="btn btn-outline-dark btn-search" (click)="submitForm(); clicked = true;">Send inn</button>
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Apply click')">Ok</button>
         </div>
     </ng-template>
     <div>
-        <button class="btn btn-outline-dark btn-add py-1" (click)="open(content)">
-            New project
+        <button class="btn btn-outline-dark btn-add" (click)="open(content)">
+            <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16">
+                <path fill-rule="evenodd" d="M7.75 2a.75.75 0 01.75.75V7h4.25a.75.75 0 110 1.5H8.5v4.25a.75.75 0 11-1.5 0V8.5H2.75a.75.75 0 010-1.5H7V2.75A.75.75 0 017.75 2z"></path>
+            </svg>
         </button>
     </div>
 </div>

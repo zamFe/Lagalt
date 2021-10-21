@@ -6,7 +6,7 @@
     </div>
     <div  class="col-sm-2 project-name text-end">
       <div class="" style="font-weight: bold;">
-          Project created by: {{"userName"}}
+          Prosjektet er laget av: {{"username"}}
       </div>
       <div class="" style="font-weight: bold;">
         Status: {{project.progress}}
@@ -14,14 +14,12 @@
       <!-- <h4>{{project.profession}}</h4> -->
     </div>
     <div class="row">
-      <div class="col-sm-2">
-        <h4>
-          Messages:
-        </h4>
+      <div class="appchat col-sm-4">
+        <app-project-chat></app-project-chat>
       </div>
       <div class="col-sm-5 project-description text-center">
         <h3>
-          Project description
+          Prosjekt beskrivelse
         </h3>
         <h5>
           {{project.description}}
@@ -29,7 +27,7 @@
       </div>
       <div class="col-sm-5 project-skills text-start">
         <h3>
-          Skills needed:
+          Erfaringer som søkes etter:
         </h3>
         <h5 *ngFor="let skill of project.skills">
         {{skill.name}}
@@ -38,7 +36,7 @@
     </div>
     <div class="row">
       <div class="col-sm-2">
-        There are currently "4" applications to this project
+        Det er nå 4 søkere til dette prosjektet
       </div>
     </div>
     <div class="row">
@@ -56,7 +54,7 @@
       </div>
       <div class="col-sm-6 text-start">
         <br/>
-        <a href="{{project.source}}">Project Repository</a>
+        <a href="{{project.source}}">Prosjektlager</a>
       </div>
     </div>
   </div>

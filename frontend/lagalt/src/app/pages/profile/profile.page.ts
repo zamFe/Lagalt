@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UserComplete } from 'src/app/models/user/user-complete.model'
+import { UserComplete } from 'src/app/models/user/user-complete.model';
 import { NgForm, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '@auth0/auth0-angular';
@@ -51,10 +51,11 @@ export class ProfilePage implements OnInit, OnDestroy {
   
   public isChecked = true;
   public color = 'accent';
+
   public skills : Skill[] = []
   public users : UserComplete[] = []
   public projects : Project[] = []
-  
+
 
   constructor(private readonly userService : UserService, public auth: AuthService, 
     private readonly skillService : SkillService, private readonly projectService: ProjectService) {
@@ -72,39 +73,28 @@ export class ProfilePage implements OnInit, OnDestroy {
     this.auth.user$.subscribe(
       (profile) => {
         (this.user.username = JSON.parse(JSON.stringify(profile?.nickname, null, 2)))
-        console.log(this.user);
-        
-        this.userService.userExists(this.user.username).pipe(finalize(() => {    
-        })).subscribe(res => {    
+        this.userService.userExists(this.user.username).pipe(finalize(() => {
+        })).subscribe(res => {
           if(res){
             this.userService.getUserByUsername(this.user.username)
          }
-        }, () => {    
+        }, () => {
           this.userService.postUserByUsername(this.user.username)
         });  
-        console.log(profile)
+        
       }
     );
     this.auth.idTokenClaims$.subscribe(data =>
-      console.log(data)) 
-
-      this.userService.getUserById(2)
-      console.log("Skills" + this.user.skills);
-      
-
-      //console.log("Skills" + this.user.skills[1]);
-    //this.userService.getUserById(1) // CHANGE TO IMPLEMENT ON LOGIN
-
+      localStorage.setItem('token', data!.__raw));
   }
-  
-    
+
+
   ngOnDestroy(): void {
     this.user$.unsubscribe();
   }
 
   //Changes the hidden mode button from true to false or false to true
   changed(){
-    console.log(this.isChecked);
   }
 
 
@@ -149,6 +139,10 @@ export class ProfilePage implements OnInit, OnDestroy {
     // maybe check that description is changed, and that description is not equal to empty string or white spaces
     this.user.description = handleDescriptionForm.value.description
     // RUN PUT USER API CALL so we can update description
+    this.userService.getTest();
+  }
+  saveUser() {
+    //this.userService.putUser(this.user)
   }
 
 }

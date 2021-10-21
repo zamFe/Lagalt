@@ -18,6 +18,7 @@ export class LogoutButtonComponent implements OnInit {
   ngOnInit(): void {}
 
   logout(): void {
+    localStorage.clear();
     this.auth.logout({ returnTo: this.doc.location.origin });
   }
 
