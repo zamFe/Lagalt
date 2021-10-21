@@ -86,6 +86,7 @@ namespace LagaltAPI.Controllers
         ///     or BadRequest on failure.
         /// </returns>
         // POST: api/Skills
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<SkillReadDTO>> PostSkill(SkillCreateDTO dtoSkill)
         {
