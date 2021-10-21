@@ -80,7 +80,7 @@ export class ProjectService {
     }
 
     public getRecommendedProjectsByUserId(userId: number): Subscription {
-        return this.http.get<ProjectPageWrapper>(`${API_URL}/Recommended/User/${userId}`)
+        return this.http.get<ProjectPageWrapper>(`${API_URL}/Recommended/${userId}`)
             .subscribe((page: ProjectPageWrapper) => {
                 this.setRenderProjects(page.results)
             })
