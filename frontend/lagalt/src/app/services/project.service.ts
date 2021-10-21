@@ -4,7 +4,7 @@ import { Project } from "../models/project.model";
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { finalize, map, retry, switchMap, tap } from "rxjs/operators";
 import { environment } from "src/environments/environment";
-import { PageWrapper } from "../models/page-wrapper.model";
+import { ProjectPageWrapper } from "../models/project-page-wrapper.model";
 
 const API_URL = `${environment.apiUrl}Projects`;
 const defaultProject: Project = {
@@ -57,17 +57,17 @@ export class ProjectService {
 
     // API CRUD calls
     public getProjects(): Subscription {
-        return this.http.get<PageWrapper>(API_URL)
-            .subscribe((page: PageWrapper) => {
+        return this.http.get<ProjectPageWrapper>(API_URL)
+            .subscribe((page: ProjectPageWrapper) => {
                 this.setProjects(page.results)
                 this.setRenderProjects(page.results)
             });
     }
     public getProjectsByUserId(userId : number): Subscription {
-        return this.http.get<Project[]>(`${API_URL}/User/${userId}`)
-            .subscribe((project: Project[]) => {
-                this.setProjects(project)
-                this.setRenderProjects(project)
+        return this.http.get<ProjectPageWrapper>(`${API_URL}/User/${userId}`)
+            .subscribe((project: ProjectPageWrapper) => {
+                this.setProjects(project.results)
+                this.setRenderProjects(project.results)
             });
     }
 
@@ -80,8 +80,8 @@ export class ProjectService {
     }
 
     public getRecommendedProjectsByUserId(userId: number): Subscription {
-        return this.http.get<PageWrapper>(`${API_URL}/Recommended/User/${userId}`)
-            .subscribe((page: PageWrapper) => {
+        return this.http.get<ProjectPageWrapper>(`${API_URL}/Recommended/User/${userId}`)
+            .subscribe((page: ProjectPageWrapper) => {
                 this.setRenderProjects(page.results)
             })
     }

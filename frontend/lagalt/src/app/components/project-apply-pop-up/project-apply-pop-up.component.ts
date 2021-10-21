@@ -19,29 +19,27 @@ export class ProjectApplyPopUpComponent implements OnInit, OnDestroy {
   public adminId : number[] | undefined;
   public userId : number | undefined;
   public userRole: string = ""
-  
+
   closeResult = '';
 
   projectName: string = "Project name"
   public textAreaForm: FormGroup;
 
-  constructor(private modalService: NgbModal, private fb : FormBuilder, 
+  constructor(private modalService: NgbModal, private fb : FormBuilder,
     private readonly projectService: ProjectService, private readonly userService: UserService) {
     this.textAreaForm = fb.group({
       textArea: ""
     });
 
-    
+
     this.project$ = this.projectService.project$.subscribe((project : Project) => {
       this.adminId = project.administratorIds
-      console.log(this.adminId);
-      
-      
+
+
     })
     this.user$ = this.userService.user$.subscribe((user : UserComplete) => {
       this.userId = user.id
-      console.log(this.userId);
-      
+
     })
     if (this.userId && this.adminId?.includes(this.userId)) {
       this.userRole = "admin"
@@ -60,13 +58,13 @@ export class ProjectApplyPopUpComponent implements OnInit, OnDestroy {
 
   ifAdmin(){
     // Check if current user is in the projects admin id list
-    
+
   }
 
 
-  ngOnInit(): void {  
-    
-    
+  ngOnInit(): void {
+
+
   }
   ngOnDestroy(): void {
   }
