@@ -52,9 +52,9 @@ export class AddNewProjectComponent implements OnInit, OnDestroy {
       title: this.createProjectForm.value.title,
       description: this.createProjectForm.value.description,
       image: this.createProjectForm.value.imageUrl,
-      profession: selectedProfessionId,
+      professionId: selectedProfessionId,
       users: [userId],
-      administrators: [userId],
+      administratorIds: [userId],
       progress: 'founding',
       source: null,
       skills: []
