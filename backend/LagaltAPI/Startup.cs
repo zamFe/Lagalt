@@ -49,6 +49,7 @@ namespace LagaltAPI
             services.AddScoped(typeof(ProfessionService));
             services.AddScoped(typeof(SkillService));
             services.AddScoped(typeof(UserService));
+            services.AddScoped(typeof(UpdateService));
 
             services.AddAutoMapper(typeof(Startup));
 
