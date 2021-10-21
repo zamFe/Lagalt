@@ -37,7 +37,7 @@ namespace LagaltAPI
             {
                 options.AddPolicy(name: _clientOrigin,
                                   builder => builder
-                                  .WithOrigins("http://localhost:4200")
+                                  .WithOrigins(Environment.GetEnvironmentVariable("FRONTEND_URL"))
                                   .AllowAnyHeader()
                                   .AllowAnyMethod()
                                   );
@@ -55,30 +55,37 @@ namespace LagaltAPI
             services.AddDbContext<LagaltContext>(options =>
             {
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-                string connStr;
+                string connStr = "";
                 if (env == "Development")
                     // Use Local Variable during development.
                     connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
                 else
                 {
-                    // Use Heroku while deployed.
                     var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-                    var pgUserPass = connUrl.Split("@")[0];
-                    var pgHostPortDb = connUrl.Split("@")[1];
-                    var pgHostPort = pgHostPortDb.Split("/")[0];
-
-                    var pgsqlBuilder = new NpgsqlConnectionStringBuilder
+                    if (Environment.GetEnvironmentVariable("CLOUD_PLATFORM") == "HEROKU")
                     {
-                        Host = pgHostPort.Split(":")[0],
-                        Port = Int32.Parse(pgHostPort.Split(":")[1]),
-                        Username = pgUserPass.Split(":")[1].Split("//")[1],
-                        Password = pgUserPass.Split(":")[2],
-                        Database = pgHostPortDb.Split("/")[1],
-                        SslMode = SslMode.Require,
-                        TrustServerCertificate = true
-                    };
-                    connStr = pgsqlBuilder.ToString();
-                    Environment.SetEnvironmentVariable("CONNECTION_STRING", connStr);
+                        var pgUserPass = connUrl.Split("@")[0];
+                        var pgHostPortDb = connUrl.Split("@")[1];
+                        var pgHostPort = pgHostPortDb.Split("/")[0];
+
+                        var pgsqlBuilder = new NpgsqlConnectionStringBuilder
+                        {
+                            Host = pgHostPort.Split(":")[0],
+                            Port = Int32.Parse(pgHostPort.Split(":")[1]),
+                            Username = pgUserPass.Split(":")[1].Split("//")[1],
+                            Password = pgUserPass.Split(":")[2],
+                            Database = pgHostPortDb.Split("/")[1],
+                            SslMode = SslMode.Require,
+                            TrustServerCertificate = true
+                        };
+                        connStr = pgsqlBuilder.ToString();
+                        Environment.SetEnvironmentVariable("CONNECTION_STRING", connStr);
+                    }
+                    else if (Environment.GetEnvironmentVariable("CLOUD_PLATFORM") == "AZURE")
+                    {
+                        connStr = connUrl;
+                        Environment.SetEnvironmentVariable("CONNECTION_STRING", connStr);
+                    }
                 }
                 options.UseNpgsql(connStr);
             });
