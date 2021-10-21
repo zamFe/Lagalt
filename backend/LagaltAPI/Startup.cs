@@ -100,7 +100,7 @@ namespace LagaltAPI
                 .AddJwtBearer(options =>
                 {
                     options.Authority = $"https://dev--rmchv2w.eu.auth0.com/";
-                    options.Audience = "https://lagalt-api-f.herokuapp.com/";
+                    options.Audience = "OoAzUGX9zMtfwak3auYzMkZCuURGRbA3";
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         NameClaimType = ClaimTypes.NameIdentifier
