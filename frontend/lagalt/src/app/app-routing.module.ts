@@ -24,7 +24,7 @@ const routes: Routes = [
       canActivate: [AuthGuard]
   },
   {
-      path : 'project',
+      path : 'project/:id',
       component : ProjectPage,
   },
   {
@@ -32,7 +32,7 @@ const routes: Routes = [
     component : AdminGiveAccessPage,
   },
   {
-      path : 'my-project',
+      path : 'my-projects',
       component : MyProjectsComponent
   },
 ]

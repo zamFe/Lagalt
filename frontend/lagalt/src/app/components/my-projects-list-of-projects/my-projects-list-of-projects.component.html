@@ -1,7 +1,7 @@
-<div (click)="goToProject()">
+<div>
   <ul class="d-flex flex-wrap flex-column">
       <app-my-projects-list-of-projects-item *ngFor="let item of projects"
-      [project]="item">
+      [project]="item" (click)="goToProject(item.id)">
       </app-my-projects-list-of-projects-item>
   </ul>
   <router-outlet></router-outlet>
