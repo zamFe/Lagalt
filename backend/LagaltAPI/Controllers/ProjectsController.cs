@@ -45,7 +45,7 @@ namespace LagaltAPI.Controllers
 
             try
             {
-                var domainProject = await _projectService.GetByIdAsync(projectId);
+                var domainProject = await _projectService.GetReadonlyByIdAsync(projectId);
 
                 if (domainProject != null)
                     return _mapper.Map<ProjectCompleteReadDTO>(domainProject);
@@ -166,7 +166,7 @@ namespace LagaltAPI.Controllers
             if (!_projectService.EntityExists(projectId))
                 return NotFound();
 
-            var domainProject = await _projectService.GetByIdAsync(projectId);
+            var domainProject = await _projectService.GetWriteableByIdAsync(projectId);
             _mapper.Map<ProjectEditDTO, Project>(dtoProject, domainProject);
 
             try

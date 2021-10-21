@@ -31,10 +31,11 @@ namespace LagaltAPI.Services
 
         public async Task<Application> AddAsync(Application newApplication)
         {
-            // TODO - Check if skills are missing from returned application.
             // TODO - Uncomment when ready to log history for applications.
             var user = await _context.Users
-                .FindAsync(newApplication.UserId);
+                .Include(user => user.Skills)
+                .Where(user => user.Id == newApplication.UserId)
+                .FirstAsync();
             //user.AppliedTo.Add(newApplication.Id);
             newApplication.User = user;
 
@@ -45,7 +46,16 @@ namespace LagaltAPI.Services
             return newApplication;
         }
 
-        public async Task<Application> GetByIdAsync(int applicationId)
+        public async Task<Application> GetReadonlyByIdAsync(int applicationId)
+        {
+            return await _context.Applications
+                .AsNoTracking()
+                .Include(application => application.User.Skills)
+                .Where(application => application.Id == applicationId)
+                .FirstAsync();
+        }
+
+        public async Task<Application> GetWriteableByIdAsync(int applicationId)
         {
             return await _context.Applications
                 .Include(application => application.User.Skills)
@@ -57,6 +67,7 @@ namespace LagaltAPI.Services
             int projectId, PageRange range)
         {
             return await _context.Applications
+                .AsNoTracking()
                 .Include(application => application.User.Skills)
                 .Where(application => application.ProjectId == projectId)
                 .Skip(range.Offset - 1)
