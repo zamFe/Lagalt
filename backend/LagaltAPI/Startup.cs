@@ -99,6 +99,7 @@ namespace LagaltAPI
                 {
                     options.Authority = Environment.GetEnvironmentVariable("AUTH_DOMAIN");
                     options.Audience = Environment.GetEnvironmentVariable("AUTH_AUDIENCE");
+                    options.RequireHttpsMetadata = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         NameClaimType = ClaimTypes.NameIdentifier
