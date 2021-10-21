@@ -5,7 +5,12 @@
     /// </summary>
     public class PageRange
     {
+        /// <summary>
+        ///     Specifies the database index (base 1) of the first entity to be included.
+        /// </summary>
         public int Offset { get; set; }
+
+        /// <summary> Specifies the upper limit for how many entities to include. </summary>
         public int Limit { get; set; }
 
         // Constructor.
