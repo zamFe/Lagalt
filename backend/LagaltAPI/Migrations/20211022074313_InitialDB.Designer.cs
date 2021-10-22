@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LagaltAPI.Migrations
 {
     [DbContext(typeof(LagaltContext))]
-    [Migration("20211022071143_InitialDB")]
+    [Migration("20211022074313_InitialDB")]
     partial class InitialDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -186,6 +186,7 @@ namespace LagaltAPI.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int[]>("AdministratorIds")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<string>("Description")
@@ -263,6 +264,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 5,
+                            AdministratorIds = new int[0],
                             Description = "Jeg har definitivt lest det",
                             Image = "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png",
                             ProfessionId = 4,

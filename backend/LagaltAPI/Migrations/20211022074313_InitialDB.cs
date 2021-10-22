@@ -62,7 +62,7 @@ namespace LagaltAPI.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ProfessionId = table.Column<int>(type: "integer", nullable: false),
-                    AdministratorIds = table.Column<int[]>(type: "integer[]", nullable: true),
+                    AdministratorIds = table.Column<int[]>(type: "integer[]", nullable: false),
                     Title = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
                     Description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     Progress = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
@@ -283,7 +283,7 @@ namespace LagaltAPI.Migrations
                     { 2, new[] { 4 }, "Some call them movies and some call them films. På norsk gjør vi det litt enklere", null, 2, "Founding", null, "Den Filmiske Film Filmen" },
                     { 3, new[] { 5 }, "Hva kan gå galt?", null, 3, "Completed", "https://github.com/vocollapse/Blockinger", "Enda et tetris spill" },
                     { 4, new[] { 6 }, "Alt var bedre før", null, 3, "Stalled", "https://github.com/ddevault/TrueCraft", "Minecraft Nostalgi" },
-                    { 5, null, "Jeg har definitivt lest det", "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png", 4, "Stalled", "https://github.com/ddevault/RedditSharp", "Reddit API" }
+                    { 5, new int[0], "Jeg har definitivt lest det", "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png", 4, "Stalled", "https://github.com/ddevault/RedditSharp", "Reddit API" }
                 });
 
             migrationBuilder.InsertData(

@@ -184,6 +184,7 @@ namespace LagaltAPI.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int[]>("AdministratorIds")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<string>("Description")
@@ -261,6 +262,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 5,
+                            AdministratorIds = new int[0],
                             Description = "Jeg har definitivt lest det",
                             Image = "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png",
                             ProfessionId = 4,
