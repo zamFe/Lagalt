@@ -74,7 +74,7 @@ namespace LagaltAPI.Services
             var user = await _context.Users
                 .AsNoTracking()
                 .Where(user => user.Username == username)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
             if (user != null)
                 user = await HandleUserPrivacy(user);
             return user;
