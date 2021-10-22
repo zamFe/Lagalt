@@ -101,25 +101,14 @@ export class ProfilePage implements OnInit, OnDestroy {
 
 
     this.skillService.postSkill(newSkill)
+  }
 
-    //this.skillService.addSkill(addSkillForm)
-    // WAIT WITH IMPLEMENTING TILL USER MODEL IS UPDATED with skill[] instead of array of ids
 
-    // if(addSkillForm){
-    //   this.skills.push(addSkillForm.value.skills);
-    // }
-    // let usersResults : User[] = []
-    // this.userService.getUsers$().subscribe(data => {
-    //   console.log(data);
-    //   usersResults = data
-    // })
-    // let usersResultsById : User
-    // this.userService.getUserById$().subscribe(data => {
-    //   console.log(data);
-    //   usersResultsById = data
-    //   let description = data.description
-    //   console.log(description);
-    // })
+
+  refresh() {
+    setTimeout(function(){
+      window.location.reload();
+        },1000)
   }
 
   handleDescription(handleDescriptionForm : NgForm){
