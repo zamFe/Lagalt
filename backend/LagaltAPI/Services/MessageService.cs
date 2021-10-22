@@ -47,5 +47,13 @@ namespace LagaltAPI.Services
                 .OrderByDescending(message => message.Id)
                 .ToListAsync();
         }
+
+        public async Task<int> GetTotalProjectMessagesAsync(int projectId)
+        {
+            return await _context.Messages
+                .AsNoTracking()
+                .Where(message => message.ProjectId == projectId)
+                .CountAsync();
+        }
     }
 }

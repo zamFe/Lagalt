@@ -48,6 +48,11 @@ namespace LagaltAPI.Services
                 .ToListAsync();
         }
 
-
+        public async Task<int> GetTotalProjectUpdatesAsync(int projectId)
+        {
+            return await _context.Updates
+                .Where(update => update.ProjectId == projectId)
+                .CountAsync();
+        }
     }
 }

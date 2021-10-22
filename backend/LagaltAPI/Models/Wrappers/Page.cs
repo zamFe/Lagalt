@@ -18,17 +18,16 @@ namespace LagaltAPI.Models.Wrappers
         public IEnumerable<T> Results { get; set; }
 
         // Constructor.
-        public Page(ICollection<T> data, PageRange filter, string baseUri)
+        public Page(ICollection<T> data, int totalEntities, PageRange range, string baseUri)
         {
-            // TODO - Fix next page sometimes being empty.
-            //        Have to instead get total valid results,
-            //        and then see if there is enough for another page
-            Next = data.Count < filter.Limit
+            // TODO - make previous a bit better?
+
+            Next = totalEntities <= range.Limit + range.Offset - 1
                 ? ""
-                : baseUri + $"?offset={filter.Offset + filter.Limit}&limit={filter.Limit}";
-            Previous = filter.Offset == 1
+                : baseUri + $"?offset={range.Offset + range.Limit}&limit={range.Limit}";
+            Previous = range.Offset == 1
                 ? ""
-                : baseUri + $"?offset={filter.Offset - filter.Limit}&limit={filter.Limit}";
+                : baseUri + $"?offset={range.Offset - range.Limit}&limit={range.Limit}";
             Results = data;
         }
     }

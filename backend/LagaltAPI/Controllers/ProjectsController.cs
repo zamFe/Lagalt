@@ -72,8 +72,9 @@ namespace LagaltAPI.Controllers
             var range = new PageRange(offset, limit);
             var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
                 await _projectService.GetPageAsync(range));
+            var totalProjects = await _projectService.GetTotalProjectsAsync();
             var baseUri = _uriService.GetBaseUrl() + "api/Projects";
-            return new Page<ProjectCompactReadDTO>(projects, range, baseUri);
+            return new Page<ProjectCompactReadDTO>(projects, totalProjects, range, baseUri);
         }
 
         /// <summary> Generates recommended projects for a user. </summary>
@@ -94,8 +95,9 @@ namespace LagaltAPI.Controllers
             var range = new PageRange(offset, limit);
             var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
                 await _projectService.GetRecommendedProjectsPageAsync(userId, range));
+            var totalProjects = await _projectService.GetTotalRecommendedProjectsAsync(userId);
             var baseUri = _uriService.GetBaseUrl() + $"api/Projects/Recommended/{userId}";
-            return new Page<ProjectCompactReadDTO>(projects, range, baseUri);
+            return new Page<ProjectCompactReadDTO>(projects, totalProjects, range, baseUri);
         }
 
         /// <summary> Fetches a user's projects from the database. </summary>
@@ -114,8 +116,9 @@ namespace LagaltAPI.Controllers
             var range = new PageRange(offset, limit);
             var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
                 await _projectService.GetUserProjectsPageAsync(userId, range));
+            var totalProjects = await _projectService.GetTotalUserProjectsAsync(userId);
             var baseUri = _uriService.GetBaseUrl() + $"api/Projects/User/{userId}";
-            return new Page<ProjectCompactReadDTO>(projects, range, baseUri);
+            return new Page<ProjectCompactReadDTO>(projects, totalProjects, range, baseUri);
         }
 
         /// <summary> Adds a new project entry to the database. </summary>

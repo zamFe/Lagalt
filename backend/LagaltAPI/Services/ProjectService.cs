@@ -117,6 +117,34 @@ namespace LagaltAPI.Services
                 .ToListAsync();
         }
 
+        public async Task<int> GetTotalProjectsAsync()
+        {
+            return await _context.Projects.CountAsync();
+        }
+
+        public async Task<int> GetTotalRecommendedProjectsAsync(int userId)
+        {
+            var userSkillIds = await _context.Skills
+                .AsNoTracking()
+                .Where(skill => skill.Users.Any(user => user.Id == userId))
+                .Select(skill => skill.Id)
+                .ToListAsync();
+
+            return await _context.Projects
+                .Where(project => !project.Users.Any(projectUser =>
+                    projectUser.Id == userId))
+                .Where(project => project.Skills.Any(projectSkill =>
+                    userSkillIds.Contains(projectSkill.Id)))
+                .CountAsync();
+        }
+
+        public async Task<int> GetTotalUserProjectsAsync(int userId)
+        {
+            return await _context.Projects
+                .Where(project => project.Users.Any(user => user.Id == userId))
+                .CountAsync();
+        }
+
         public async Task UpdateAsync(Project updatedProject, IEnumerable<int> skillIds)
         {
             updatedProject.Skills = await _context.Skills

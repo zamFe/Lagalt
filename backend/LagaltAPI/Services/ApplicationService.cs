@@ -76,6 +76,13 @@ namespace LagaltAPI.Services
                 .ToListAsync();
         }
 
+        public async Task<int> GetTotalProjectApplicationsAsync(int projectId)
+        {
+            return await _context.Applications
+                .Where(application => application.ProjectId == projectId)
+                .CountAsync();
+        }
+
         public async Task UpdateAsync(Application updatedApplication, bool newlyAccepted = false)
         {
             if (newlyAccepted)

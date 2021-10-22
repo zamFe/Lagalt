@@ -66,8 +66,9 @@ namespace LagaltAPI.Controllers
             var range = new PageRange(offset, limit);
             var messages = _mapper.Map<List<MessageReadDTO>>(
                 await _service.GetPageByProjectIdAsync(projectId, range));
+            var totalMessages = await _service.GetTotalProjectMessagesAsync(projectId);
             var baseUri = _uriService.GetBaseUrl() + $"api/Messages/Project/{projectId}";
-            return new Page<MessageReadDTO>(messages, range, baseUri);
+            return new Page<MessageReadDTO>(messages, totalMessages, range, baseUri);
         }
 
         /// <summary> Adds a new message entry to the database. </summary>
