@@ -70,8 +70,9 @@ namespace LagaltAPI.Controllers
             var filter = new PageRange(offset, limit);
             var updates = _mapper.Map<List<UpdateReadDTO>>(
                 await _updateService.GetPageByProjectIdAsync(projectId, filter));
+            var totalUpdates = await _updateService.GetTotalProjectUpdatesAsync(projectId);
             var baseUri = _uriService.GetBaseUrl() + $"api/Applications/Project/{projectId}";
-            return new Page<UpdateReadDTO>(updates, filter, baseUri);
+            return new Page<UpdateReadDTO>(updates, totalUpdates, filter, baseUri);
         }
 
         /// <summary> Adds a new project update entry to the database. </summary>
@@ -88,8 +89,10 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<UpdateReadDTO>> PostUpdate(UpdateCreateDTO dtoUpdate)
         {
             var domainUpdate = _mapper.Map<Update>(dtoUpdate);
-            domainUpdate = await _updateService.AddAsync(domainUpdate);
+            if (!_updateService.UpdateIsValid(domainUpdate))
+                return BadRequest();
 
+            domainUpdate = await _updateService.AddAsync(domainUpdate);
             return CreatedAtAction("GetUpdate",
                 new { updateId = domainUpdate.Id },
                 _mapper.Map<UpdateReadDTO>(domainUpdate));

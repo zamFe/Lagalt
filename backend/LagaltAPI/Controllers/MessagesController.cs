@@ -66,8 +66,9 @@ namespace LagaltAPI.Controllers
             var range = new PageRange(offset, limit);
             var messages = _mapper.Map<List<MessageReadDTO>>(
                 await _service.GetPageByProjectIdAsync(projectId, range));
+            var totalMessages = await _service.GetTotalProjectMessagesAsync(projectId);
             var baseUri = _uriService.GetBaseUrl() + $"api/Messages/Project/{projectId}";
-            return new Page<MessageReadDTO>(messages, range, baseUri);
+            return new Page<MessageReadDTO>(messages, totalMessages, range, baseUri);
         }
 
         /// <summary> Adds a new message entry to the database. </summary>
@@ -83,8 +84,10 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<MessageReadDTO>> PostMessage(MessageCreateDTO dtoMessage)
         {
             var domainMessage = _mapper.Map<Message>(dtoMessage);
-            domainMessage = await _service.AddAsync(domainMessage);
+            if (!_service.UserCanPostMessage(domainMessage))
+                return BadRequest();
 
+            domainMessage = await _service.AddAsync(domainMessage);
             return CreatedAtAction("GetMessage", 
                 new { messageId = domainMessage.Id }, 
                 _mapper.Map<MessageReadDTO>(domainMessage));

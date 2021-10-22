@@ -35,9 +35,7 @@ namespace LagaltAPI.Services
                 .Include(user => user.Skills)
                 .Where(user => user.Id == newApplication.UserId)
                 .FirstAsync();
-            user.AppliedTo = user.AppliedTo != null
-                ? user.AppliedTo.Union(new int[] { newApplication.ProjectId }).ToArray()
-                : new int[] { newApplication.ProjectId };
+            user.AppliedTo = user.AppliedTo.Union(new int[] {newApplication.ProjectId}).ToArray();
             newApplication.User = user;
 
             _context.Entry(user).State = EntityState.Modified;
@@ -70,10 +68,17 @@ namespace LagaltAPI.Services
                 .AsNoTracking()
                 .Include(application => application.User.Skills)
                 .Where(application => application.ProjectId == projectId)
+                .OrderByDescending(application => application.Id)
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
-                .OrderByDescending(application => application.Id)
                 .ToListAsync();
+        }
+
+        public async Task<int> GetTotalProjectApplicationsAsync(int projectId)
+        {
+            return await _context.Applications
+                .Where(application => application.ProjectId == projectId)
+                .CountAsync();
         }
 
         public async Task UpdateAsync(Application updatedApplication, bool newlyAccepted = false)

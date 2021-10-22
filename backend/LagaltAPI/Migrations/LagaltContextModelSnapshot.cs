@@ -184,6 +184,7 @@ namespace LagaltAPI.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int[]>("AdministratorIds")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<string>("Description")
@@ -261,6 +262,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 5,
+                            AdministratorIds = new int[0],
                             Description = "Jeg har definitivt lest det",
                             Image = "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png",
                             ProfessionId = 4,
@@ -367,12 +369,15 @@ namespace LagaltAPI.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int[]>("AppliedTo")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("Clicked")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("ContributedTo")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<string>("Description")
@@ -396,6 +401,7 @@ namespace LagaltAPI.Migrations
                         .HasColumnType("character varying(20)");
 
                     b.Property<int[]>("Viewed")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.HasKey("Id");
@@ -406,6 +412,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 1,
+                            AppliedTo = new int[0],
                             Clicked = new[] { 1 },
                             ContributedTo = new[] { 1 },
                             Description = "Looking for my friend, Mr. Tambourine",
@@ -432,6 +439,7 @@ namespace LagaltAPI.Migrations
                             Id = 3,
                             AppliedTo = new[] { 1 },
                             Clicked = new[] { 1 },
+                            ContributedTo = new int[0],
                             Hidden = true,
                             Image = "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg",
                             Username = "DoubleOh",
@@ -440,6 +448,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 4,
+                            AppliedTo = new int[0],
                             Clicked = new[] { 2 },
                             ContributedTo = new[] { 2 },
                             Hidden = false,
@@ -450,6 +459,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 5,
+                            AppliedTo = new int[0],
                             Clicked = new[] { 3 },
                             ContributedTo = new[] { 3 },
                             Description = "Spillutvikler, elns",
@@ -460,6 +470,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 6,
+                            AppliedTo = new int[0],
                             Clicked = new[] { 4 },
                             ContributedTo = new[] { 4 },
                             Hidden = false,

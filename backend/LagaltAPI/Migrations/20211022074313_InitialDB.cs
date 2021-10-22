@@ -45,10 +45,10 @@ namespace LagaltAPI.Migrations
                     Description = table.Column<string>(type: "character varying(140)", maxLength: 140, nullable: true),
                     Image = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     Portfolio = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Viewed = table.Column<int[]>(type: "integer[]", nullable: true),
-                    Clicked = table.Column<int[]>(type: "integer[]", nullable: true),
-                    AppliedTo = table.Column<int[]>(type: "integer[]", nullable: true),
-                    ContributedTo = table.Column<int[]>(type: "integer[]", nullable: true)
+                    Viewed = table.Column<int[]>(type: "integer[]", nullable: false),
+                    Clicked = table.Column<int[]>(type: "integer[]", nullable: false),
+                    AppliedTo = table.Column<int[]>(type: "integer[]", nullable: false),
+                    ContributedTo = table.Column<int[]>(type: "integer[]", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,7 +62,7 @@ namespace LagaltAPI.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ProfessionId = table.Column<int>(type: "integer", nullable: false),
-                    AdministratorIds = table.Column<int[]>(type: "integer[]", nullable: true),
+                    AdministratorIds = table.Column<int[]>(type: "integer[]", nullable: false),
                     Title = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
                     Description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
                     Progress = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
@@ -266,12 +266,12 @@ namespace LagaltAPI.Migrations
                 columns: new[] { "Id", "AppliedTo", "Clicked", "ContributedTo", "Description", "Hidden", "Image", "Portfolio", "Username", "Viewed" },
                 values: new object[,]
                 {
-                    { 1, null, new[] { 1 }, new[] { 1 }, "Looking for my friend, Mr. Tambourine", false, "https://upload.wikimedia.org/wikipedia/commons/0/02/Bob_Dylan_-_Azkena_Rock_Festival_2010_2.jpg", "https://en.wikipedia.org/wiki/Bob_Dylan_discography", "Bob", new[] { 1 } },
+                    { 1, new int[0], new[] { 1 }, new[] { 1 }, "Looking for my friend, Mr. Tambourine", false, "https://upload.wikimedia.org/wikipedia/commons/0/02/Bob_Dylan_-_Azkena_Rock_Festival_2010_2.jpg", "https://en.wikipedia.org/wiki/Bob_Dylan_discography", "Bob", new[] { 1 } },
                     { 2, new[] { 1 }, new[] { 1 }, new[] { 1 }, "Lærer å fly for øyeblikket", false, null, "https://en.wikipedia.org/wiki/Dave_Grohl#Career", "Grohl", new[] { 1 } },
-                    { 3, new[] { 1 }, new[] { 1 }, null, null, true, "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg", null, "DoubleOh", new[] { 1 } },
-                    { 4, null, new[] { 2 }, new[] { 2 }, null, false, null, "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/", "ManOfEgg", new[] { 2 } },
-                    { 5, null, new[] { 3 }, new[] { 3 }, "Spillutvikler, elns", false, null, null, "Rob", new[] { 3 } },
-                    { 6, null, new[] { 4 }, new[] { 4 }, null, false, "https://avatars.githubusercontent.com/u/1310872", "https://git.sr.ht/~sircmpwn", "Drew", new[] { 4 } }
+                    { 3, new[] { 1 }, new[] { 1 }, new int[0], null, true, "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg", null, "DoubleOh", new[] { 1 } },
+                    { 4, new int[0], new[] { 2 }, new[] { 2 }, null, false, null, "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/", "ManOfEgg", new[] { 2 } },
+                    { 5, new int[0], new[] { 3 }, new[] { 3 }, "Spillutvikler, elns", false, null, null, "Rob", new[] { 3 } },
+                    { 6, new int[0], new[] { 4 }, new[] { 4 }, null, false, "https://avatars.githubusercontent.com/u/1310872", "https://git.sr.ht/~sircmpwn", "Drew", new[] { 4 } }
                 });
 
             migrationBuilder.InsertData(
@@ -283,7 +283,7 @@ namespace LagaltAPI.Migrations
                     { 2, new[] { 4 }, "Some call them movies and some call them films. På norsk gjør vi det litt enklere", null, 2, "Founding", null, "Den Filmiske Film Filmen" },
                     { 3, new[] { 5 }, "Hva kan gå galt?", null, 3, "Completed", "https://github.com/vocollapse/Blockinger", "Enda et tetris spill" },
                     { 4, new[] { 6 }, "Alt var bedre før", null, 3, "Stalled", "https://github.com/ddevault/TrueCraft", "Minecraft Nostalgi" },
-                    { 5, null, "Jeg har definitivt lest det", "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png", 4, "Stalled", "https://github.com/ddevault/RedditSharp", "Reddit API" }
+                    { 5, new int[0], "Jeg har definitivt lest det", "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png", 4, "Stalled", "https://github.com/ddevault/RedditSharp", "Reddit API" }
                 });
 
             migrationBuilder.InsertData(

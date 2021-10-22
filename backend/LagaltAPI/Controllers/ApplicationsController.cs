@@ -69,8 +69,10 @@ namespace LagaltAPI.Controllers
             var filter = new PageRange(offset, limit);
             var applications = _mapper.Map<List<ApplicationReadDTO>>(
                 await _applicationService.GetPageByProjectIdAsync(projectId, filter));
+            var totalApplications = await _applicationService.GetTotalProjectApplicationsAsync(
+                projectId);
             var baseUri = _uriService.GetBaseUrl() + $"api/Applications/Project/{projectId}";
-            return new Page<ApplicationReadDTO>(applications, filter, baseUri);
+            return new Page<ApplicationReadDTO>(applications, totalApplications, filter, baseUri);
         }
 
         /// <summary> Adds a new application entry to the database. </summary>

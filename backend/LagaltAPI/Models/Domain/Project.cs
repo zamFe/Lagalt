@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace LagaltAPI.Models.Domain
@@ -26,7 +27,8 @@ namespace LagaltAPI.Models.Domain
         public ICollection<User> Users { get; set; }
 
         // Data.
-        public int[] AdministratorIds { get; set; }
+        [Required]
+        public int[] AdministratorIds { get; set; } = Array.Empty<int>();
 
         [MaxLength(40), Required]
         public string Title { get; set; }

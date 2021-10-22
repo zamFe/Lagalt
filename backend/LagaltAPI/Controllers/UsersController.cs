@@ -138,13 +138,13 @@ namespace LagaltAPI
         }
 
         /// <summary>
-        /// Updates the list of viewed projects for a specified user by Id,
+        ///     Updates the list of viewed projects for a specified user by id.
         /// </summary>
         /// <param name="userId"> The id of the user to update. </param>
-        /// <param name="projectIds"> The array of projects that have been viewed </param>
+        /// <param name="projectIds"> The ids of projects that have been viewed. </param>
         /// <returns>
         ///     NoContent on successful database update,
-        ///     or NotFound if the provided id does not match any users in the database.
+        ///     or NotFound if the provided user id does not match any users in the database.
         /// </returns>
         /// <exception cref="DbUpdateConcurrencyException">
         ///     Thrown when the user is found in the database but not able to be updated.
@@ -171,13 +171,13 @@ namespace LagaltAPI
         }
 
         /// <summary>
-        /// Updates the list of clicked projects for a specified user by Id,
+        ///     Updates the list of clicked projects for a specified user by id.
         /// </summary>
         /// <param name="userId"> The id of the user to update. </param>
-        /// <param name="projectIds"> The array of projects that have been clicked </param>
+        /// <param name="projectIds"> The ids of projects that have been clicked </param>
         /// <returns>
         ///     NoContent on successful database update,
-        ///     or NotFound if the provided id does not match any users in the database.
+        ///     or NotFound if the provided user id does not match any users in the database.
         /// </returns>
         /// <exception cref="DbUpdateConcurrencyException">
         ///     Thrown when the user is found in the database but not able to be updated.

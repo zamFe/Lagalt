@@ -18,11 +18,26 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
+        // Could be expanded to implement a profanity filter.
+        public bool UserCanPostMessage(Message message)
+        {
+            return  _context.Projects
+                .Where(project => project.Id == message.ProjectId)
+                .Any(project => project.Users.Any(user => user.Id == message.UserId));
+        }
+
         public async Task<Message> AddAsync(Message newMessage)
         {
+            var user = await _context.Users
+                .Include(user => user.Skills)
+                .Where(user => user.Id == newMessage.UserId)
+                .FirstAsync();
+            user.ContributedTo = user.AppliedTo.Union(new int[] {newMessage.ProjectId}).ToArray();
+            newMessage.User = user;
+
+            _context.Entry(user).State = EntityState.Modified;
             _context.Messages.Add(newMessage);
             await _context.SaveChangesAsync();
-            newMessage.User = await _context.Users.FindAsync(newMessage.UserId);
             return newMessage;
         }
 
@@ -42,10 +57,18 @@ namespace LagaltAPI.Services
                 .AsNoTracking()
                 .Include(message => message.User)
                 .Where(message => message.ProjectId == projectId)
+                .OrderByDescending(message => message.Id)
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
-                .OrderByDescending(message => message.Id)
                 .ToListAsync();
+        }
+
+        public async Task<int> GetTotalProjectMessagesAsync(int projectId)
+        {
+            return await _context.Messages
+                .AsNoTracking()
+                .Where(message => message.ProjectId == projectId)
+                .CountAsync();
         }
     }
 }
