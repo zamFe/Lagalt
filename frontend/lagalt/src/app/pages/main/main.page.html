@@ -1,7 +1,14 @@
 <main>
-  <div (click)="goToProject()">
-    <div class="">
+  <div >
       <app-main-list-of-projects></app-main-list-of-projects>
   </div>
-  </div>
 </main>
+<footer class="pagination container justify-content-center" *ngIf="totalPages !== 1">
+  <div>
+    <div class="mt-1">
+      <button class="btn btn-outline-dark" (click)="onPrevClick()" [disabled]="currentPage === 1">Prev</button>&nbsp;
+      <button class="btn btn-outline-dark" (click)="onNextClick()" [disabled]="currentPage === totalPages">Next</button>
+    </div>
+    <p class="text-center mt-1">Page {{ currentPage }} of {{ totalPages }}</p>
+  </div> 
+</footer>

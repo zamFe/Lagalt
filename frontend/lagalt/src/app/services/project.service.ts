@@ -26,10 +26,17 @@ const defaultProject: Project = {
 })
 export class ProjectService {
 
-    // Store varaibles
+    // Store observables
     public readonly projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
-    public readonly renderProjects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
+    public readonly myProjects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
     public readonly project$: BehaviorSubject<Project> = new BehaviorSubject<Project>(defaultProject);
+
+    // Page properties
+    public offset = 0;
+    public limit = 2;
+    public pages = 0;
+    public currentPage = 1;
+    public totalEntities = 0;
 
     constructor(private readonly http : HttpClient) {
     }
@@ -38,8 +45,8 @@ export class ProjectService {
     public setProjects(projects: Project[]): void {
         this.projects$.next(projects)
     }
-    public setRenderProjects(projects: Project[]): void {
-        this.renderProjects$.next(projects)
+    public setMyProjects(projects: Project[]): void {
+        this.myProjects$.next(projects)
     }
     public setProject(project: Project): void {
         this.project$.next(project)
@@ -55,15 +62,51 @@ export class ProjectService {
         this.setProjects(projects)
     }
 
+    // Page modifiers
+    nextPageMainProjects(): void {
+        this.offset += this.limit;
+        this.currentPage++;
+        this.getProjects();
+    }
+    prevPageMainProjects(): void {
+        this.offset -= this.limit;
+        this.currentPage--;
+        this.getProjects();
+    }
+
+    nextPageMyProjects(userId: number): void {
+        this.offset += this.limit;
+        this.currentPage++;
+        this.getProjectsByUserId(userId);
+    }
+    prevPageMyProjects(userId: number): void {
+        this.offset -= this.limit;
+        this.currentPage--;
+        this.getProjectsByUserId(userId);
+    }
+
+    nextPageRecommendedProjects(userId: number): void {
+        this.offset += this.limit;
+        this.currentPage++;
+        this.getRecommendedProjectsByUserId(userId);
+    }
+    prevPageRecommendedProjects(userId: number): void {
+        this.offset -= this.limit;
+        this.currentPage--;
+        this.getRecommendedProjectsByUserId(userId);
+    }
+
+
     // API CRUD calls
     public getProjects(): Subscription {
-        return this.http.get<ProjectPageWrapper>(API_URL)
+        return this.http.get<ProjectPageWrapper>(`${API_URL}?offset=${this.offset}&limit=${this.limit}`)
             .subscribe((page: ProjectPageWrapper) => {
                 this.setProjects(page.results)
-                if (this.renderProjects$.value.length < page.results.length) {
-                    this.setRenderProjects(page.results)
-                }
-               
+                // if (this.renderProjects$.value.length < page.results.length) {
+                //     this.setMyProjects(page.results)
+                // }
+                this.totalEntities = page.totalEntities;
+                this.pages = Math.ceil(this.totalEntities/this.limit)
             });
     }
 
@@ -71,8 +114,8 @@ export class ProjectService {
     public getProjectsByUserId(userId : number): Subscription {
         return this.http.get<ProjectPageWrapper>(`${API_URL}/User/${userId}`)
             .subscribe((project: ProjectPageWrapper) => {
-                this.setProjects(project.results)
-                this.setRenderProjects(project.results)
+                this.setMyProjects(project.results)
+                this.pages = Math.ceil(this.totalEntities/this.limit)
             });
     }
 
@@ -87,7 +130,8 @@ export class ProjectService {
     public getRecommendedProjectsByUserId(userId: number): Subscription {
         return this.http.get<ProjectPageWrapper>(`${API_URL}/Recommended/${userId}`)
             .subscribe((page: ProjectPageWrapper) => {
-                this.setRenderProjects(page.results)
+                this.setProjects(page.results)
+                this.pages = Math.ceil(this.totalEntities/this.limit)
             })
     }
 

@@ -10,23 +10,32 @@ import { Router, RouterLink, NavigationExtras } from '@angular/router';
 })
 export class MainPage implements OnInit {
 
-  constructor(private readonly projectService: ProjectService,
-     private readonly skillsService: SkillService, private readonly router : Router) { }
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly skillsService: SkillService) {
+
+    }
+
+  get totalPages(): number {
+    return this.projectService.pages;
+  }
+  get currentPage(): number {
+    return this.projectService.currentPage;
+  }
+
+  onNextClick() {
+    // check if main, myprojects or recommended
+    this.projectService.nextPageMainProjects();
+  }
+  
+  onPrevClick() {
+    // check if main, myprojects or recommended
+    this.projectService.prevPageMainProjects();
+  }
 
   ngOnInit(): void {
-    // if (this.projectService.renderProjects$.value.length !== 0) {
-    //   this.projectService.getProjectsAndSetRender();
-    // }
-    // else {
-      
-    // }
     this.projectService.getProjects();
     this.skillsService.getSkills();
     
   }
-  goToProject(){
-    this.router.navigate(["project"])
-  }
-
-
 }

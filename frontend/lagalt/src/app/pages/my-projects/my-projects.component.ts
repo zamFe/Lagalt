@@ -13,19 +13,28 @@ export class MyProjectsComponent implements OnInit{
 
   public userId: number = 0;
   public projectId: number = 0;
+  private userIdsInProject: number[] = [];
   constructor(private readonly projectService: ProjectService,
     private readonly skillsService: SkillService,
     private readonly messageService : MessageService) {
       this.projectService.project$.subscribe(data => {
         this.projectId = data.id
+        this.userIdsInProject = data.users.map(u => {
+          return u.id
       })
-   }
+    })
+  }
 
   ngOnInit(): void {
     this.userId = Number(localStorage.getItem('userId'))
     this.projectService.getProjectsByUserId(this.userId);
     this.skillsService.getSkills();
-    this.messageService.getMessagesByProjectId(this.projectId)
+    
+    // CHECK IF USER IS IN PROJECT
+    if (this.userIdsInProject.includes(this.userId)) {
+      this.messageService.getMessagesByProjectId(this.projectId)
+    }
+    
   }
 
 

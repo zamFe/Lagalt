@@ -14,7 +14,7 @@ export class MyProjectsListOfProjectsComponent implements OnInit, OnDestroy {
   public projects: Project[] = [];
 
   constructor(private readonly projectService: ProjectService, private readonly router : Router) {
-    this.projects$ = this.projectService.renderProjects$.subscribe((projects: Project[]) => {
+    this.projects$ = this.projectService.myProjects$.subscribe((projects: Project[]) => {
       this.projects = projects
     })
    }

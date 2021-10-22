@@ -27,7 +27,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.projectService.projects$.subscribe(data => {
       searchResults = data.filter(p => p.title.toLowerCase().includes(searchProjectForm.value.searchInput.toLowerCase()))
     }).unsubscribe()
-    this.projectService.setRenderProjects(searchResults)
+    this.projectService.setProjects(searchResults)
   }
 
   searchMusic(searchProjectForm : NgForm): void {
@@ -36,7 +36,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.projectService.projects$.subscribe(data => {
       searchResults = data.filter(p => p.title.includes(searchProjectForm.value.searchInput) && p.profession.id === 1)
     }).unsubscribe()
-    this.projectService.setRenderProjects(searchResults)
+    this.projectService.setProjects(searchResults)
   }
 
   searchFilm(searchProjectForm : NgForm): void {
@@ -45,7 +45,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.projectService.projects$.subscribe(data => {
       searchResults = data.filter(p => p.title.includes(searchProjectForm.value.searchInput) && p.profession.id === 2)
     }).unsubscribe()
-    this.projectService.setRenderProjects(searchResults)
+    this.projectService.setProjects(searchResults)
   }
 
   searchGame(searchProjectForm : NgForm): void {
@@ -54,7 +54,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.projectService.projects$.subscribe(data => {
       searchResults = data.filter(p => p.title.includes(searchProjectForm.value.searchInput) && p.profession.id === 3)
     }).unsubscribe()
-    this.projectService.setRenderProjects(searchResults)
+    this.projectService.setProjects(searchResults)
   }
 
   searchWeb(searchProjectForm : NgForm): void {
@@ -63,7 +63,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.projectService.projects$.subscribe(data => {
       searchResults = data.filter(p => p.title.includes(searchProjectForm.value.searchInput) && p.profession.id === 4)
     }).unsubscribe()
-    this.projectService.setRenderProjects(searchResults)
+    this.projectService.setProjects(searchResults)
     
     
   }
