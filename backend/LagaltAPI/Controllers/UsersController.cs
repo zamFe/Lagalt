@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace LagaltAPI
@@ -13,7 +14,7 @@ namespace LagaltAPI
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
-    [Authorize]
+    //[Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -80,6 +81,10 @@ namespace LagaltAPI
         [HttpPost]
         public async Task<ActionResult<UserCompleteReadDTO>> PostUser(UserCreateDTO dtoUser)
         {
+            var existingUser = await _service.GetReadonlyByUsernameAsync(dtoUser.Username);
+            if (existingUser != null)
+                return Conflict("User Already Exsists!");
+
             User domainUser = _mapper.Map<User>(dtoUser);
             await _service.AddAsync(domainUser, dtoUser.Skills);
 
