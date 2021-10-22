@@ -26,18 +26,32 @@
     <div class="col-sm-3">
 
     </div>
-    <div class="col-sm-3">
+    <div *ngIf="this.skillMatched === 'Matched', else noMatch" class="col-sm-3">
       <div class="d-flex col col-sm-4">
         <span class="row-sm-6 align-self-center">
           Nødvendige ferdigheter:
         </span>
         <ul class="row-sm-6">
-          <li *ngFor="let skill of skillsNeeded">
-            {{skill.name}}
+          <li class = "list-item" *ngFor="let skill of project.skills">
+              {{skill.name}}            
           </li>
         </ul>
       </div>
     </div>
+    <ng-template #noMatch>
+      <div class="col-sm-3">
+        <div class="d-flex col col-sm-4">
+          <span class="row-sm-6 align-self-center">
+            Nødvendige ferdigheter:
+          </span>
+          <ul class="row-sm-6">
+            <li *ngFor="let skill of project.skills">
+                {{skill.name}}            
+            </li>
+          </ul>
+        </div>
+      </div>
+    </ng-template>
   </li>
 </div>
 

@@ -25,6 +25,7 @@
           {{project.description}}
         </h5>
       </div>
+
       <div class="col-sm-5 project-skills text-start">
         <h3>
           Erfaringer som søkes etter:
@@ -32,6 +33,12 @@
         <h5 *ngFor="let skill of project.skills">
         {{skill.name}}
         </h5>
+      </div>
+      <div>
+        <button class = 
+        "btn skill form-control"
+          type="submit">Legg til erfaring
+        </button>
       </div>
     </div>
     <div class="row">
