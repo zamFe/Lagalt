@@ -12,15 +12,13 @@
       {{state}}
     </mat-radio-button>
   </mat-radio-group>
-  <div>Your Project status is: {{progress}}</div>  
+  <div>Your Project status is: {{progress}}</div>
 </div>
   <ng-template #isUser>
   <div *ngIf="this.userRole === 'user', else isGuest">
-    <h1>IKKE TILGANG RIP</h1>
   </div>
 </ng-template>
 <ng-template #isGuest>
   <div>
-    <h1>GUEST</h1>
   </div>
 </ng-template>

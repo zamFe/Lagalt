@@ -6,6 +6,8 @@ import { ProjectService } from 'src/app/services/project.service';
 import { Observable, Subscription } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 import { UserComplete } from 'src/app/models/user/user-complete.model';
+import { Application, PostApplication } from 'src/app/models/application.model';
+import { ApplicationService } from 'src/app/services/application.service';
 
 @Component({
   selector: 'app-project-apply-pop-up',
@@ -16,9 +18,17 @@ export class ProjectApplyPopUpComponent implements OnInit, OnDestroy {
   private project$: Subscription
   private user$ : Subscription
   public progress: string = "";
-  public adminId : number[] | undefined;
-  public userId : number | undefined;
+  public adminId : number[] = [];
+  public userId : number = 0;
+  public projectId : number = 0
   public userRole: string = ""
+  public userAccept : boolean = true
+
+  public application : PostApplication = {
+    projectId: 0,
+    userId: 0,
+    motivation: ''
+  }
 
   closeResult = '';
 
@@ -26,11 +36,15 @@ export class ProjectApplyPopUpComponent implements OnInit, OnDestroy {
   public textAreaForm: FormGroup;
 
   constructor(private modalService: NgbModal, private fb : FormBuilder,
-    private readonly projectService: ProjectService, private readonly userService: UserService) {
+    private readonly projectService: ProjectService, private readonly userService: UserService,
+    private readonly applicationService : ApplicationService) {
     this.textAreaForm = fb.group({
       textArea: ""
     });
 
+    this.project$ = this.projectService.project$.subscribe((project : Project) => {
+      this. projectId = project.id
+    })
 
     this.project$ = this.projectService.project$.subscribe((project : Project) => {
       this.adminId = project.administratorIds
@@ -50,6 +64,12 @@ export class ProjectApplyPopUpComponent implements OnInit, OnDestroy {
     else {
       this.userRole = "guest"
     }
+  }
+  applyToProject(){
+    this.application.userId = this.userId
+    this.application.projectId = this.projectId
+    this.application.motivation = this.textAreaForm.value.textArea
+    this.applicationService.postApplication(this.application)
   }
 
   open(content: any) {

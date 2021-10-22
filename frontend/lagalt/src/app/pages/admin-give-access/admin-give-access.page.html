@@ -1,32 +1,41 @@
 <div class="container border my-1 text-center d-flex flex-column">
   <ul class="d-flex flex-wrap flex-column">
-    <li class="projectItem row">
-      <div class="col-sm-3">
-        <div class="row mt-3">
-          <span class="align-self-center h4">Brukernavn:</span>
-          <span class="align-self-center h4">Rahul</span>
-          <div class="button-box col-lg-12">
-            <a class="btn-accept">Accept</a>
-            <a class="btn-decline">Decline</a>
-          </div>       
-
-        </div>
-      </div>
-      <div class="col-sm-9">
-        <div class="container">
-          <div class="row">
-            <div class="form-group col-sm">
-              <label for="exampleFormControlTextarea1">Erfaringer som prosjektet trenger</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly></textarea>
-            </div>
-            <div class="form-group col-sm">
-              <label for="exampleFormControlTextarea1">Bruker beskrivelse</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly></textarea>
+    <div *ngFor="let application of applications">
+      <li class="projectItem row">
+        <div class="col-sm-3">
+          <div class="row mt-3">
+            <span class="align-self-center h4">Brukernavn:</span>
+            <span class="align-self-center h4">{{application.user.username}}</span>
+            <div class="button-box col-lg-12">
+              <button type="button" class="btn-accept" (click)="acceptApplication">Godkjenn</button>
+              <button type="button" class="btn-decline" (click)="declineApplication">Avvis</button>
             </div>
           </div>
         </div>
-      </div>
-
-    </li>  
+        <div class="col-sm-9">
+          <div class="container">
+            <div class="row">
+              <div class="form-group col-sm">
+                <div style="font-weight:bold;">
+                  Erfaringer som prosjektet trenger
+                </div>
+                <div>
+                  {{application.user.skills}}
+                </div>
+              </div>
+              <div class="form-group col-sm">
+                <div style="font-weight:bold;">
+                  Motivasjon for å bli med
+                </div>
+                <br/>
+                <div>
+                  {{application.motivation}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </div>
   </ul>
 </div>

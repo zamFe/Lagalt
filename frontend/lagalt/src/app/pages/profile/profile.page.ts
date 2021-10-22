@@ -47,6 +47,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     private readonly skillService : SkillService, private readonly projectService: ProjectService) {
     this.user$ = this.userService.user$.subscribe((user: UserComplete) => {
       this.user = user;
+      localStorage.setItem('userId', JSON.stringify(user.id)); 
     })
 
     this.skills$ = this.userService.user$.subscribe((user: UserComplete) => {
@@ -59,7 +60,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     this.auth.idTokenClaims$.subscribe(data => localStorage.setItem('token', data!.__raw));
     this.auth.user$.subscribe(
       (profile) => {
-        (this.user.username = JSON.parse(JSON.stringify(profile?.nickname, null, 2)))
+        this.user.username = JSON.parse(JSON.stringify(profile?.nickname, null, 2))
         this.userService.userExists(this.user.username).pipe(finalize(() => {
         })).subscribe(res => {
           if(res){
@@ -67,10 +68,10 @@ export class ProfilePage implements OnInit, OnDestroy {
          }
         }, () => {
           this.userService.postUserByUsername(this.user.username)
-        });  
+        }); 
+        
       }
     );
-    
   }
 
 

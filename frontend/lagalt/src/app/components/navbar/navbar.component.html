@@ -7,13 +7,13 @@
             <app-search></app-search>
         </div>
         <div class="collapse navbar-collapse justify-content-center">
-            <app-add-new-project></app-add-new-project>
+            <app-add-new-project *ngIf="userId !== 0"></app-add-new-project>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mb-0 mb-lg-0 justify-content-between">
                 <li class="nav-item"><a class="nav-link" routerLink="main">Hjem</a></li>
-                <li *ngIf="user.id !== 0" class="nav-item"><a class="nav-link" routerLink="my-project">Mine Prosjekter</a></li>
-                <li *ngIf="user.id !== 0" class="nav-item"><a class="nav-link" routerLink="profile">Min Profil</a></li>
+                <li *ngIf="userId !== 0" class="nav-item"><a class="nav-link" routerLink="my-projects">Mine Prosjekter</a></li>
+                <li *ngIf="userId !== 0" class="nav-item"><a class="nav-link" routerLink="profile">Min Profil</a></li>
                 <app-auth-nav></app-auth-nav>
             </ul>
                 

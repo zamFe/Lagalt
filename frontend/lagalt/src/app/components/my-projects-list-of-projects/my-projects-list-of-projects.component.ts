@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from 'src/app/models/project.model';
 import { ProjectService } from 'src/app/services/project.service';
@@ -19,8 +19,8 @@ export class MyProjectsListOfProjectsComponent implements OnInit, OnDestroy {
     })
    }
 
-   goToProject(){
-     this.router.navigate(["project"])
+   goToProject(id: number){
+     this.router.navigateByUrl(`/project/${id}`)
    }
   ngOnInit(): void {
   }

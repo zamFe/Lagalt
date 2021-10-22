@@ -1,5 +1,5 @@
 import { Component, NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, NavigationExtras } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 
 import { ProjectPage } from './pages/project/project.page';
@@ -24,15 +24,15 @@ const routes: Routes = [
       canActivate: [AuthGuard]
   },
   {
-      path : 'project',
+      path : 'project/:id',
       component : ProjectPage,
   },
   {
-    path : 'approval',
+    path : 'project/:id/applications',
     component : AdminGiveAccessPage,
   },
   {
-      path : 'my-project',
+      path : 'my-projects',
       component : MyProjectsComponent
   },
 ]

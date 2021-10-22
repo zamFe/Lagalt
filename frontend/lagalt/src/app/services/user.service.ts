@@ -54,12 +54,6 @@ export class UserService {
         });
   }
 
-  // BRUKES DENNE?
-  public getUserExistStatus(username : string): Observable<any> {
-    const url = (API_URL_USERS +`/Username${username}`);
-    return this.http.get(url);
-  }
-
   public getUserByUsername(username: string): Subscription{
     return this.http.get<UserComplete>(`${API_URL_USERS}/username/${username}`)
         .subscribe((user: UserComplete) => {
