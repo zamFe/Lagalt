@@ -89,8 +89,10 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<UpdateReadDTO>> PostUpdate(UpdateCreateDTO dtoUpdate)
         {
             var domainUpdate = _mapper.Map<Update>(dtoUpdate);
-            domainUpdate = await _updateService.AddAsync(domainUpdate);
+            if (!_updateService.UpdateIsValid(domainUpdate))
+                return BadRequest();
 
+            domainUpdate = await _updateService.AddAsync(domainUpdate);
             return CreatedAtAction("GetUpdate",
                 new { updateId = domainUpdate.Id },
                 _mapper.Map<UpdateReadDTO>(domainUpdate));

@@ -18,6 +18,14 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
+        // Could be expanded to implement a profanity filter.
+        public bool UpdateIsValid(Update update)
+        {
+            return _context.Projects
+                .Where(project => project.Id == update.ProjectId)
+                .Any(project => project.AdministratorIds.Contains(update.UserId));
+        }
+
         public async Task<Update> AddAsync(Update newUpdate)
         {
             newUpdate.User = await _context.Users.FindAsync(newUpdate.UserId);
