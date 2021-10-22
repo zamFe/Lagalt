@@ -100,7 +100,6 @@ export class ProjectService {
 
     // IKKE TESTET
     public putProject(project: PutProject): Subscription {
-      console.log(project.id);
         this.removeProject(project.id)
         return this.http.put<Project>(`${API_URL}/${project.id}`, project)
         .subscribe((response: Project) => {

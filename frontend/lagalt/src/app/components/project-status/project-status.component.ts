@@ -80,7 +80,6 @@ export class ProjectStatusComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    console.log(this.putProject);
 
 
   }
