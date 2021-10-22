@@ -19,7 +19,7 @@ namespace LagaltAPI.Services
 
         private async Task<User> HandleUserPrivacy(User user)
         {
-            if (user.Hidden)
+            if (false) //user.Hidden)
             {
                 user.Description = null;
                 user.Portfolio = null;
