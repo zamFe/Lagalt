@@ -34,7 +34,7 @@ Hostet at: [lagalt website](https://orange-tree-0b9310403.azurestaticapps.net)
 ### Back-End
 
 The Lagalt API is written in ASP.NET.
-Hostet at: [lagalt API](https://lagalt-api-f.herokuapp.com)
+Hostet at: [lagalt API](https://lagalt-api-f.azurewebsites.net)
 
 ### Data Storage
 
