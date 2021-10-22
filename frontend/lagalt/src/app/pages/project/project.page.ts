@@ -7,6 +7,10 @@ import { MessageService } from 'src/app/services/message.service';
 import { Message } from 'src/app/models/message.model';
 import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute } from '@angular/router';
+import { UserComplete } from 'src/app/models/user/user-complete.model';
+import { NgForm } from '@angular/forms';
+import { SkillService } from 'src/app/services/skill.service';
+
 
 
 
@@ -16,19 +20,9 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./project.page.css']
 })
 export class ProjectPage implements OnInit, OnDestroy {
-
-  // projectIndusty: string = 'Creative field(film)'
-  // projectName: string = "Project name"
-  // userName: string = 'Michael Jordan'
-  // date: string = "01.01.2012"
-  // projectStatus: string = "Under dev"
-  // skillsNeeded: string[] = ['web dev', 'C#', 'Angular']
-  // projectImage: string = "https://avatars.dicebear.com/api/initials/cm.svg"
-  // projecDescription: string = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-  // projectTags: string[] = ['#test', '#lagalt']
-
   private readonly projectId: number = 0;
   private project$: Subscription
+
 
   public project: Project = {
     id: 0,
@@ -43,8 +37,20 @@ export class ProjectPage implements OnInit, OnDestroy {
     administratorIds: []
   };
 
-  constructor(private readonly projectService: ProjectService,
+  public user: UserComplete = {
+    id: 0,
+    username: '',
+    description: '',
+    image: '',
+    portfolio: '',
+    skills: [],
+    projects: []
+  }
+
+  constructor(private readonly projectService : ProjectService,
               private readonly messageService : MessageService,
+              private readonly userService : UserService,
+              private readonly skillService : SkillService,
               private route: ActivatedRoute) {
 
     this.projectId = Number(this.route.snapshot.params.id)
@@ -62,5 +68,28 @@ export class ProjectPage implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.project$.unsubscribe();
   }
+
+  
+  addSkill(addSkillForm : NgForm){
+
+    let projectId : number[] = []
+    this.projectService.project$.subscribe((project : Project) => {
+      projectId = [project.id]
+    })
+
+    let newSkill : Object = {
+      name: addSkillForm.value.skills,
+      users: [],
+      projects: projectId
+    }
+    this.skillService.postSkill(newSkill)
+  }
+
+  refresh() {
+    setTimeout(function(){
+      window.location.reload();
+        },1000)
+  }
+  
 
 }
