@@ -1,23 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace LagaltAPI.Models
+namespace LagaltAPI.Models.Domain
 {
-    /// <summary>Simple data model representing a project at Lagalt</summary>
+    /// <summary> Simple data model representing a project at Lagalt </summary>
     public class Project
     {
-        //PK
+        // Private key.
         public int Id { get; set; }
 
-        //FK Profession
+        // Navigation & foreign key property for relationship with profession.
         public int ProfessionId { get; set; }
         public Profession Profession { get; set; }
 
-        //Many-to-One Relation
+        // Collection navigation property for relationship with messages.
         public ICollection<Message> Messages { get; set; }
 
-        //Many-to-Many Relation
-        public ICollection<UserProject> UserProjects { get; set; }
+        // Collection navigation property for relationship with skills.
+        public ICollection<Skill> Skills { get; set; }
+
+        // Collection navigation property for relationship with users.
+        public ICollection<User> Users { get; set; }
+
+        // Data.
+        public int[] AdministratorIds { get; set; }
 
         [MaxLength(40), Required]
         public string Title { get; set; }
