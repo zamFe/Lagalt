@@ -12,7 +12,6 @@ export class NavbarComponent implements OnInit {
     this.userService.user$.subscribe(data => {
       if (this.userId === 0) {
         this.userId = data.id
-        console.log("tried to get user:", data.id)
       }
     })
    }
