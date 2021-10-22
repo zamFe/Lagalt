@@ -1,14 +1,14 @@
-using Google.Apis.Auth.AspNetCore3;
+using AspNetCoreRateLimit;
 using LagaltAPI.Auth;
 using LagaltAPI.Context;
 using LagaltAPI.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -24,15 +24,41 @@ namespace LagaltAPI
     public class Startup
     {
         private readonly string _clientOrigin = "Client Origin";
+        public IConfigurationRoot Configuration { get; set; }
+        public Startup(IWebHostEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            Configuration = builder.Build();
+        }
 
         // This method gets called by the runtime.
         // Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Rate limiting
+            services.AddOptions();
+            services.AddMemoryCache();
+            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+            services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
+            services.AddInMemoryRateLimiting();
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+            //automapper
             services.AddAutoMapper(typeof(Startup));
 
+            //controllers and services
             services.AddControllers();
+            services.AddScoped(typeof(ApplicationService));
+            services.AddScoped(typeof(MessageService));
+            services.AddScoped(typeof(ProjectService));
+            services.AddScoped(typeof(ProfessionService));
+            services.AddScoped(typeof(SkillService));
+            services.AddScoped(typeof(UserService));
+            services.AddScoped(typeof(UpdateService));
 
+            //Policy
             services.AddCors(options =>
             {
                 options.AddPolicy(name: _clientOrigin,
@@ -43,16 +69,7 @@ namespace LagaltAPI
                                   );
             });
 
-            services.AddScoped(typeof(ApplicationService));
-            services.AddScoped(typeof(MessageService));
-            services.AddScoped(typeof(ProjectService));
-            services.AddScoped(typeof(ProfessionService));
-            services.AddScoped(typeof(SkillService));
-            services.AddScoped(typeof(UserService));
-            services.AddScoped(typeof(UpdateService));
-
-            services.AddAutoMapper(typeof(Startup));
-
+            // Entity Framework
             services.AddDbContext<LagaltContext>(options =>
             {
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -91,6 +108,7 @@ namespace LagaltAPI
                 options.UseNpgsql(connStr);
             });
 
+            // URI
             services.AddHttpContextAccessor();
             services.AddScoped(typeof(UriService), options =>
             {
@@ -100,7 +118,7 @@ namespace LagaltAPI
                 return new UriService(baseUri);
             });
 
-            //Auth0
+            // Authentication and Authorization
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -113,14 +131,13 @@ namespace LagaltAPI
                         NameClaimType = ClaimTypes.NameIdentifier
                     };
                 });
-
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("read:users", policy => policy.Requirements.Add(new HasScopeRequirement("read:users", $"https://{Environment.GetEnvironmentVariable("AUTH_DOMAIN")}/")));
             });
-
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
+            //Swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -135,8 +152,6 @@ namespace LagaltAPI
             });
         }
 
-        // This method gets called by the runtime.
-        // Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -149,6 +164,7 @@ namespace LagaltAPI
                     c.RoutePrefix = string.Empty;
             });
 
+            app.UseIpRateLimiting();
             app.UseHttpsRedirection();
             app.UseRouting();
 
