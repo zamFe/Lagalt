@@ -20,9 +20,16 @@ namespace LagaltAPI.Services
 
         public async Task<Message> AddAsync(Message newMessage)
         {
+            var user = await _context.Users
+                .Include(user => user.Skills)
+                .Where(user => user.Id == newMessage.UserId)
+                .FirstAsync();
+            user.ContributedTo = user.AppliedTo.Union(new int[] {newMessage.ProjectId}).ToArray();
+            newMessage.User = user;
+
+            _context.Entry(user).State = EntityState.Modified;
             _context.Messages.Add(newMessage);
             await _context.SaveChangesAsync();
-            newMessage.User = await _context.Users.FindAsync(newMessage.UserId);
             return newMessage;
         }
 
