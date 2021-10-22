@@ -20,9 +20,9 @@ import { SkillService } from 'src/app/services/skill.service';
   styleUrls: ['./project.page.css']
 })
 export class ProjectPage implements OnInit, OnDestroy {
-  private readonly projectId: number = 0;
-  private project$: Subscription
-
+  private readonly projectId: number = 0
+  private project$: Subscription;
+  private user$: Subscription;
 
   public project: Project = {
     id: 0,
@@ -46,7 +46,11 @@ export class ProjectPage implements OnInit, OnDestroy {
     skills: [],
     projects: [],
     hidden: false,
-  }
+  };
+
+  public userId : number = 0;
+  public adminId : number[] = [];
+  public userRole: string = "";
 
   constructor(private readonly projectService : ProjectService,
               private readonly messageService : MessageService,
@@ -58,6 +62,24 @@ export class ProjectPage implements OnInit, OnDestroy {
     this.project$ = this.projectService.project$.subscribe((project: Project) => {
       this.project = project;
     })
+
+    this.project$ = this.projectService.project$.subscribe((project : Project) => {
+      this.adminId = project.administratorIds
+    })
+    
+    this.user$ = this.userService.user$.subscribe((user : UserComplete) => {
+      this.userId = user.id
+    })
+
+    if (this.userId && this.adminId?.includes(this.userId)) {
+      this.userRole = "admin"
+    }
+    else if (this.userId) {
+      this.userRole = "user"
+    }
+    else {
+      this.userRole = "guest"
+    }
 
   }
 
