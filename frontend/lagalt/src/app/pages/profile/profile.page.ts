@@ -36,13 +36,8 @@ export class ProfilePage implements OnInit, OnDestroy {
     name: ''
   }
 
-
   public isChecked = true;
   public color = 'accent';
-
-
-
-
 
   constructor(private readonly userService : UserService, public auth: AuthService,
     private readonly skillService : SkillService, private readonly projectService: ProjectService) {
