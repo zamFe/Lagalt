@@ -84,8 +84,10 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<MessageReadDTO>> PostMessage(MessageCreateDTO dtoMessage)
         {
             var domainMessage = _mapper.Map<Message>(dtoMessage);
-            domainMessage = await _service.AddAsync(domainMessage);
+            if (!_service.UserCanPostMessage(domainMessage))
+                return BadRequest();
 
+            domainMessage = await _service.AddAsync(domainMessage);
             return CreatedAtAction("GetMessage", 
                 new { messageId = domainMessage.Id }, 
                 _mapper.Map<MessageReadDTO>(domainMessage));

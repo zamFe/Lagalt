@@ -18,6 +18,14 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
+        // Could be expanded to implement a profanity filter.
+        public bool UserCanPostMessage(Message message)
+        {
+            return  _context.Projects
+                .Where(project => project.Id == message.ProjectId)
+                .Any(project => project.Users.Any(user => user.Id == message.UserId));
+        }
+
         public async Task<Message> AddAsync(Message newMessage)
         {
             var user = await _context.Users
