@@ -5,4 +5,9 @@
 .popup{
   height: 1000px;
 }
+.text-area{
+  resize: none;
+  height: 400px;
+  width: 400px;
+}
 

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Application, ApplicationResponse } from '../models/application.model';
+import { Application, ApplicationResponse, PutApplication } from '../models/application.model';
 
 const API_URL = `${environment.apiUrl}Applications`;
 
@@ -34,6 +34,12 @@ export class ApplicationService {
 
   public postApplication(application: Object): Subscription {
     return this.http.post<Application>(API_URL, application)
+      .subscribe((application: Application) => {
+        this.addApplication(application)
+      })
+  }
+  public putApplication(application: PutApplication): Subscription {
+    return this.http.put<Application>(`${API_URL}/${application.id}`, application)
       .subscribe((application: Application) => {
         this.addApplication(application)
       })

@@ -1,3 +1,4 @@
+import { Skill } from "./skill.model";
 import { UserComplete } from "./user/user-complete.model";
 
 export interface ApplicationResponse {
@@ -10,7 +11,7 @@ export interface Application {
     id: number,
     user: {
       id : number,
-      skills : [],
+      skills : Skill[],
       username : string,
       description : string,
       image : string,
@@ -25,4 +26,9 @@ export interface PostApplication {
   projectId : number,
   userId : number,
   motivation: string
+}
+export interface PutApplication {
+  id : number,
+  accepted : boolean,
+  seen: boolean
 }
