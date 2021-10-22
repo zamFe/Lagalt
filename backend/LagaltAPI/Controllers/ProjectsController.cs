@@ -15,7 +15,7 @@ namespace LagaltAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
-    [AllowAnonymous]
+    [Authorize]
     public class ProjectsController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -38,6 +38,7 @@ namespace LagaltAPI.Controllers
         ///     If it is not, then NotFound is returned instead.
         /// </returns>
         // GET: api/Projects/5
+        [AllowAnonymous]
         [HttpGet("{projectId}")]
         public async Task<ActionResult<ProjectCompleteReadDTO>> GetProject(int projectId)
         {
@@ -63,6 +64,7 @@ namespace LagaltAPI.Controllers
         ///     A page containing all available read-specific DTOs within the specified range.
         /// </returns>
         // GET api/Projects?offset=5&limit=5
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetProjects(
             [FromQuery] int offset, [FromQuery] int limit)
@@ -85,7 +87,6 @@ namespace LagaltAPI.Controllers
         ///     A page containing all available read-specific DTOs for the user.
         /// </returns>
         // GET: api/Projects/Recommended/5
-        [Authorize]
         [HttpGet("Recommended/{userId}")]
         public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetRecommendedProjects(
             int userId, [FromQuery] int offset, [FromQuery] int limit)
@@ -108,7 +109,6 @@ namespace LagaltAPI.Controllers
         ///     An enumerable containing read-specific DTOs of the projects joined by the user.
         /// </returns>
         // GET: api/Projects/User/5
-        [Authorize]
         [HttpGet("User/{userId}")]
         public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetUserProjects(
             int userId, [FromQuery] int offset, [FromQuery] int limit)
@@ -130,14 +130,22 @@ namespace LagaltAPI.Controllers
         ///     or BadRequest on failure.
         /// </returns>
         // POST: api/Projects
-        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ProjectCompleteReadDTO>> PostProject(
             ProjectCreateDTO dtoProject)
         {
-            Project domainProject = _mapper.Map<Project>(dtoProject);
-            await _projectService.AddAsync(domainProject, dtoProject.Users, dtoProject.Skills);
+            var domainProject = _mapper.Map<Project>(dtoProject);
 
+            if (dtoProject.AdministratorIds.Length == 0 || dtoProject.Users.Length == 0)
+                return BadRequest("A project must have users and administrators");
+
+            foreach (int adminId in dtoProject.AdministratorIds)
+            {
+                if (!Array.Exists(dtoProject.Users, userId => userId == adminId))
+                    return BadRequest("Project administrators must be project members");
+            }
+
+            await _projectService.AddAsync(domainProject, dtoProject.Users, dtoProject.Skills);
             return CreatedAtAction("GetProject",
                 new { projectId = domainProject.Id },
                 _mapper.Map<ProjectCompleteReadDTO>(domainProject));
@@ -159,7 +167,6 @@ namespace LagaltAPI.Controllers
         ///     Thrown when the project is found in the database but not able to be updated.
         /// </exception>
         // PUT: api/Projects/5
-        [Authorize]
         [HttpPut("{projectId}")]
         public async Task<IActionResult> PutProject(int projectId, ProjectEditDTO dtoProject)
         {
