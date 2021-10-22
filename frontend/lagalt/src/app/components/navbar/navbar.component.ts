@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { UserComplete } from 'src/app/models/user/user-complete.model';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -10,7 +8,13 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class NavbarComponent implements OnInit {
   public userId: number = 0;
-  constructor() {
+  constructor(private readonly userService: UserService) {
+    this.userService.user$.subscribe(data => {
+      if (this.userId === 0) {
+        this.userId = data.id
+        console.log("tried to get user:", data.id)
+      }
+    })
    }
 
   ngOnInit(): void {
