@@ -70,9 +70,9 @@ namespace LagaltAPI.Services
                 .AsNoTracking()
                 .Include(application => application.User.Skills)
                 .Where(application => application.ProjectId == projectId)
+                .OrderByDescending(application => application.Id)
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
-                .OrderByDescending(application => application.Id)
                 .ToListAsync();
         }
 

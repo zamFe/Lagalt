@@ -42,9 +42,9 @@ namespace LagaltAPI.Services
                 .AsNoTracking()
                 .Include(update => update.User)
                 .Where(update => update.ProjectId == projectId)
+                .OrderByDescending(application => application.Id)
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
-                .OrderByDescending(application => application.Id)
                 .ToListAsync();
         }
 

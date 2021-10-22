@@ -71,9 +71,9 @@ namespace LagaltAPI.Services
                 .AsNoTracking()
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
+                .OrderByDescending(project => project.Id)
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
-                .OrderByDescending(project => project.Id)
                 .ToListAsync();
         }
 
@@ -97,9 +97,9 @@ namespace LagaltAPI.Services
                     projectUser.Id == userId))
                 .Where(project => project.Skills.Any(projectSkill =>
                     userSkillIds.Contains(projectSkill.Id)))
+                .OrderByDescending(project => project.Id)
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
-                .OrderByDescending(project => project.Id)
                 .ToListAsync();
         }
 
@@ -111,9 +111,9 @@ namespace LagaltAPI.Services
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
                 .Where(project => project.Users.Any(user => user.Id == userId))
+                .OrderByDescending(project => project.Id)
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
-                .OrderByDescending(project => project.Id)
                 .ToListAsync();
         }
 
