@@ -44,7 +44,8 @@ export class ProjectPage implements OnInit, OnDestroy {
     image: '',
     portfolio: '',
     skills: [],
-    projects: []
+    projects: [],
+    hidden: false,
   }
 
   constructor(private readonly projectService : ProjectService,
@@ -69,7 +70,7 @@ export class ProjectPage implements OnInit, OnDestroy {
     this.project$.unsubscribe();
   }
 
-  
+
   addSkill(addSkillForm : NgForm){
 
     let projectId : number[] = []
@@ -90,6 +91,6 @@ export class ProjectPage implements OnInit, OnDestroy {
       window.location.reload();
         },1000)
   }
-  
+
 
 }
