@@ -59,7 +59,7 @@ namespace LagaltAPI
             services.AddScoped(typeof(UpdateService));
 
             //Policy
-            /*services.AddCors(options =>
+            services.AddCors(options =>
             {
                 options.AddPolicy(name: _clientOrigin,
                                   builder => builder
@@ -67,7 +67,7 @@ namespace LagaltAPI
                                   .AllowAnyHeader()
                                   .AllowAnyMethod()
                                   );
-            });*/
+            });
 
             // Entity Framework
             services.AddDbContext<LagaltContext>(options =>
