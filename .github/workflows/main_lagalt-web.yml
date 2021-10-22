@@ -28,7 +28,7 @@ jobs:
           npm run build --if-present
           
       - name: Zip artifact for deployment
-        run: zip release.zip frontend/lagalt -r
+        run: zip release.zip frontend/lagalt/* -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
