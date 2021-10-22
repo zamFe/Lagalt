@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from 'src/app/models/project.model';
-import { ProjectService } from 'src/app/services/project.service';
+import { MyProjectService } from 'src/app/services/my-project.service';
 @Component({
   selector: 'app-my-projects-list-of-projects',
   templateUrl: './my-projects-list-of-projects.component.html',
@@ -13,8 +13,8 @@ export class MyProjectsListOfProjectsComponent implements OnInit, OnDestroy {
   private projects$: Subscription;
   public projects: Project[] = [];
 
-  constructor(private readonly projectService: ProjectService, private readonly router : Router) {
-    this.projects$ = this.projectService.myProjects$.subscribe((projects: Project[]) => {
+  constructor(private readonly myProjectService: MyProjectService, private readonly router : Router) {
+    this.projects$ = this.myProjectService.myProjects$.subscribe((projects: Project[]) => {
       this.projects = projects
     })
    }

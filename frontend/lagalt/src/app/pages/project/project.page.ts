@@ -17,16 +17,6 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ProjectPage implements OnInit, OnDestroy {
 
-  // projectIndusty: string = 'Creative field(film)'
-  // projectName: string = "Project name"
-  // userName: string = 'Michael Jordan'
-  // date: string = "01.01.2012"
-  // projectStatus: string = "Under dev"
-  // skillsNeeded: string[] = ['web dev', 'C#', 'Angular']
-  // projectImage: string = "https://avatars.dicebear.com/api/initials/cm.svg"
-  // projecDescription: string = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-  // projectTags: string[] = ['#test', '#lagalt']
-
   private readonly projectId: number = 0;
   private project$: Subscription
 
@@ -42,21 +32,30 @@ export class ProjectPage implements OnInit, OnDestroy {
     source: null,
     administratorIds: []
   };
-
+  private userIdsInProject: number[] = [];
+  private userId: number = 0;
   constructor(private readonly projectService: ProjectService,
               private readonly messageService : MessageService,
+              private readonly userService: UserService,
               private route: ActivatedRoute) {
 
     this.projectId = Number(this.route.snapshot.params.id)
     this.project$ = this.projectService.project$.subscribe((project: Project) => {
       this.project = project;
+      this.userIdsInProject = project.users.map(u => {
+        return u.id
+      })
     })
-
+    this.userService.user$.subscribe(user => this.userId = user.id)
   }
 
   ngOnInit(): void {
     this.projectService.getProjectById(this.projectId)
-    this.messageService.getMessagesByProjectId(this.projectId)
+    
+    // CHECK IF USER IS IN PROJECT
+    if (this.userIdsInProject.includes(this.userId)) {
+      this.messageService.getMessagesByProjectId(this.projectId)
+    }
   }
 
   ngOnDestroy(): void {

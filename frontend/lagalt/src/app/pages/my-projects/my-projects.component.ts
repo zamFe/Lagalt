@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'src/app/services/message.service';
-import { ProjectService } from 'src/app/services/project.service';
+import { MyProjectService } from 'src/app/services/my-project.service';
 import { SkillService } from 'src/app/services/skill.service';
-import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-my-projects',
@@ -12,28 +11,31 @@ import { UserService } from 'src/app/services/user.service';
 export class MyProjectsComponent implements OnInit{
 
   public userId: number = 0;
-  public projectId: number = 0;
-  private userIdsInProject: number[] = [];
-  constructor(private readonly projectService: ProjectService,
-    private readonly skillsService: SkillService,
-    private readonly messageService : MessageService) {
-      this.projectService.project$.subscribe(data => {
-        this.projectId = data.id
-        this.userIdsInProject = data.users.map(u => {
-          return u.id
-      })
-    })
+  constructor(private readonly myProjectService: MyProjectService,
+    private readonly skillsService: SkillService) {
+  }
+  
+
+
+  get totalPages(): number {
+    return this.myProjectService.pages;
+  }
+  get currentPage(): number {
+    return this.myProjectService.currentPage;
+  }
+
+  onNextClick() {
+    this.myProjectService.nextPage(this.userId);
+  }
+  
+  onPrevClick() {
+    this.myProjectService.prevPage(this.userId);
   }
 
   ngOnInit(): void {
     this.userId = Number(localStorage.getItem('userId'))
-    this.projectService.getProjectsByUserId(this.userId);
+    this.myProjectService.getProjectsByUserId(this.userId);
     this.skillsService.getSkills();
-    
-    // CHECK IF USER IS IN PROJECT
-    if (this.userIdsInProject.includes(this.userId)) {
-      this.messageService.getMessagesByProjectId(this.projectId)
-    }
     
   }
 

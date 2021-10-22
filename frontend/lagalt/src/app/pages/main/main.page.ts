@@ -24,13 +24,11 @@ export class MainPage implements OnInit {
   }
 
   onNextClick() {
-    // check if main, myprojects or recommended
-    this.projectService.nextPageMainProjects();
+    this.projectService.nextPage();
   }
   
   onPrevClick() {
-    // check if main, myprojects or recommended
-    this.projectService.prevPageMainProjects();
+    this.projectService.prevPage();
   }
 
   ngOnInit(): void {

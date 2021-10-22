@@ -2,7 +2,6 @@ import { Injectable} from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Project } from "../models/project.model";
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { finalize, map, retry, switchMap, tap } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { ProjectPageWrapper } from "../models/project-page-wrapper.model";
 
@@ -28,7 +27,6 @@ export class ProjectService {
 
     // Store observables
     public readonly projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
-    public readonly myProjects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
     public readonly project$: BehaviorSubject<Project> = new BehaviorSubject<Project>(defaultProject);
 
     // Page properties
@@ -45,9 +43,6 @@ export class ProjectService {
     public setProjects(projects: Project[]): void {
         this.projects$.next(projects)
     }
-    public setMyProjects(projects: Project[]): void {
-        this.myProjects$.next(projects)
-    }
     public setProject(project: Project): void {
         this.project$.next(project)
     }
@@ -63,26 +58,15 @@ export class ProjectService {
     }
 
     // Page modifiers
-    nextPageMainProjects(): void {
+    nextPage(): void {
         this.offset += this.limit;
         this.currentPage++;
         this.getProjects();
     }
-    prevPageMainProjects(): void {
+    prevPage(): void {
         this.offset -= this.limit;
         this.currentPage--;
         this.getProjects();
-    }
-
-    nextPageMyProjects(userId: number): void {
-        this.offset += this.limit;
-        this.currentPage++;
-        this.getProjectsByUserId(userId);
-    }
-    prevPageMyProjects(userId: number): void {
-        this.offset -= this.limit;
-        this.currentPage--;
-        this.getProjectsByUserId(userId);
     }
 
     nextPageRecommendedProjects(userId: number): void {
@@ -109,16 +93,6 @@ export class ProjectService {
                 this.pages = Math.ceil(this.totalEntities/this.limit)
             });
     }
-
-    
-    public getProjectsByUserId(userId : number): Subscription {
-        return this.http.get<ProjectPageWrapper>(`${API_URL}/User/${userId}`)
-            .subscribe((project: ProjectPageWrapper) => {
-                this.setMyProjects(project.results)
-                this.pages = Math.ceil(this.totalEntities/this.limit)
-            });
-    }
-
 
     public getProjectById(id: number): Subscription {
         return this.http.get<Project>(`${API_URL}/${id}`)
