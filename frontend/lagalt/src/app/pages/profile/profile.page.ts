@@ -7,9 +7,8 @@ import { UserService } from 'src/app/services/user.service';
 import { SkillService } from 'src/app/services/skill.service';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { PostSkill, Skill } from 'src/app/models/skill.model';
+import { Skill } from 'src/app/models/skill.model';
 import { Project } from 'src/app/models/project.model';
-import { Profession } from 'src/app/models/profession.model';
 import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
@@ -36,25 +35,12 @@ export class ProfilePage implements OnInit, OnDestroy {
     name: ''
   }
 
-  public skillPost: PostSkill = {
-    id: 0,
-    name: '',
-    user: [],
-    project: []
-  }
-
-  public profession : Profession = {
-    id: 0,
-    name: ''
-  }
-  
   
   public isChecked = true;
   public color = 'accent';
 
-  public skills : Skill[] = []
-  public users : UserComplete[] = []
-  public projects : Project[] = []
+
+
 
 
   constructor(private readonly userService : UserService, public auth: AuthService, 
@@ -101,19 +87,19 @@ export class ProfilePage implements OnInit, OnDestroy {
   //Adds skill to a list in the user profile
   addSkill(addSkillForm : NgForm){
 
-    
+    let userId : number[] = []
     this.userService.user$.subscribe((user : UserComplete) => {
-      this.skillPost.user = [user.id]
+      userId = [user.id]
     })
 
-    this.skillPost.name = addSkillForm.value;
-
-    this.skillPost.project = []
-    console.log(this.skillPost.name)
-
+    let newSkill : Object = {
+      name: addSkillForm.value.skills,
+      users: userId,
+      projects: []
+    }
 
     
-    this.skillService.postSkill(this.skill)
+    this.skillService.postSkill(newSkill)
 
     //this.skillService.addSkill(addSkillForm)
     // WAIT WITH IMPLEMENTING TILL USER MODEL IS UPDATED with skill[] instead of array of ids

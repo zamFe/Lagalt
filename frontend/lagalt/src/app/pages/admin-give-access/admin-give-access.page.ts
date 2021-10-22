@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ApplicationService } from 'src/app/services/application.service';
-import { Application, ApplicationResponse } from 'src/app/models/application.model';
+import { Application, ApplicationResponse, PutApplication } from 'src/app/models/application.model';
 import { Skill } from 'src/app/models/skill.model';
 import { ActivatedRoute } from '@angular/router';
 
@@ -15,6 +15,11 @@ export class AdminGiveAccessPage implements OnInit {
   private application$: Subscription
   private readonly projectId: number = 0
   public applications: Application[] = []
+  private putApplication : PutApplication = {
+    id: 0,
+    accepted: false,
+    seen: false
+  }
 
 
   constructor(private readonly applicationService : ApplicationService, private route : ActivatedRoute) {
@@ -30,12 +35,22 @@ export class AdminGiveAccessPage implements OnInit {
 
   }
 
-  declineApplication(){
-
+  declineApplication(id: number){
+    this.putApplication = {
+      id : id,
+      accepted : false,
+      seen : true
+    }
+    this.applicationService.putApplication(this.putApplication)
   }
 
-  acceptApplication(){
-
+  acceptApplication(id: number){
+    this.putApplication = {
+      id : id,
+      accepted : true,
+      seen : true
+    }
+    this.applicationService.putApplication(this.putApplication)
   }
 
   ngOnInit(): void {

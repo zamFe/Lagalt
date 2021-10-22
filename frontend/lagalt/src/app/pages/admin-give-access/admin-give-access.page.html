@@ -1,14 +1,14 @@
 <div class="container border my-1 text-center d-flex flex-column">
   <ul class="d-flex flex-wrap flex-column">
-    <div *ngFor="let application of applications">
-      <li class="projectItem row">
+    <div *ngFor="let application of applications" >
+      <li class="projectItem row" *ngIf="application.seen === false">
         <div class="col-sm-3">
           <div class="row mt-3">
             <span class="align-self-center h4">Brukernavn:</span>
             <span class="align-self-center h4">{{application.user.username}}</span>
             <div class="button-box col-lg-12">
-              <button type="button" class="btn-accept" (click)="acceptApplication">Godkjenn</button>
-              <button type="button" class="btn-decline" (click)="declineApplication">Avvis</button>
+              <button type="button" class="btn-accept" (click)="acceptApplication(application.id)">Godkjenn</button>
+              <button type="button" class="btn-decline" (click)="declineApplication(application.id)">Avvis</button>
             </div>
           </div>
         </div>
@@ -19,8 +19,8 @@
                 <div style="font-weight:bold;">
                   Erfaringer som prosjektet trenger
                 </div>
-                <div>
-                  {{application.user.skills}}
+                <div *ngFor= "let skill of application.user.skills">
+                  {{skill.name}}
                 </div>
               </div>
               <div class="form-group col-sm">
