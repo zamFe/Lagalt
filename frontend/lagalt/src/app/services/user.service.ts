@@ -4,12 +4,10 @@ import { UserComplete } from "../models/user/user-complete.model";
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { catchError, finalize, mapTo, retry, switchMap, tap } from "rxjs/operators";
 import { environment } from "src/environments/environment";
-import { User } from "@auth0/auth0-spa-js";
 
 
 
 const API_URL_USERS = `${environment.apiUrl}Users`
-const API_URL_SKILLS = `${environment.apiUrl}Skills`
 const defaultUser : UserComplete = {
   id: 0,
   username: "default",
@@ -17,7 +15,8 @@ const defaultUser : UserComplete = {
   image: "",
   portfolio: "",
   skills: [],
-  projects: []
+  projects: [],
+  hidden: false
 }
 @Injectable({
   providedIn: 'root'
@@ -65,9 +64,18 @@ export class UserService {
     return this.http.get(`${API_URL_USERS}/username/${username}`)
   }
 
+
   public postUserByUsername(username : string): Subscription {
-    return this.http.post<UserComplete>(API_URL_USERS, {username: username, skills: []})
+    let newUser = {
+      username: username,
+      skills: [],
+      description : "",
+      image: "",
+      portfolio:""}
+    return this.http.post<UserComplete>(API_URL_USERS, newUser)
       .subscribe((response: UserComplete) => {
+        console.log(response);
+
         this.setUserById(response)
     });
   }

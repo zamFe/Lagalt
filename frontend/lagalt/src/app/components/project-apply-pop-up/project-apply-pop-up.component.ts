@@ -43,7 +43,7 @@ export class ProjectApplyPopUpComponent implements OnInit, OnDestroy {
     });
 
     this.project$ = this.projectService.project$.subscribe((project : Project) => {
-      this. projectId = project.id
+      this.projectId = project.id
     })
 
     this.project$ = this.projectService.project$.subscribe((project : Project) => {

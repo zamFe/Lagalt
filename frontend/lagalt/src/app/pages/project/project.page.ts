@@ -39,7 +39,7 @@ export class ProjectPage implements OnInit, OnDestroy {
     users: [],
     description: '',
     progress: '',
-    source: null,
+    source: '',
     administratorIds: []
   };
 

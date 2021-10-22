@@ -20,7 +20,9 @@
                   Erfaringer som prosjektet trenger
                 </div>
                 <div *ngFor= "let skill of application.user.skills">
+                  <div *ngIf="this.skillMatched === 'Matched'" class="col-sm-3">
                   {{skill.name}}
+                  </div>
                 </div>
               </div>
               <div class="form-group col-sm">

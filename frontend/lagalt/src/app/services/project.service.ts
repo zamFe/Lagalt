@@ -1,6 +1,6 @@
 import { Injectable} from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Project } from "../models/project.model";
+import { Project, PutProject } from "../models/project.model";
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { finalize, map, retry, switchMap, tap } from "rxjs/operators";
 import { environment } from "src/environments/environment";
@@ -16,7 +16,7 @@ const defaultProject: Project = {
     users: [],
     description: "",
     progress: "",
-    source: null,
+    source: "",
     administratorIds: []
 }
 
@@ -63,11 +63,11 @@ export class ProjectService {
                 if (this.renderProjects$.value.length < page.results.length) {
                     this.setRenderProjects(page.results)
                 }
-               
+
             });
     }
 
-    
+
     public getProjectsByUserId(userId : number): Subscription {
         return this.http.get<ProjectPageWrapper>(`${API_URL}/User/${userId}`)
             .subscribe((project: ProjectPageWrapper) => {
@@ -99,7 +99,8 @@ export class ProjectService {
     }
 
     // IKKE TESTET
-    public putProject(project: Project): Subscription {
+    public putProject(project: PutProject): Subscription {
+      console.log(project.id);
         this.removeProject(project.id)
         return this.http.put<Project>(`${API_URL}/${project.id}`, project)
         .subscribe((response: Project) => {

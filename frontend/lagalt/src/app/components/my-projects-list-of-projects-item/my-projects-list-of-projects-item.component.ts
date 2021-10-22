@@ -20,7 +20,7 @@ export class MyProjectsListOfProjectsItemComponent implements OnInit, OnDestroy 
     users: [],
     description: '',
     progress: '',
-    source: null,
+    source: '',
     administratorIds: []
   };
 

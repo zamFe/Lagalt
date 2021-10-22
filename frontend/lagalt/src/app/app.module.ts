@@ -36,8 +36,6 @@ import { MyProjectsListOfProjectsItemComponent } from './components/my-projects-
 import { ProjectApplicationsComponent } from './components/project-applications/project-applications.component';
 import { GetRecommendedComponent } from './components/get-recommended/get-recommended.component';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -91,8 +89,8 @@ import { GetRecommendedComponent } from './components/get-recommended/get-recomm
       useClass: TokenInterceptor,
       multi: true
     },
-    { 
-      provide: JWT_OPTIONS, 
+    {
+      provide: JWT_OPTIONS,
       useValue: JWT_OPTIONS
     },
     JwtHelperService

@@ -27,7 +27,8 @@ export class ProfilePage implements OnInit, OnDestroy {
     image: '',
     portfolio: '',
     skills: [],
-    projects: []
+    projects: [],
+    hidden: false
   }
 
   public skill: Skill = {
@@ -35,7 +36,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     name: ''
   }
 
-  
+
   public isChecked = true;
   public color = 'accent';
 
@@ -43,17 +44,17 @@ export class ProfilePage implements OnInit, OnDestroy {
 
 
 
-  constructor(private readonly userService : UserService, public auth: AuthService, 
+  constructor(private readonly userService : UserService, public auth: AuthService,
     private readonly skillService : SkillService, private readonly projectService: ProjectService) {
     this.user$ = this.userService.user$.subscribe((user: UserComplete) => {
       this.user = user;
-      localStorage.setItem('userId', JSON.stringify(user.id)); 
+      localStorage.setItem('userId', JSON.stringify(user.id));
     })
 
     this.skills$ = this.userService.user$.subscribe((user: UserComplete) => {
       this.user.skills = user.skills
-    })    
-    
+    })
+
   }
 
   ngOnInit(): void {
@@ -68,8 +69,8 @@ export class ProfilePage implements OnInit, OnDestroy {
          }
         }, () => {
           this.userService.postUserByUsername(this.user.username)
-        }); 
-        
+        });
+
       }
     );
   }
@@ -98,7 +99,7 @@ export class ProfilePage implements OnInit, OnDestroy {
       projects: []
     }
 
-    
+
     this.skillService.postSkill(newSkill)
 
     //this.skillService.addSkill(addSkillForm)
