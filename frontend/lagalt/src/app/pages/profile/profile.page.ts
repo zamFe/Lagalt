@@ -1,48 +1,119 @@
-import { Component, OnInit } from '@angular/core';
-import { Profile } from 'src/app/models/profile.model'
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { UserComplete } from 'src/app/models/user/user-complete.model';
 import { NgForm, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { AuthService } from '@auth0/auth0-angular';
+import { UserService } from 'src/app/services/user.service';
+import { SkillService } from 'src/app/services/skill.service';
+import { Observable, Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import { Skill } from 'src/app/models/skill.model';
+import { Project } from 'src/app/models/project.model';
+import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.css']
 })
-export class ProfilePage implements OnInit {
+export class ProfilePage implements OnInit, OnDestroy {
+  public profileJson: string = '';
+  private user$: Subscription;
+  private skills$: Subscription;
+  public user: UserComplete = {
+    id: 0,
+    username: '',
+    description: '',
+    image: '',
+    portfolio: '',
+    skills: [],
+    projects: [],
+    hidden: false
+  }
 
-  public skills : [string] = ['Using LagAlt']
-  public textAreaForm: FormGroup;
+  public skill: Skill = {
+    id: 0,
+    name: ''
+  }
+
   public isChecked = true;
   public color = 'accent';
 
-  constructor(private fb : FormBuilder) {
+  constructor(private readonly userService : UserService, public auth: AuthService,
+    private readonly skillService : SkillService, private readonly projectService: ProjectService) {
+    this.user$ = this.userService.user$.subscribe((user: UserComplete) => {
+      this.user = user;
+      localStorage.setItem('userId', JSON.stringify(user.id));
+    })
 
-    this.textAreaForm = fb.group({
-      textArea: ""
-    });
+    this.skills$ = this.userService.user$.subscribe((user: UserComplete) => {
+      this.user.skills = user.skills
+    })
+
   }
-
-
 
   ngOnInit(): void {
+    this.auth.idTokenClaims$.subscribe(data => localStorage.setItem('token', data!.__raw));
+    this.auth.user$.subscribe(
+      (profile) => {
+        this.user.username = JSON.parse(JSON.stringify(profile?.nickname, null, 2))
+        this.userService.userExists(this.user.username).pipe(finalize(() => {
+        })).subscribe(res => {
+          if(res){
+            this.userService.getUserByUsername(this.user.username)
+         }
+        }, () => {
+          this.userService.postUserByUsername(this.user.username)
+        });
+
+      }
+    );
   }
+
+
+  ngOnDestroy(): void {
+    this.user$.unsubscribe();
+  }
+
   //Changes the hidden mode button from true to false or false to true
   changed(){
-    console.log(this.isChecked);
   }
+
+
   //Adds skill to a list in the user profile
   addSkill(addSkillForm : NgForm){
-    console.log(this.skills);
 
-    if(addSkillForm){
-      this.skills.push(addSkillForm.value.skills);
+    let userId : number[] = []
+    this.userService.user$.subscribe((user : UserComplete) => {
+      userId = [user.id]
+    })
+
+    let newSkill : Object = {
+      name: addSkillForm.value.skills,
+      users: userId,
+      projects: []
     }
+
+
+    this.skillService.postSkill(newSkill)
   }
 
-  addDescription(newDescription: string){
-    if(newDescription){
 
-    }
+
+  refresh() {
+    setTimeout(function(){
+      window.location.reload();
+        },1000)
+  }
+
+  handleDescription(handleDescriptionForm : NgForm){
+    // maybe check that description is changed, and that description is not equal to empty string or white spaces
+    this.user.description = handleDescriptionForm.value.description
+    // RUN PUT USER API CALL so we can update description
+    this.userService.getTest();
+  }
+  saveUser() {
+    //this.userService.putUser(this.user)
   }
 
 }

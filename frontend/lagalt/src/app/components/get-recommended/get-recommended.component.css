@@ -1,0 +1,13 @@
+
+.filterOption {
+    padding-top: 0.01rem;
+    padding-bottom: 0.01rem;
+    border-radius: 0.1rem;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+    min-width: 3rem;
+}
+
+.btn-rec {
+    background-color: #8695a0;
+}

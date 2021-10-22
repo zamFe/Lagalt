@@ -1,0 +1,41 @@
+#searchInput {
+    min-width: 20.7rem;
+    max-height: 1.6rem;
+    border-radius: 0.1rem;
+}
+
+.btn-search {
+    max-height: 1.6rem;
+    background-color: #354A59;
+    color: white;
+    padding-top: 0.01rem;
+    padding-bottom: 0.01rem;
+}
+.btn-search:hover {
+    color:black;
+}
+
+.filterOption {
+    padding-top: 0.01rem;
+    padding-bottom: 0.01rem;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+    min-width: 3rem;
+}
+
+.btn-all {
+    background-color: #BF616A;
+}
+.btn-music {
+    background-color: #D08770;
+}
+.btn-film {
+    background-color: #EBCB8B;
+}
+.btn-game {
+    background-color: #A3BE8C;
+}
+.btn-web {
+    background-color: #B48EAD;
+    margin-right: 0;
+}

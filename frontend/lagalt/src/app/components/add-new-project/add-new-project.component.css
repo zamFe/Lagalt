@@ -1,0 +1,26 @@
+.text-area {
+    resize: none;
+}
+
+.btn-search {
+    background-color: #354A59;
+    color: white;
+    border-radius: 0.1rem;
+}
+.btn-search:hover {
+    color:black;
+}
+
+.btn-add {
+    background-color: #8695a0;
+    border-radius: 0.1rem;
+}
+
+
+.btn-add:hover {
+    color: white;
+    fill: white;
+    stroke: white;
+}
+
+

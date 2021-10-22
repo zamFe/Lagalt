@@ -13,17 +13,22 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+
+
 using Npgsql;
 using System;
 using System.IO;
 using System.Reflection;
 using System.Security.Claims;
 
+
 namespace LagaltAPI
 {
     public class Startup
     {
+
         private readonly string _clientOrigin = "Client Origin";
+
 
         // This method gets called by the runtime.
         // Use this method to add services to the container.
@@ -124,6 +129,19 @@ namespace LagaltAPI
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:4200")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod();
+                                      
+                                  });
+            });
+
+
         }
 
         // This method gets called by the runtime.
@@ -143,12 +161,14 @@ namespace LagaltAPI
             app.UseHttpsRedirection();
             app.UseRouting();
 
+
             app.UseCors(_clientOrigin);
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => endpoints.MapControllers());
+
         }
     }
 }

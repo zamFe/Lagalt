@@ -1,51 +1,75 @@
-<div>
-  <div class="project-details">
-    <div class="project-industry">
-      <h4>{{projectIndusty}}</h4>
+<div class ="pp container-fluid">
+  <div class="row project-details">
+    <img class="col-sm-2" src="{{project.image}}" alt="project logo"/>
+    <div class="col-sm-8 project-industry text-center">
+      <h1>{{project.title}}</h1>
     </div>
-
-    <div  class="project-name">
-      <h1>{{projectName}}</h1>
+    <div  class="col-sm-2 project-name text-end">
+      <div class="" style="font-weight: bold;">
+          Prosjektet er laget av: {{"username"}}
+      </div>
+      <div class="" style="font-weight: bold;">
+        Status: {{project.progress}}
+      </div>
+      <!-- <h4>{{project.profession}}</h4> -->
     </div>
-    
-    <div class="project-info">
-      <section>
-        <span>
-          <p>
-            Project created by: {{userName}} <br>
-            Date created: {{date}}
-          </p>
-        </span>
-
+    <div class="row">
+      <div class="appchat col-sm-4">
+        <app-project-chat></app-project-chat>
+      </div>
+      <div class="col-sm-5 project-description text-center">
         <h3>
-          Status: {{projectStatus}}
+          Prosjekt beskrivelse
         </h3>
-        <div class="project-image">
-          <img src = {{projectImage}}
-            alt="project logo"
-          />
-        </div>
-        <div>
-          Skills needed: {{skillsNeeded}}
-        </div>
-      </section>
-      <br />
-      <section class="project-description">
-        <h3>Project description</h3>
-        <h5>{{projecDescription}}</h5>
-      </section>
-
-      <div class="projcet-apply-button">
-        <button
-        type="submit"
-        class="apply-button"
-      >
-        Apply to join
-      </button>
+        <h5>
+          {{project.description}}
+        </h5>
       </div>
 
-      <div class="project-tags">
-        <span> {{projectTags}}</span>
+
+      <div class="col-sm-6">
+        <form #addSkillForm="ngForm" (ngSubmit)="addSkill(addSkillForm); addSkillForm.resetForm()">
+          <input
+          ngModel
+          class="form-control"
+          placeholder="Legg til erfaringer..."
+          #username="ngModel"
+          name = "skills"
+          id = "skills"
+          required> <br/>
+          <div class="p-3 justify-content-center">
+            <button class="btn skill form-control"
+            type="submit">Legg til erfaring</button>
+            <div class="col-sm-5 project-skills text-start">
+              <h3>
+                Erfaringer som søkes etter:
+              </h3>
+              <h5 *ngFor="let skill of project.skills">
+              {{skill.name}}
+              </h5>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+    </div>
+    <div class="row">
+      <div class="col-sm-1">
+      <br/>
+        <app-project-status></app-project-status>
+      </div>
+    </div>
+    <div class="row flex-row-reverse">
+      <div class="col-sm-3 text-end">
+        <app-project-apply-pop-up></app-project-apply-pop-up>
+      </div>
+      <div class="col-sm-3">
+        <app-project-applications></app-project-applications>
+      </div>
+      <div class="col-sm-6 text-start">
+        <br/>
+        <a href="{{project.source}}">Prosjektlager</a>
       </div>
     </div>
   </div>
