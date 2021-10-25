@@ -65,12 +65,26 @@ namespace LagaltAPI.Services
                 .FirstAsync();
         }
 
-        public async Task<IEnumerable<Project>> GetPageAsync(PageRange range)
+        public async Task<IEnumerable<Project>> GetPageAsync(
+            PageRange range, int professionId = 0)
         {
+            if (professionId == 0)
+            {
+                return await _context.Projects
+                .AsNoTracking()
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .OrderByDescending(project => project.Id)
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
+                .ToListAsync();
+            }
+
             return await _context.Projects
                 .AsNoTracking()
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
+                .Where(project => project.ProfessionId == professionId)
                 .OrderByDescending(project => project.Id)
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
@@ -117,9 +131,14 @@ namespace LagaltAPI.Services
                 .ToListAsync();
         }
 
-        public async Task<int> GetTotalProjectsAsync()
+        public async Task<int> GetTotalProjectsAsync(int professionId = 0)
         {
-            return await _context.Projects.CountAsync();
+            if (professionId == 0)
+             return await _context.Projects.CountAsync();
+
+            return await _context.Projects
+                .Where(project => project.ProfessionId == professionId)
+                .CountAsync();
         }
 
         public async Task<int> GetTotalRecommendedProjectsAsync(int userId)
