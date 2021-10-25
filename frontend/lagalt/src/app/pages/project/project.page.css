@@ -1,6 +1,10 @@
 
 .title{
-  margin-top: 30px;
+  background: rgb(229,233,240);
+  background: linear-gradient(90deg, rgba(229,233,240,1) 0%, rgba(216,222,233,1) 35%, rgba(229,233,240,1) 100%);
+  min-height: 60px;
+  text-align: center;
+  color: #2E3440;
 }
 .projectPage{
   background-color: #ECEFF4;
@@ -30,8 +34,15 @@
     transform: translate(-50%, -50%);
 }
 .description{
-  margin-top: 100px;
-  margin-right: 30px;
+  margin-top: 160px;
+  border: solid;
+  width: 65%;
+  border-radius: 1%;
+  border-color: #D8DEE9;
+  margin-left: 145px;
+  background-color: #E5E9F0;
+
+
 }
 .projdesc{
   margin-top: 5px;
