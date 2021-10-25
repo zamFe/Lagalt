@@ -17,6 +17,15 @@ export interface PostUser {
   description: string,
   image: string,
   portfolio: string,
+}
 
+export interface PutUser {
+  id : number,
+  skills : IdSkill[],
+  hidden : boolean,
+  username : string,
+  description : string,
+  image: string,
+  portfolio : string,
 }
 

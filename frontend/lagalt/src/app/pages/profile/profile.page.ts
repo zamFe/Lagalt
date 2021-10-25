@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UserComplete } from 'src/app/models/user/user-complete.model';
+import { PutUser, UserComplete } from 'src/app/models/user/user-complete.model';
 import { NgForm, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '@auth0/auth0-angular';
@@ -7,7 +7,7 @@ import { UserService } from 'src/app/services/user.service';
 import { SkillService } from 'src/app/services/skill.service';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { Skill } from 'src/app/models/skill.model';
+import { Skill, IdSkill } from 'src/app/models/skill.model';
 import { Project } from 'src/app/models/project.model';
 import { ProjectService } from 'src/app/services/project.service';
 
@@ -29,6 +29,15 @@ export class ProfilePage implements OnInit, OnDestroy {
     skills: [],
     projects: [],
     hidden: false
+  }
+  public putUser: PutUser = {
+    id: 0,
+    skills: [],
+    hidden: false,
+    username: '',
+    description: '',
+    image: '',
+    portfolio: ''
   }
 
   public skill: Skill = {
@@ -107,10 +116,18 @@ export class ProfilePage implements OnInit, OnDestroy {
   }
 
   handleDescription(handleDescriptionForm : NgForm){
-    // maybe check that description is changed, and that description is not equal to empty string or white spaces
-    this.user.description = handleDescriptionForm.value.description
-    // RUN PUT USER API CALL so we can update description
-    this.userService.getTest();
+    this.putUser = {
+      username : this.user.username,
+      id: this.user.id,
+      description: handleDescriptionForm.value.description,
+      image: this.user.image,
+      portfolio: this.user.portfolio,
+      skills: this.user.skills,
+      hidden: this.user.hidden,
+      }
+    console.log(this.putUser);
+
+      this.userService.putUser(this.putUser);
   }
   saveUser() {
     //this.userService.putUser(this.user)

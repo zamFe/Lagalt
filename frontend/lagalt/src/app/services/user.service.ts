@@ -1,6 +1,6 @@
 import { Injectable} from "@angular/core";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
-import { UserComplete } from "../models/user/user-complete.model";
+import { PutUser, UserComplete } from "../models/user/user-complete.model";
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { catchError, finalize, mapTo, retry, switchMap, tap } from "rxjs/operators";
 import { environment } from "src/environments/environment";
@@ -35,6 +35,7 @@ export class UserService {
   public setUserById(user: UserComplete): void {
     this.user$.next(user)
   }
+
 
    // API CRUD calls
   public getUsers(): Subscription {
@@ -81,10 +82,10 @@ export class UserService {
   }
 
   // IKKE TESTET
-  public putUser(user: UserComplete): Subscription {
+  public putUser(user: PutUser): Subscription {
     return this.http.put<UserComplete>(`${API_URL_USERS}/${user.id}`, user)
       .subscribe(() => {
-        this.setUserById(user)
+        //this.setUserById(user)
       });
   }
   public getTest() {
