@@ -1,11 +1,11 @@
 .projectdisp{
-  margin-left: 18px;
-  margin-top: 30px;
+  margin-left: 5px;
+  margin-top: 5px;
   font-weight: bold;
 }
 .statusradio{
   width: 180px;
 }
-.projectdisplay{
-
+.project-status-radio-button{
+  margin-left: 10px;
 }

@@ -12,90 +12,94 @@
           Prosjekt beskrivelse:
         </h3>
       </div>
-        <div class="projdesc text-center">
-          <h5>
-            {{project.description}}
-          </h5>
-        </div>
     </div>
     <div  class="col-sm-2 project-name text-center">
       <div class="" style="font-weight: bold;">
           <!-- Prosjektet er laget av: {{user.username}} -->
       </div>
-      <div class="" style="font-weight: bold;">
+      <div class="statusdiv" style="font-weight: bold;">
         <div class="statustext">
-          <h3>Prosjekt status:</h3>
+          <h5>Prosjekt status:</h5>
         </div>
         <div class="projectprogress text-center">
           {{project.progress}}
         </div>
       </div>
-      <div class="skilltext text-center">
-        <h3>
-          Ferdigheter som trengs:
-        </h3>
-      </div>
-      <div class="skilllist text-center">
-        <h5 *ngFor="let skill of project.skills">
-          {{skill.name}}
+      <div class="skillsdiv">
+        <div class="skilltext text-center">
+          <h5>
+            Ferdigheter som trengs:
           </h5>
-    </div>
+        </div>
+        <div class="skilllist text-start">
+          <div *ngFor="let skill of project.skills">
+            <li>
+              {{skill.name}}
+            </li>
+          </div>
+      </div>
+      </div>
+      
       <!-- <h4>{{project.profession}}</h4> -->
     </div>
   </div>
   <div class="row">
-    <div class="appchat col-sm-3" *ngIf="this.userRole === 'admin'">
+    <div class="appchat col-sm-3">
       <app-project-chat></app-project-chat>
     </div>
     <div class="col-sm-7">
-      <div class="lager">
-        <a href="{{project.source}}">Prosjektlager</a>
-      </div>
-      <div class="apply">¨
-        <app-project-apply-pop-up></app-project-apply-pop-up>
+      <div class="projdesc text-center">
+        <h5>
+          {{project.description}}
+        </h5>
       </div>
     </div>
 
-    <div class="col-sm-2 align-items-end" *ngIf="this.userRole === 'admin'">
-      <div class="skillsinput">
-        <form #addSkillForm="ngForm" (ngSubmit)="addSkill(addSkillForm); addSkillForm.resetForm()">
-          <input
-          ngModel
-          class="form-control"
-          placeholder="Legg til erfaring..."
-          #username="ngModel"
-          name = "skills"
-          id = "skills"
-          required> <br/>
-          <div class="text-center">
-            <button class="btn skill form-control"
-            type="submit">Legg til</button>
-          </div>
-        </form>
+    <div class="col-sm-2 align-items-end">
+      <div class="skillsinput " *ngIf="this.userRole === 'admin'">
+        <div class="skillsinputdiv">
+          <form #addSkillForm="ngForm" (ngSubmit)="addSkill(addSkillForm); addSkillForm.resetForm()">
+            <input
+            ngModel
+            class="form-control"
+            placeholder="Legg til erfaring..."
+            #username="ngModel"
+            name = "skills"
+            id = "skills"
+            required> <br/>
+            <div class="text-center">
+              <button class="btn skill form-control"
+              type="submit">Legg til</button>
+            </div>
+          </form>
+        </div>
       </div>
-      <div class="status">
+      <div class="status" *ngIf="this.userRole === 'admin'">
         <app-project-status></app-project-status>
       </div>
-      <div class="applications">
+      <div class="applications" *ngIf="this.userRole === 'admin'">
         <app-project-applications></app-project-applications>
+      </div>
+      <div class="apply">
+        <app-project-apply-pop-up></app-project-apply-pop-up>
+      </div>
+      <div class="lager">
+        <a href="{{project.source}}">Prosjektlager</a>
       </div>
     </div>
   </div>
     <div class="row">
       <div class="col-sm-1">
       <br/>
-
       </div>
     </div>
     <div class="row flex-row-reverse">
       <div class="col-sm-3 text-end">
       </div>
       <div class="col-sm-3">
-
       </div>
       <div class="col-sm-6 text-start">
         <br/>
-
       </div>
     </div>
 </div>

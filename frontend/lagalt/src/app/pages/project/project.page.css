@@ -34,16 +34,21 @@
   margin-right: 30px;
 }
 .projdesc{
-  margin-top: 15px;
+  margin-top: 5px;
+  border: solid;
+  border-color: #D8DEE9;
+  border-width: 2px;
+  border-radius: 1%;
+  min-height: 500px;
+  width: 65%;
+  margin: 0 auto;
 }
 .project-industry{
 }
-.skilltext{
-  margin-top: 30px;
-}
+
 .skilllist{
   color:#354A59;
-
+  margin-left: 15px;
 }
 .skill{
   width: 100px;
@@ -52,11 +57,46 @@
 }
 .skillsinput{
   text-align: end;
-  width: 200px;
+  width: 180;
+  margin-top: 5px;
+  background-color: #D8DEE9;
+  border: solid;
+  border-radius: 1%;
+  height: 145px;
 }
 .applications{
-  margin-top: 242px;
+  margin-top: 25px;
+}
+
+.apply{
+  margin-top: 25px;
 }
 .lager{
-  margin-top: 454px;
+  margin-top: 15px;
+}
+
+.statusdiv{
+  background-color: #D8DEE9;
+  border: solid;
+  border-radius: 1%;
+}
+
+.skillsdiv{
+  min-height: 200px;
+  margin-top: 15px;
+  background-color: #D8DEE9;
+  border: solid;
+  border-radius: 1%;
+}
+
+.skillsinputdiv{
+  margin-top: 20px;
+}
+
+.status{
+  margin-top: 5px;
+  background-color: #D8DEE9;
+  border: solid;
+  border-radius: 1%;
+  height: 180px;
 }
