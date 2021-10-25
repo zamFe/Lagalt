@@ -44,7 +44,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="appchat col-sm-3">
+    <div class="appchat col-sm-3" *ngIf="this.userRole === 'admin'">
       <app-project-chat></app-project-chat>
     </div>
     <div class="col-sm-7">
