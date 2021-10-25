@@ -1,76 +1,101 @@
-<div class ="pp container-fluid">
+<div class ="projectPage container-fluid">
+
   <div class="row project-details">
-    <img class="col-sm-2" src="{{project.image}}" alt="project logo"/>
-    <div class="col-sm-8 project-industry text-center">
-      <h1>{{project.title}}</h1>
+    <img class="image col-sm-3" src="{{project.image}}"
+    onerror="this.src='https://cdn.mos.cms.futurecdn.net/3upZx2gxxLpW7MBbnKYQLH-970-80.jpg.webp'" alt="project logo"/>
+    <div class="col-sm-7 project-industry text-center">
+      <div class="title">
+        <h1>{{project.title}}</h1>
+      </div>
+      <div class="description text-center">
+        <h3>
+          Prosjekt beskrivelse:
+        </h3>
+      </div>
+        <div class="projdesc text-center">
+          <h5>
+            {{project.description}}
+          </h5>
+        </div>
     </div>
-    <div  class="col-sm-2 project-name text-end">
+    <div  class="col-sm-2 project-name text-center">
       <div class="" style="font-weight: bold;">
-          Prosjektet er laget av: {{"username"}}
+          <!-- Prosjektet er laget av: {{user.username}} -->
       </div>
       <div class="" style="font-weight: bold;">
-        Status: {{project.progress}}
+        <div class="statustext">
+          <h3>Prosjekt status:</h3>
+        </div>
+        <div class="projectprogress text-center">
+          {{project.progress}}
+        </div>
       </div>
+      <div class="skilltext text-center">
+        <h3>
+          Ferdigheter som trengs:
+        </h3>
+      </div>
+      <div class="skilllist text-center">
+        <h5 *ngFor="let skill of project.skills">
+          {{skill.name}}
+          </h5>
+    </div>
       <!-- <h4>{{project.profession}}</h4> -->
     </div>
-    <div class="row">
-      <div class="appchat col-sm-4">
-        <app-project-chat></app-project-chat>
+  </div>
+  <div class="row">
+    <div class="appchat col-sm-3">
+      <app-project-chat></app-project-chat>
+    </div>
+    <div class="col-sm-7">
+      <div class="lager">
+        <a href="{{project.source}}">Prosjektlager</a>
       </div>
-      <div class="col-sm-5 project-description text-center">
-        <h3>
-          Prosjekt beskrivelse
-        </h3>
-        <h5>
-          {{project.description}}
-        </h5>
+      <div class="apply">¨
+        <app-project-apply-pop-up></app-project-apply-pop-up>
       </div>
+    </div>
 
-      
-      <div class="col-sm-6" *ngIf="this.userRole === 'admin'">
+    <div class="col-sm-2 align-items-end" *ngIf="this.userRole === 'admin'">
+      <div class="skillsinput">
         <form #addSkillForm="ngForm" (ngSubmit)="addSkill(addSkillForm); addSkillForm.resetForm()">
           <input
           ngModel
           class="form-control"
-          placeholder="Legg til erfaringer..."
+          placeholder="Legg til erfaring..."
           #username="ngModel"
           name = "skills"
           id = "skills"
           required> <br/>
-          <div class="p-3 justify-content-center">
+          <div class="text-center">
             <button class="btn skill form-control"
-            type="submit">Legg til erfaring</button>
-            <div class="col-sm-5 project-skills text-start">
-              <h3>
-                Erfaringer som søkes etter:
-              </h3>
-              <h5 *ngFor="let skill of project.skills">
-              {{skill.name}}
-              </h5>
-            </div>
+            type="submit">Legg til</button>
           </div>
         </form>
       </div>
+      <div class="status">
+        <app-project-status></app-project-status>
+      </div>
+      <div class="applications">
+        <app-project-applications></app-project-applications>
+      </div>
     </div>
-    <div class="row">
-    </div>
+  </div>
     <div class="row">
       <div class="col-sm-1">
       <br/>
-        <app-project-status></app-project-status>
+
       </div>
     </div>
     <div class="row flex-row-reverse">
       <div class="col-sm-3 text-end">
-        <app-project-apply-pop-up></app-project-apply-pop-up>
       </div>
       <div class="col-sm-3">
-        <app-project-applications></app-project-applications>
+
       </div>
       <div class="col-sm-6 text-start">
         <br/>
-        <a href="{{project.source}}">Prosjektlager</a>
+
       </div>
     </div>
-  </div>
 </div>

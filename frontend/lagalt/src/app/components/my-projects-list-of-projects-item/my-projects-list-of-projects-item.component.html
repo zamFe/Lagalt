@@ -30,10 +30,10 @@
     <div class="col-sm-3">
       <div class="d-flex col col-sm-4">
         <span class="row-sm-6 align-self-center">
-          Erfaringer som søkes:
+          Nødvendige ferdigheter:
         </span>
         <ul class="row-sm-6">
-          <li *ngFor="let skill of skillsNeeded">
+          <li *ngFor="let skill of project.skills">
             {{skill.name}}
           </li>
         </ul>

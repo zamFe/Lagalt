@@ -51,6 +51,7 @@ export class ProjectPage implements OnInit, OnDestroy {
   public userId : number = 0;
   public adminId : number[] = [];
   public userRole: string = "";
+  public adminName : string = "";
 
   constructor(private readonly projectService : ProjectService,
               private readonly messageService : MessageService,
@@ -65,8 +66,9 @@ export class ProjectPage implements OnInit, OnDestroy {
 
     this.project$ = this.projectService.project$.subscribe((project : Project) => {
       this.adminId = project.administratorIds
+
     })
-    
+
     this.user$ = this.userService.user$.subscribe((user : UserComplete) => {
       this.userId = user.id
     })

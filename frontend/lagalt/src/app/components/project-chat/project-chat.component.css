@@ -6,6 +6,10 @@
 }
 .chatlist{
   background-color: white;
+  height: 400px;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column-reverse;
 }
 .refreshbtn{
   background-color: #354A59;
