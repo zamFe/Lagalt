@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using System;
 
 namespace LagaltAPI.Models.Domain
 {
@@ -24,7 +25,7 @@ namespace LagaltAPI.Models.Domain
         // Data.
         public bool Hidden { get; set; } = true;
 
-        [MaxLength(20), Required]
+        [MaxLength(30), Required]
         public string Username { get; set; }
 
         [MaxLength(140)]
@@ -37,12 +38,16 @@ namespace LagaltAPI.Models.Domain
         public string Portfolio { get; set; }
 
         // Account history.
-        public int[] Viewed { get; set; }
+        [Required]
+        public int[] Viewed { get; set; } = Array.Empty<int>();
 
-        public int[] Clicked { get; set; }
+        [Required]
+        public int[] Clicked { get; set; } = Array.Empty<int>();
 
-        public int[] AppliedTo { get; set; }
+        [Required]
+        public int[] AppliedTo { get; set; } = Array.Empty<int>();
 
-        public int[] ContributedTo { get; set; }
+        [Required]
+        public int[] ContributedTo { get; set; } = Array.Empty<int>();
     }
 }

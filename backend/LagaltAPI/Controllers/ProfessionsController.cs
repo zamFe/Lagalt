@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LagaltAPI.Models.DTOs.Profession;
 using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace LagaltAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
+    [AllowAnonymous]
     public class ProfessionsController : ControllerBase
     {
         private readonly IMapper _mapper;

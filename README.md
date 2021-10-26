@@ -14,7 +14,8 @@ Lagalt is a project management platform designed to connect individuals in creat
 
 ### Website
 1. Navigate to `Lagalt/frontend/lagalt`
-2. Run `ng serve --open` in a terminal
+2. Run `npm install`
+3. Run `ng serve --open`
 
 ### API (Dev mode)
 
@@ -29,12 +30,12 @@ Lagalt is a project management platform designed to connect individuals in creat
 ### Front-End
 
 The Lagalt website is written in Angular.
-Hostet at: [lagalt website]()
+Hostet at: [lagalt website](https://orange-tree-0b9310403.azurestaticapps.net)
 
 ### Back-End
 
 The Lagalt API is written in ASP.NET.
-Hostet at: [lagalt API](https://lagalt-api-f.herokuapp.com/)
+Hostet at: [lagalt API](https://lagalt-api-f.azurewebsites.net)
 
 ### Data Storage
 

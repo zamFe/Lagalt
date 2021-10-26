@@ -6,6 +6,9 @@ namespace LagaltAPI.Models.Wrappers
     /// <typeparam name="T"> Data to be contained in the page. </typeparam>
     public class Page<T>
     {
+        /// <summary> How many total entities are available for the query. </summary>
+        public int TotalEntities { get; set; }
+
         /// <summary> A URI pointing to the next page of results, should there be any. </summary>
         public string Next { get; set; }
 
@@ -18,17 +21,31 @@ namespace LagaltAPI.Models.Wrappers
         public IEnumerable<T> Results { get; set; }
 
         // Constructor.
-        public Page(ICollection<T> data, PageRange filter, string baseUri)
+        public Page(ICollection<T> data, int totalEntities, PageRange range, string baseUri,
+            string keyword = "")
         {
-            // TODO - Fix next page sometimes being empty.
-            //        Have to instead get total valid results,
-            //        and then see if there is enough for another page
-            Next = data.Count < filter.Limit
-                ? ""
-                : baseUri + $"?offset={filter.Offset + filter.Limit}&limit={filter.Limit}";
-            Previous = filter.Offset == 1
-                ? ""
-                : baseUri + $"?offset={filter.Offset - filter.Limit}&limit={filter.Limit}";
+            TotalEntities = totalEntities;
+
+            if (keyword != "")
+            {
+                var normalizedKeyword = keyword.Trim().ToLower();
+                Next = TotalEntities <= range.Limit + range.Offset - 1
+                    ? ""
+                    : baseUri + $"?offset={range.Offset + range.Limit}&limit={range.Limit}&keyword={normalizedKeyword}";
+                Previous = range.Offset == 1
+                    ? ""
+                    : baseUri + $"?offset={range.Offset - range.Limit}&limit={range.Limit}&keyword={normalizedKeyword}";
+            }
+            else
+            {
+                Next = TotalEntities <= range.Limit + range.Offset - 1
+                    ? ""
+                    : baseUri + $"?offset={range.Offset + range.Limit}&limit={range.Limit}";
+                Previous = range.Offset == 1
+                    ? ""
+                    : baseUri + $"?offset={range.Offset - range.Limit}&limit={range.Limit}";
+            }
+            
             Results = data;
         }
     }

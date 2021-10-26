@@ -3,6 +3,7 @@ using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Application;
 using LagaltAPI.Models.Wrappers;
 using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,18 +15,65 @@ namespace LagaltAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
+    //[Authorize]
     public class ApplicationsController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly ApplicationService _applicationService;
+        private readonly ProjectService _projectService;
         private readonly UriService _uriService;
+        private readonly UserService _userService;
 
         public ApplicationsController(
-            IMapper mapper, ApplicationService applicationService, UriService uriService)
+            IMapper mapper, ApplicationService applicationService, ProjectService projectService,
+            UriService uriService, UserService userService)
         {
             _mapper = mapper;
             _applicationService = applicationService;
+            _projectService = projectService;
             _uriService = uriService;
+            _userService = userService;
+        }
+
+        private  ValidationResult ValidateNewApplication(Application application)
+        {
+            if (_userService.UserExists(application.UserId))
+                return new ValidationResult(false, "Unable to find user");
+
+            if (_projectService.ProjectExists(application.ProjectId))
+                return new ValidationResult(false, "Unable to find project");
+
+            if (_applicationService.UserHasAppliedToProject(
+                application.UserId, application.ProjectId))
+            {
+                return new ValidationResult(false, "User has already applied to project");
+            }
+
+            return new ValidationResult(true);
+        }
+
+        /// <summary> Checks whether an update-specific DTO is properly formated. </summary>
+        /// <param name="endpoint"> The endpoint at which the PUT request was recieved. </param>
+        /// <param name="dtoApplication">
+        ///     An edit-specific DTO containing an updated version of an application.
+        /// </param>
+        /// <param name="domainApplication">
+        ///     The current version of the application to be updated.
+        /// </param>
+        /// <returns> A ValidationResult with a result and the reason for the result. </returns>
+        private ValidationResult ValidateUpdatedApplication(
+            int endpoint, ApplicationEditDTO dtoApplication, Application domainApplication)
+        {
+            if (endpoint != dtoApplication.Id)
+            {
+                return new ValidationResult(
+                    false, "Mismatch between application id and API endpoint");
+            }
+
+            if (domainApplication.Accepted)
+                return new ValidationResult(false, "Application has already been accepted");
+
+            return new ValidationResult(true);
         }
 
         /// <summary> Fetches an application from the database based on application id. </summary>
@@ -40,7 +88,7 @@ namespace LagaltAPI.Controllers
         {
             try
             {
-                var domainApplication = await _applicationService.GetByIdAsync(applicationId);
+                var domainApplication = await _applicationService.GetReadonlyByIdAsync(applicationId);
 
                 if (domainApplication != null)
                     return _mapper.Map<ApplicationReadDTO>(domainApplication);
@@ -67,8 +115,10 @@ namespace LagaltAPI.Controllers
             var filter = new PageRange(offset, limit);
             var applications = _mapper.Map<List<ApplicationReadDTO>>(
                 await _applicationService.GetPageByProjectIdAsync(projectId, filter));
+            var totalApplications = await _applicationService.GetTotalProjectApplicationsAsync(
+                projectId);
             var baseUri = _uriService.GetBaseUrl() + $"api/Applications/Project/{projectId}";
-            return new Page<ApplicationReadDTO>(applications, filter, baseUri);
+            return new Page<ApplicationReadDTO>(applications, totalApplications, filter, baseUri);
         }
 
         /// <summary> Adds a new application entry to the database. </summary>
@@ -84,13 +134,12 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<ApplicationReadDTO>> PostApplication(
             ApplicationCreateDTO dtoApplication)
         {
-            if(_applicationService.UserHasAppliedToProject(
-                dtoApplication.UserId, dtoApplication.ProjectId))
-            {
-                return BadRequest("User has already applied to project");
-            }
-
             var domainApplication = _mapper.Map<Application>(dtoApplication);
+
+            var validation = ValidateNewApplication(domainApplication);
+            if(!validation.Result)
+                return BadRequest(validation.RejectionReason);
+
             domainApplication = await _applicationService.AddAsync(domainApplication);
 
             return CreatedAtAction("GetApplication",
@@ -109,7 +158,8 @@ namespace LagaltAPI.Controllers
         ///     NoContent on successful database update,
         ///     BadRequest if the applicationId and the id of the dto do not match
         ///     or if the application has already been accepted,
-        ///     or NotFound if the provided id does not match any users in the database.
+        ///     or NotFound if the provided application id does not match
+        ///     any applications in the database.
         /// </returns>
         /// <exception cref="DbUpdateConcurrencyException">
         ///     Thrown when the application is found in the database but not able to be updated.
@@ -119,14 +169,16 @@ namespace LagaltAPI.Controllers
         public async Task<IActionResult> PutUser(
             int applicationId, ApplicationEditDTO dtoApplication)
         {
-            if (applicationId != dtoApplication.Id)
-                return BadRequest();
-            if (!_applicationService.EntityExists(applicationId))
+            if (!_applicationService.ApplicationExists(applicationId))
                 return NotFound();
 
-            var domainApplication = await _applicationService.GetByIdAsync(applicationId);
-            if (domainApplication.Accepted)
-                return BadRequest("Application has already been accepted");
+            var domainApplication = await _applicationService.GetWriteableByIdAsync(applicationId);
+
+            var validation = ValidateUpdatedApplication(
+                applicationId, dtoApplication, domainApplication);
+            if (!validation.Result)
+                return BadRequest(validation.RejectionReason);
+            
             var newlyAccepted = dtoApplication.Accepted && !domainApplication.Accepted;
             _mapper.Map<ApplicationEditDTO, Application>(dtoApplication, domainApplication);
 
@@ -136,7 +188,7 @@ namespace LagaltAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_applicationService.EntityExists(applicationId))
+                if (!_applicationService.ApplicationExists(applicationId))
                     return NotFound();
                 else
                     throw;

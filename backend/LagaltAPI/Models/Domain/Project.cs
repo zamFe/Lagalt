@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace LagaltAPI.Models.Domain
@@ -19,11 +20,15 @@ namespace LagaltAPI.Models.Domain
         // Collection navigation property for relationship with skills.
         public ICollection<Skill> Skills { get; set; }
 
+        // Collection navigation property for relationship with updates.
+        public ICollection<Update> Updates { get; set; }
+
         // Collection navigation property for relationship with users.
         public ICollection<User> Users { get; set; }
 
         // Data.
-        public int[] AdministratorIds { get; set; }
+        [Required]
+        public int[] AdministratorIds { get; set; } = Array.Empty<int>();
 
         [MaxLength(40), Required]
         public string Title { get; set; }

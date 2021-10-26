@@ -9,6 +9,11 @@
         /// <summary> The ids of the skills which the user posesses. </summary>
         public int[] Skills { get; set; }
 
+        /// <summary>
+        ///     Whether the user wants to hide their projects, skills, description and portfolio.
+        /// </summary>
+        public bool Hidden { get; set; }
+
         /// <summary> The name the user is referred to as. </summary>
         public string Username { get; set; }
 

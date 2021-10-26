@@ -18,9 +18,23 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
-        public bool EntityExists(int projectId)
+        public bool ProjectExists(int projectId)
         {
-            return _context.Projects.Any(project => project.Id == projectId);
+            return _context.Projects.Find(projectId) != null;
+        }
+
+        public bool UserIsProjectMember(int projectId, int userId)
+        {
+            return _context.Projects
+                .Where(project => project.Id == projectId)
+                .Any(project => project.Users.Any(user => user.Id == userId));
+        }
+
+        public bool UserIsProjectAdministrator(int projectId, int userId)
+        {
+            return _context.Projects
+                .Where(project => project.Id == projectId)
+                .Any(project => project.AdministratorIds.Contains(userId));
         }
 
         public async Task<Project> AddAsync(
@@ -42,54 +56,19 @@ namespace LagaltAPI.Services
             return newProject;
         }
 
-        public async Task<IEnumerable<Project>> GetPageAsync(PageRange range)
+        public async Task<Project> GetReadonlyByIdAsync(int projectId)
         {
             return await _context.Projects
+                .AsNoTracking()
+                .Include(project => project.Messages)
+                .Include(project => project.Users)
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
-                .Skip(range.Offset - 1)
-                .Take(range.Limit)
-                .OrderByDescending(project => project.Id)
-                .ToListAsync();
+                .Where(project => project.Id == projectId)
+                .FirstAsync();
         }
 
-        public async Task<IEnumerable<Project>> GetRecommendedProjectsPageAsync(
-            int userId, PageRange range)
-        {
-            var userSkillIds = await _context.Skills
-                .Where(skill => skill.Users.Any(user => user.Id == userId))
-                .Select(skill => skill.Id)
-                .ToListAsync();
-
-            // TODO - Include projects joined by fellow contributors.
-            //        Currently only looks at projects matching the user's skills.
-            return await _context.Projects
-                .Include(project => project.Skills)
-                .Include(project => project.Profession)
-                .Where(project => !project.Users.Any(projectUser =>
-                    projectUser.Id == userId))
-                .Where(project => project.Skills.Any(projectSkill =>
-                    userSkillIds.Contains(projectSkill.Id)))
-                .Skip(range.Offset - 1)
-                .Take(range.Limit)
-                .OrderByDescending(project => project.Id)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Project>> GetUserProjectsPageAsync(
-            int userId, PageRange range)
-        {
-            return await _context.Projects
-                .Include(project => project.Skills)
-                .Include(project => project.Profession)
-                .Where(project => project.Users.Any(user => user.Id == userId))
-                .Skip(range.Offset - 1)
-                .Take(range.Limit)
-                .OrderByDescending(project => project.Id)
-                .ToListAsync();
-        }
-
-        public async Task<Project> GetByIdAsync(int projectId)
+        public async Task<Project> GetWriteableByIdAsync(int projectId)
         {
             return await _context.Projects
                 .Include(project => project.Messages)
@@ -98,6 +77,161 @@ namespace LagaltAPI.Services
                 .Include(project => project.Profession)
                 .Where(project => project.Id == projectId)
                 .FirstAsync();
+        }
+
+        public async Task<IEnumerable<Project>> GetPageAsync(
+            PageRange range, int professionId = 0, string keyword = "")
+        {
+            var normalizedKeyword = keyword == null ? "" : keyword.ToLower().Trim();
+
+            if (professionId == 0 && normalizedKeyword == "")
+            {
+                // No filters.
+                return await _context.Projects
+                .AsNoTracking()
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .OrderByDescending(project => project.Id)
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
+                .ToListAsync();
+            }
+            else if (professionId != 0 && normalizedKeyword == "")
+            {
+                // Just profession filter.
+                return await _context.Projects
+                .AsNoTracking()
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .Where(project => project.ProfessionId == professionId)
+                .OrderByDescending(project => project.Id)
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
+                .ToListAsync();
+            }
+            else if (professionId == 0 && normalizedKeyword != "")
+            {
+                // Just keyword filter.
+                return await _context.Projects
+                .AsNoTracking()
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .Where(project => project.Title.ToLower().Contains(normalizedKeyword))
+                .OrderByDescending(project => project.Id)
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
+                .ToListAsync();
+            }
+            else
+            {
+                // Both profession & keyword filter.
+                return await _context.Projects
+                .AsNoTracking()
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .Where(project => project.ProfessionId == professionId)
+                .Where(project => project.Title.ToLower().Contains(normalizedKeyword))
+                .OrderByDescending(project => project.Id)
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
+                .ToListAsync();
+            }            
+        }
+
+        // Currently only looks at projects matching the user's skills.
+        // Other factors could be popularity (general and among fellow project members),
+        // surges in activity, how recent the project is, etc.
+        public async Task<IEnumerable<Project>> GetRecommendedProjectsPageAsync(
+            int userId, PageRange range)
+        {
+            var userSkillIds = await _context.Skills
+                .AsNoTracking()
+                .Where(skill => skill.Users.Any(user => user.Id == userId))
+                .Select(skill => skill.Id)
+                .ToListAsync();
+
+            return await _context.Projects
+                .AsNoTracking()
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .Where(project => !project.Users.Any(projectUser =>
+                    projectUser.Id == userId))
+                .Where(project => project.Skills.Any(projectSkill =>
+                    userSkillIds.Contains(projectSkill.Id)))
+                .OrderByDescending(project => project.Id)
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Project>> GetUserProjectsPageAsync(
+            int userId, PageRange range)
+        {
+            return await _context.Projects
+                .AsNoTracking()
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .Where(project => project.Users.Any(user => user.Id == userId))
+                .OrderByDescending(project => project.Id)
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalProjectsAsync(int professionId = 0, string keyword = "")
+        {
+            var normalizedKeyword = keyword == null ? "" : keyword.ToLower().Trim();
+
+            if (professionId == 0 && normalizedKeyword == "")
+            {
+                // No filters.
+                return await _context.Projects.CountAsync();
+            }
+            else if (professionId != 0 && normalizedKeyword == "")
+            {
+                // Just profession filter.
+                return await _context.Projects
+                .Where(project => project.ProfessionId == professionId)
+                .CountAsync();
+            }
+            else if (professionId == 0 && normalizedKeyword != "")
+            {
+                // Just keyword filter.
+                return await _context.Projects
+                .Where(project => project.Title.ToLower().Contains(normalizedKeyword))
+                .CountAsync();
+            }
+            else
+            {
+                // Both profession & keyword filter.
+                return await _context.Projects
+                .Where(project => project.ProfessionId == professionId)
+                .Where(project => project.Title.ToLower().Contains(normalizedKeyword))
+                .CountAsync();
+            }
+        }
+
+        public async Task<int> GetTotalRecommendedProjectsAsync(int userId)
+        {
+            var userSkillIds = await _context.Skills
+                .AsNoTracking()
+                .Where(skill => skill.Users.Any(user => user.Id == userId))
+                .Select(skill => skill.Id)
+                .ToListAsync();
+
+            return await _context.Projects
+                .Where(project => !project.Users.Any(projectUser =>
+                    projectUser.Id == userId))
+                .Where(project => project.Skills.Any(projectSkill =>
+                    userSkillIds.Contains(projectSkill.Id)))
+                .CountAsync();
+        }
+
+        public async Task<int> GetTotalUserProjectsAsync(int userId)
+        {
+            return await _context.Projects
+                .Where(project => project.Users.Any(user => user.Id == userId))
+                .CountAsync();
         }
 
         public async Task UpdateAsync(Project updatedProject, IEnumerable<int> skillIds)
