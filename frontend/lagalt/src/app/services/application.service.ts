@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -28,7 +28,10 @@ export class ApplicationService {
     return this.http.get<ApplicationResponse>(`${API_URL}/Project/${projectId}`)
         .subscribe((applications: ApplicationResponse) => {
             this.setApplications(applications.results)
-
+        },
+        (error: HttpErrorResponse) => {
+            //console.log(error.message);
+            alert(error.message)
         });
   }
 
@@ -36,12 +39,20 @@ export class ApplicationService {
     return this.http.post<Application>(API_URL, application)
       .subscribe((application: Application) => {
         this.addApplication(application)
+      },
+      (error: HttpErrorResponse) => {
+          //console.log(error.message);
+          alert(error.message)
       })
   }
   public putApplication(application: PutApplication): Subscription {
     return this.http.put<Application>(`${API_URL}/${application.id}`, application)
       .subscribe((application: Application) => {
         this.addApplication(application)
+      },
+      (error: HttpErrorResponse) => {
+          //console.log(error.message);
+          alert(error.message)
       })
   }
 

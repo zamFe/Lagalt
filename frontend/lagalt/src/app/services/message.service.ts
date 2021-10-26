@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -28,6 +28,10 @@ export class MessageService {
     return this.http.get<MessageResponse>(`${API_URL}/Project/${projectId}`)
         .subscribe((messages: MessageResponse) => {
             this.setMessages(messages.results)
+        },
+        (error: HttpErrorResponse) => {
+            //console.log(error.message);
+            alert(error.message)
         });
   }
 
@@ -35,6 +39,10 @@ export class MessageService {
     return this.http.post<Message>(API_URL, message)
       .subscribe((message: Message) => {
         this.addMessage(message)
+      },
+      (error: HttpErrorResponse) => {
+          //console.log(error.message);
+          alert(error.message)
       })
   }
 }

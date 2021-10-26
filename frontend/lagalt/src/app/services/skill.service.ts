@@ -28,6 +28,10 @@ export class SkillService {
     return this.http.get<Skill[]>(API_URL)
         .subscribe((skills: Skill[]) => {
             this.setSkills(skills)
+        },
+        (error: HttpErrorResponse) => {
+            //console.log(error.message);
+            alert(error.message)
         });
   }
   
@@ -35,6 +39,10 @@ export class SkillService {
     return this.http.post<Skill>(API_URL, skill)
       .subscribe((response) => {
         this.addSkill(response)
+      },
+      (error: HttpErrorResponse) => {
+          //console.log(error.message);
+          alert(error.message)
       })
   }
     
