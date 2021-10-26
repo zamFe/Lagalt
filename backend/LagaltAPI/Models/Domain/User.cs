@@ -25,7 +25,7 @@ namespace LagaltAPI.Models.Domain
         // Data.
         public bool Hidden { get; set; } = true;
 
-        [MaxLength(20), Required]
+        [MaxLength(30), Required]
         public string Username { get; set; }
 
         [MaxLength(140)]
