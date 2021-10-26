@@ -1,6 +1,6 @@
 import { Injectable} from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Project } from "../models/project.model";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { Project, PutProject } from "../models/project.model";
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { environment } from "src/environments/environment";
 import { ProjectPageWrapper } from "../models/project-page-wrapper.model";
@@ -15,7 +15,7 @@ const defaultProject: Project = {
     users: [],
     description: "",
     progress: "",
-    source: null,
+    source: "",
     administratorIds: []
 }
 
@@ -24,6 +24,8 @@ const defaultProject: Project = {
     providedIn: 'root'
 })
 export class ProjectService {
+
+    private _loading: boolean = false;
 
     // Store observables
     public readonly projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
@@ -90,44 +92,74 @@ export class ProjectService {
         this.professionId = professionId;
     }
 
-
-    // API CRUD calls
-    public getProjects() {
+        // API CRUD calls
+    public getProjects(): Subscription {
+        this._loading = true;
         return this.http.get<ProjectPageWrapper>
         (`${API_URL}?offset=${this.offset}&limit=${this.limit}&professionId=${this.professionId}&keyword=${this.keyword}`)
-        .subscribe((page: ProjectPageWrapper) => {
-            this.setProjects(page.results)
-            this.totalEntities = page.totalEntities;
-            this.pages = Math.ceil(this.totalEntities/this.limit)
-        });
+            .subscribe((page: ProjectPageWrapper) => {
+                this.setProjects(page.results)
+                this.totalEntities = page.totalEntities;
+                this.pages = Math.ceil(this.totalEntities/this.limit)
+                this._loading = false;
+            },
+            (error: HttpErrorResponse) => {
+                alert(error.status + " : " + error.statusText)
+            });
     }
 
     public getProjectById(id: number): Subscription {
+        this._loading = true;
         return this.http.get<Project>(`${API_URL}/${id}`)
             .subscribe((project: Project) => {
+                this._loading = false;
                 this.setProject(project)
+            },
+            (error: HttpErrorResponse) => {
+                alert(error.status + " : " + error.statusText)
             });
     }
 
     public getRecommendedProjectsByUserId(userId: number): Subscription {
+        this._loading = true;
         return this.http.get<ProjectPageWrapper>(`${API_URL}/Recommended/${userId}`)
             .subscribe((page: ProjectPageWrapper) => {
                 this.setProjects(page.results)
+                this._loading = false;
+            },
+            (error: HttpErrorResponse) => {
+                alert(error.status + " : " + error.statusText)
             })
     }
 
     public postProject(project: Object): Subscription {
+        this._loading = true;
         return this.http.post<Project>(API_URL, project)
             .subscribe((response: Project) => {
                 this.addProject(response)
+                this._loading = false;
+            },
+            (error: HttpErrorResponse) => {
+                alert(error.status + " : " + error.statusText)
             });
     }
 
-    public putProject(project: Project): Subscription {
+    public putProject(project: PutProject): Subscription {
+        this._loading = true;
         this.removeProject(project.id)
         return this.http.put<Project>(`${API_URL}/${project.id}`, project)
         .subscribe((response: Project) => {
             this.addProject(response)
+            this._loading = false;
+        },
+        (error: HttpErrorResponse) => {
+            alert(error.status + " : " + error.statusText)
         });
     }
+
+    get loading(): boolean {
+        return this._loading;
+    }
+    
+
 }

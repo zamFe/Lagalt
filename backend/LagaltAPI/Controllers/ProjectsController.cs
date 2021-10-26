@@ -1,121 +1,186 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using LagaltAPI.Models.Domain;
+using LagaltAPI.Models.DTOs.Project;
+using LagaltAPI.Models.Wrappers;
+using LagaltAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using LagaltAPI.Context;
-using LagaltAPI.Models;
-using AutoMapper;
-using LagaltAPI.Models.DTOs.Project;
-using LagaltAPI.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LagaltAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     public class ProjectsController : ControllerBase
     {
-        private readonly ProjectService _service;
         private readonly IMapper _mapper;
+        private readonly ProjectService _projectService;
+        private readonly UriService _uriService;
 
-        public ProjectsController(ProjectService service, IMapper mapper)
+        // Constructor.
+        public ProjectsController(
+            IMapper mapper, ProjectService projectService, UriService uriService)
         {
-            _service = service;
             _mapper = mapper;
+            _projectService = projectService;
+            _uriService = uriService;
         }
 
-        // GET: api/Projects
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjects()
-        {
-            return _mapper.Map<List<ProjectReadDTO>>(await _service.GetAllAsync());
-        }
-
+        /// <summary> Fetches a project from the database based on project id. </summary>
+        /// <param name="projectId"> The id of the project to retrieve. </param>
+        /// <returns>
+        ///     A read-specific DTO of the project if it is found in the database.
+        ///     If it is not, then NotFound is returned instead.
+        /// </returns>
         // GET: api/Projects/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ProjectReadDTO>> GetProject(int id)
+        [HttpGet("{projectId}")]
+        public async Task<ActionResult<ProjectCompleteReadDTO>> GetProject(int projectId)
         {
+            // TODO - Track history (click).
+
             try
             {
-                var project = await _service.GetByIdAsync(id);
+                var domainProject = await _projectService.GetByIdAsync(projectId);
 
-                if (project != null)
-                    return _mapper.Map<ProjectReadDTO>(project);
-                else
-                    return NotFound();
+                if (domainProject != null)
+                    return _mapper.Map<ProjectCompleteReadDTO>(domainProject);
             }
-            catch (ArgumentNullException) { return BadRequest(); }
-            catch (InvalidOperationException) { return NotFound(); }
+            catch (InvalidOperationException) {}
+            return NotFound();
         }
 
-        // PUT: api/Projects/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProject(int id, ProjectEditDTO project)
+        /// <summary>
+        ///     Fetches projects from the database according to the specified offset and limit.
+        /// </summary>
+        /// <param name="offset"> Specifies the index of the first project to be included. </param>
+        /// <param name="limit"> Specifies how many projects to include. </param>
+        /// <returns>
+        ///     A page containing all available read-specific DTOs within the specified range.
+        /// </returns>
+        // GET api/Projects?offset=5&limit=5
+        [HttpGet]
+        public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetProjects(
+            [FromQuery] int offset, [FromQuery] int limit)
         {
-            if (id != project.Id)
-            {
+            // TODO - Track history (viewed).
+
+            var range = new PageRange(offset, limit);
+            var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
+                await _projectService.GetPageAsync(range));
+            var baseUri = _uriService.GetBaseUrl() + "api/Projects";
+            return new Page<ProjectCompactReadDTO>(projects, range, baseUri);
+        }
+
+        /// <summary> Generates recommended projects for a user. </summary>
+        /// <param name="userId"> The id of the user to get recommended projects for. </param>
+        /// <param name="offset"> Specifies the index of the first project to be included. </param>
+        /// <param name="limit"> Specifies how many projects to include. </param>
+        /// <returns>
+        ///     A page containing all available read-specific DTOs for the user.
+        /// </returns>
+        // GET: api/Projects/Recommended/5
+        [Authorize]
+        [HttpGet("Recommended/{userId}")]
+        public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetRecommendedProjects(
+            int userId, [FromQuery] int offset, [FromQuery] int limit)
+        {
+            // TODO - Track history (viewed).
+
+            var range = new PageRange(offset, limit);
+            var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
+                await _projectService.GetRecommendedProjectsPageAsync(userId, range));
+            var baseUri = _uriService.GetBaseUrl() + $"api/Projects/Recommended/{userId}";
+            return new Page<ProjectCompactReadDTO>(projects, range, baseUri);
+        }
+
+        /// <summary> Fetches a user's projects from the database. </summary>
+        /// <param name="userId"> The id of the user to retrieve projects for. </param>
+        /// <param name="offset"> Specifies the index of the first project to be included. </param>
+        /// <param name="limit"> Specifies how many projects to include. </param>
+        /// <returns>
+        ///     An enumerable containing read-specific DTOs of the projects joined by the user.
+        /// </returns>
+        // GET: api/Projects/User/5
+        [Authorize]
+        [HttpGet("User/{userId}")]
+        public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetUserProjects(
+            int userId, [FromQuery] int offset, [FromQuery] int limit)
+        {
+            var range = new PageRange(offset, limit);
+            var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
+                await _projectService.GetUserProjectsPageAsync(userId, range));
+            var baseUri = _uriService.GetBaseUrl() + $"api/Projects/User/{userId}";
+            return new Page<ProjectCompactReadDTO>(projects, range, baseUri);
+        }
+
+        /// <summary> Adds a new project entry to the database. </summary>
+        /// <param name="dtoProject">
+        ///     A creation-specific DTO representing the new project.
+        /// </param>
+        /// <returns>
+        ///     A read-specific DTO of the message just added to the database on success,
+        ///     or BadRequest on failure.
+        /// </returns>
+        // POST: api/Projects
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<ProjectCompleteReadDTO>> PostProject(
+            ProjectCreateDTO dtoProject)
+        {
+            Project domainProject = _mapper.Map<Project>(dtoProject);
+            await _projectService.AddAsync(domainProject, dtoProject.Users, dtoProject.Skills);
+
+            return CreatedAtAction("GetProject",
+                new { projectId = domainProject.Id },
+                _mapper.Map<ProjectCompleteReadDTO>(domainProject));
+        }
+
+        /// <summary>
+        ///     Updates the specified project in the database to match the provided DTO.
+        /// </summary>
+        /// <param name="projectId"> The id of the project to update. </param>
+        /// <param name="dtoProject">
+        ///     An edit-specific DTO containing the updated version of the project.
+        /// </param>
+        /// <returns>
+        ///     NoContent on successful database update,
+        ///     BadRequest if the provided id and the id of the project do not match,
+        ///     or NotFound if the provided id does not match any projects in the database.
+        /// </returns>
+        /// <exception cref="DbUpdateConcurrencyException">
+        ///     Thrown when the project is found in the database but not able to be updated.
+        /// </exception>
+        // PUT: api/Projects/5
+        [Authorize]
+        [HttpPut("{projectId}")]
+        public async Task<IActionResult> PutProject(int projectId, ProjectEditDTO dtoProject)
+        {
+            if (projectId != dtoProject.Id)
                 return BadRequest();
-            }
 
-            if (!_service.EntityExists(id))
-            {
+            if (!_projectService.EntityExists(projectId))
                 return NotFound();
-            }
 
-            Project domainProject = _mapper.Map<Project>(project);
+            var domainProject = await _projectService.GetByIdAsync(projectId);
+            _mapper.Map<ProjectEditDTO, Project>(dtoProject, domainProject);
 
             try
             {
-                await _service.UpdateAsync(domainProject);
+                await _projectService.UpdateAsync(domainProject, dtoProject.Skills);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_service.EntityExists(id))
-                {
+                if (!_projectService.EntityExists(projectId))
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
             return NoContent();
         }
-
-        // POST: api/Projects
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<ProjectCreateDTO>> PostProject(ProjectCreateDTO dtoProject)
-        {
-            Project domainProject = _mapper.Map<Project>(dtoProject);
-            await _service.AddAsync(domainProject);
-
-            return CreatedAtAction("GetProject", 
-                new { id = domainProject.Id }, 
-                _mapper.Map<ProjectReadDTO>(domainProject));
-        }
-
-        /* NOT CURRENTLY SUPPORTED */
-        /*
-        // DELETE: api/Projects/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProject(int id)
-        {
-            var project = await _context.Projects.FindAsync(id);
-            if (project == null)
-            {
-                return NotFound();
-            }
-
-            _context.Projects.Remove(project);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-        */
     }
 }

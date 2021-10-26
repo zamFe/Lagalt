@@ -29,6 +29,10 @@ export class MainPage implements OnInit {
   onPrevClick() {
     this.projectService.prevPage();
   }
+  
+  get loading(): boolean {
+    return this.projectService.loading;
+  }
 
   ngOnInit(): void {
     this.projectService.getProjects();

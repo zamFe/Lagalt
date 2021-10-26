@@ -1,15 +1,13 @@
 import { Injectable} from "@angular/core";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
-import { UserComplete } from "../models/user/user-complete.model";
+import { PutUser, UserComplete } from "../models/user/user-complete.model";
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { catchError, finalize, mapTo, retry, switchMap, tap } from "rxjs/operators";
 import { environment } from "src/environments/environment";
-import { User } from "@auth0/auth0-spa-js";
 
 
 
 const API_URL_USERS = `${environment.apiUrl}Users`
-const API_URL_SKILLS = `${environment.apiUrl}Skills`
 const defaultUser : UserComplete = {
   id: 0,
   username: "default",
@@ -17,12 +15,14 @@ const defaultUser : UserComplete = {
   image: "",
   portfolio: "",
   skills: [],
-  projects: []
+  projects: [],
+  hidden: false
 }
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+  private _loading: boolean = false;
 
   public readonly users$: BehaviorSubject<UserComplete[]> = new BehaviorSubject<UserComplete[]>([]);
   public readonly user$: BehaviorSubject<UserComplete> = new BehaviorSubject<UserComplete>(defaultUser);
@@ -33,53 +33,93 @@ export class UserService {
   public setUsers(users: UserComplete[]): void {
     this.users$.next(users)
   }
-  public setUserById(user: UserComplete): void {
+  public setUser(user: UserComplete): void {
     this.user$.next(user)
   }
 
+
+
    // API CRUD calls
   public getUsers(): Subscription {
+    this._loading = true;
     //set users as enum in storage here.
     return this.http.get<UserComplete[]>(API_URL_USERS)
         .subscribe((users: UserComplete[]) => {
-            this.setUsers(users)
+          this._loading = false;
+          this.setUsers(users)
+        },
+        (error: HttpErrorResponse) => {
+            //console.log(error.message);
+            alert(error.status + " : " + error.statusText)
         });
   }
 
   public getUserById(id : number): Subscription {
+    this._loading = true;
     //set users as enum in storage here.
     return this.http.get<UserComplete>(API_URL_USERS +`/${id}`)
         .subscribe((user: UserComplete) => {
-            this.setUserById(user)
+          this._loading = false;
+          this.setUser(user)
+        },
+        (error: HttpErrorResponse) => {
+            //console.log(error.message);
+            alert(error.status + " : " + error.statusText)
         });
   }
 
+  // trenger ikke error
   public getUserByUsername(username: string): Subscription{
     return this.http.get<UserComplete>(`${API_URL_USERS}/username/${username}`)
         .subscribe((user: UserComplete) => {
-            this.setUserById(user)
+            this.setUser(user)
         });
   }
 
+  // trenger ikke error
   public userExists(username: string): Observable<any>{
     return this.http.get(`${API_URL_USERS}/username/${username}`)
   }
 
+
   public postUserByUsername(username : string): Subscription {
-    return this.http.post<UserComplete>(API_URL_USERS, {username: username, skills: []})
+    this._loading = true;
+    let newUser = {
+      username: username,
+      skills: [],
+      description : "",
+      image: "",
+      portfolio:""}
+    return this.http.post<UserComplete>(API_URL_USERS, newUser)
       .subscribe((response: UserComplete) => {
-        this.setUserById(response)
+        this._loading = false;
+        this.setUser(response)
+    },
+    (error: HttpErrorResponse) => {
+        //console.log(error.message);
+        alert(error.status + " : " + error.statusText)
     });
   }
 
   // IKKE TESTET
-  public putUser(user: UserComplete): Subscription {
-    return this.http.put<UserComplete>(`${API_URL_USERS}/${user.id}`, user)
-      .subscribe(() => {
-        this.setUserById(user)
-      });
+  public putUser(): Subscription {
+    this._loading = true;
+    let tempSkills = this.user$.value.skills.map(element => element.id)
+    let putUser : PutUser = {
+      id: this.user$.value.id,
+      skills: tempSkills,
+      hidden: this.user$.value.hidden,
+      username: this.user$.value.username,
+      description: this.user$.value.description,
+      image: this.user$.value.image,
+      portfolio: this.user$.value.portfolio
+    }
+    this._loading = false;
+    return this.http.put(`${API_URL_USERS}/${putUser.id}`, putUser)
+    .subscribe(() => {},
+    (error: HttpErrorResponse) => {
+      //console.log(error.message);
+      alert(error.status + " : " + error.statusText)
+    });
   }
-  public getTest() {
-    return this.http.get<UserComplete[]>(API_URL_USERS).subscribe(data => console.log(data))
-}
 }

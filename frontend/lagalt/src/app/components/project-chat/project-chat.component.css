@@ -5,9 +5,14 @@
   background-color: #354A59;
 }
 .chatlist{
-  background-color: white;
+  background-color: #D8DEE9;
+  height: 400px;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column-reverse;
 }
 .refreshbtn{
   background-color: #354A59;
   margin-top: 10px;
 }
+

@@ -12,7 +12,7 @@ import { ApplicationService } from 'src/app/services/application.service';
 @Component({
   selector: 'app-project-apply-pop-up',
   templateUrl: './project-apply-pop-up.component.html',
-  styleUrls: ['./project-apply-pop-up.component.css']
+  styleUrls: ['./project-apply-pop-up.component.css'],
 })
 export class ProjectApplyPopUpComponent implements OnInit, OnDestroy {
   private project$: Subscription
@@ -32,7 +32,7 @@ export class ProjectApplyPopUpComponent implements OnInit, OnDestroy {
 
   closeResult = '';
 
-  projectName: string = "Project name"
+  projectName: string = ""
   public textAreaForm: FormGroup;
 
   constructor(private modalService: NgbModal, private fb : FormBuilder,
@@ -43,7 +43,8 @@ export class ProjectApplyPopUpComponent implements OnInit, OnDestroy {
     });
 
     this.project$ = this.projectService.project$.subscribe((project : Project) => {
-      this. projectId = project.id
+      this.projectId = project.id
+      this.projectName = project.title
     })
 
     this.project$ = this.projectService.project$.subscribe((project : Project) => {

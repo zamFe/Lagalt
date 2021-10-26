@@ -1,4 +1,4 @@
-﻿using LagaltAPI.Models;
+﻿using LagaltAPI.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,42 +7,31 @@ using System.IO;
 namespace LagaltAPI.Context
 {
     /// <summary>
-    /// Simple representation of a database session.
-    /// Data source is picked up from a ".env" file.
+    ///     Simple representation of a database session.
+    ///     Data source is picked up from an environment variable
+    ///     or a local ".env" file.
     /// </summary>
     public class LagaltContext : DbContext
     {
-        public DbSet<User> Users { get; set; }
-
-        public DbSet<Project> Projects { get; set; }
-
-        public DbSet<UserProject> UserProjects { get; set; }
-
+        public DbSet<Application> Applications { get; set; }
         public DbSet<Message> Messages { get; set; }
-
-        public DbSet<Skill> Skills { get; set; }
-
         public DbSet<Profession> Professions { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Skill> Skills { get; set; }
+        public DbSet<User> Users { get; set; }
+        
+        // Constructor.
+        public LagaltContext(DbContextOptions options) : base(options) {}
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // Load data source from .env file
-            var rootDir = Directory.GetCurrentDirectory();
-            var dotEnv = Path.Combine(rootDir, ".env");
-            if (File.Exists(dotEnv))
-                DotEnv.Load(dotEnv);
-            else
-                throw new Exception(".env not found!");
-
-            optionsBuilder.UseSqlServer(""
-                + $"Data Source={Environment.GetEnvironmentVariable("DATA_SOURCE")};"
-                + "Initial Catalog=LagaltCodeFirstDb;"
-                + "Integrated Security=True;"
-                );
+            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // TODO - Fix seeding.
+
             var professions = new Profession[]
             {
                 new Profession{Id = 1, Name = "Music"},
@@ -50,6 +39,8 @@ namespace LagaltAPI.Context
                 new Profession{Id = 3, Name = "Game Development"},
                 new Profession{Id = 4, Name = "Web Development"}
             };
+            foreach (Profession p in professions)
+                modelBuilder.Entity<Profession>().HasData(p);
 
             var skills = new Skill[]
             {
@@ -60,6 +51,8 @@ namespace LagaltAPI.Context
                 new Skill{Id = 5, Name = "Unit testing"},
                 new Skill{Id = 6, Name = "TypeScript"}
             };
+            foreach (Skill s in skills)
+                modelBuilder.Entity<Skill>().HasData(s);
 
             var users = new User[]
             {
@@ -67,47 +60,68 @@ namespace LagaltAPI.Context
                 {
                     Id = 1,
                     Hidden = false,
-                    UserName = "Bob",
+                    Username = "Bob",
                     Description = "Looking for my friend, Mr. Tambourine",
                     Image = "https://upload.wikimedia.org/wikipedia/commons/0/02/Bob_Dylan_-_Azkena_Rock_Festival_2010_2.jpg",
-                    Portfolio = "https://en.wikipedia.org/wiki/Bob_Dylan_discography"
+                    Portfolio = "https://en.wikipedia.org/wiki/Bob_Dylan_discography",
+                    Viewed = new int[] { 1 },
+                    Clicked = new int[] { 1 },
+                    ContributedTo = new int[] { 1 }
                 },
                 new User
                 {
                     Id = 2,
                     Hidden = false,
-                    UserName = "Grohl",
+                    Username = "Grohl",
                     Description = "Currently learning to fly",
-                    Portfolio = "https://en.wikipedia.org/wiki/Dave_Grohl#Career"
+                    Portfolio = "https://en.wikipedia.org/wiki/Dave_Grohl#Career",
+                    Viewed = new int[] { 1 },
+                    Clicked = new int[] { 1 },
+                    AppliedTo = new int[] { 1 },
+                    ContributedTo = new int[] { 1 }
                 },
                 new User
                 {
                     Id = 3,
-                    UserName = "DoubleOh",
-                    Image = "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg"
+                    Username = "DoubleOh",
+                    Image = "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg",
+                    Viewed = new int[] { 1 },
+                    Clicked = new int[] { 1 },
+                    AppliedTo = new int[] { 1 }
                 },
                 new User
                 {
                     Id = 4,
                     Hidden = false,
-                    UserName = "ManOfEgg",
-                    Portfolio = "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/"
+                    Username = "ManOfEgg",
+                    Portfolio = "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/",
+                    Viewed = new int[] { 2 },
+                    Clicked = new int[] { 2 },
+                    ContributedTo = new int[] { 2 }
                 },
                 new User
                 {
                     Id = 5,
                     Hidden = false,
-                    UserName = "Rob",
-                    Description = "Game dev, I guess"
+                    Username = "Rob",
+                    Description = "Game dev, I guess",
+                    Viewed = new int[] { 3 },
+                    Clicked = new int[] { 3 },
+                    ContributedTo = new int[] { 3 }
                 },
                 new User{
                     Id = 6,
                     Hidden = false,
-                    UserName = "Drew",
+                    Username = "Drew",
                     Image = "https://avatars.githubusercontent.com/u/1310872",
-                    Portfolio = "https://git.sr.ht/~sircmpwn"
+                    Portfolio = "https://git.sr.ht/~sircmpwn",
+                    Viewed = new int[] { 4 },
+                    Clicked = new int[] { 4 },
+                    ContributedTo = new int[] { 4 }
                 }
             };
+            foreach (User u in users)
+                modelBuilder.Entity<User>().HasData(u);
 
             var projects = new Project[]
             {
@@ -115,6 +129,7 @@ namespace LagaltAPI.Context
                 {
                     Id = 1,
                     ProfessionId = professions[0].Id,
+                    AdministratorIds = new int[] {1},
                     Title = "Writing an album on a Submarine",
                     Description = "I've always wanted to travel by submarine and I've also got to make new songs",
                     Progress = "In Progress",
@@ -124,6 +139,7 @@ namespace LagaltAPI.Context
                 {
                     Id = 2,
                     ProfessionId = professions[1].Id,
+                    AdministratorIds = new int[] {4},
                     Title = "The Cinematic Movie Film",
                     Description = "Some call them movies and some call them films. But what if both were correct?"
                 },
@@ -131,6 +147,7 @@ namespace LagaltAPI.Context
                 {
                     Id = 3,
                     ProfessionId = professions[2].Id,
+                    AdministratorIds = new int[] {5},
                     Title = "Yet Another Tetris Game",
                     Description = "What could go wrong?",
                     Progress =  "Completed",
@@ -140,6 +157,7 @@ namespace LagaltAPI.Context
                 {
                     Id = 4,
                     ProfessionId = professions[2].Id,
+                    AdministratorIds = new int[] {6},
                     Title = "Minecraft Nostalgia",
                     Description = "It was better before",
                     Progress = "Stalled",
@@ -156,8 +174,9 @@ namespace LagaltAPI.Context
                     Source = "https://github.com/ddevault/RedditSharp"
                 },
             };
+            foreach (Project p in projects)
+                modelBuilder.Entity<Project>().HasData(p);
 
-            // TODO - Add more messages
             var messages = new Message[]
             {
                 // Submarine project messsages
@@ -186,64 +205,38 @@ namespace LagaltAPI.Context
                     PostedTime = new DateTime(2021, 10, 3, 8, 20, 03)
                 },
             };
-
-            // TODO - add UserProject entries
-            var userProjects = new UserProject[]
-            {
-                new UserProject
-                {
-                    UserID = 1,
-                    ProjectID = 1,
-                    Viewed = true,
-                    Clicked = true,
-                    Applied = true,
-                    Administrator = true
-                },
-                new UserProject
-                {
-                    UserID = 2,
-                    ProjectID = 1,
-                    Viewed = true,
-                    Clicked = true,
-                    Applied = true,
-                    Application = "Plz i luv submarinezz!!!1!!1!!"
-                },
-                new UserProject
-                {
-                    UserID = 3,
-                    ProjectID = 1,
-                    Viewed = true,
-                    Clicked = true,
-                    Applied = true,
-                    Application = "Request Access"
-                },
-                new UserProject
-                {
-                    UserID = 4,
-                    ProjectID = 1,
-                    Viewed = true,
-                },
-                new UserProject
-                {
-                    UserID = 5,
-                    ProjectID = 1,
-                    Viewed = true,
-                    Clicked = true
-                }
-            };
-
-            foreach (Profession p in professions)
-                modelBuilder.Entity<Profession>().HasData(p);
-            foreach (Skill s in skills)
-                modelBuilder.Entity<Skill>().HasData(s);
-            foreach (User u in users)
-                modelBuilder.Entity<User>().HasData(u);
-            foreach (Project p in projects)
-                modelBuilder.Entity<Project>().HasData(p);
             foreach (Message m in messages)
                 modelBuilder.Entity<Message>().HasData(m);
-            foreach (UserProject up in userProjects)
-                modelBuilder.Entity<UserProject>().HasData(up);
+
+            var applications = new Application[]
+            {
+                new Application
+                {
+                    Id = 1,
+                    ProjectId = projects[0].Id,
+                    UserId = users[1].Id,
+                    Accepted = true,
+                    Motivation = "I also love submarines",
+                },
+                new Application
+                {
+                    Id = 2,
+                    ProjectId = projects[0].Id,
+                    UserId = users[2].Id,
+                    Accepted = true,
+                    Motivation = "Trying to figure out if i like submarines",
+                },
+                new Application
+                {
+                    Id = 3,
+                    ProjectId = projects[0].Id,
+                    UserId = users[4].Id,
+                    Accepted = false,
+                    Motivation = "What's a submarine?",
+                },
+            };
+            foreach (Application a in applications)
+                modelBuilder.Entity<Application>().HasData(a);
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Skills)
@@ -275,16 +268,51 @@ namespace LagaltAPI.Context
                     }
                 );
 
-            modelBuilder.Entity<UserProject>()
-                .HasKey(up => new { up.UserID, up.ProjectID });
-            modelBuilder.Entity<UserProject>()
-                .HasOne(up => up.User)
-                .WithMany(u => u.UserProjects)
-                .HasForeignKey(up => up.UserID);
-            modelBuilder.Entity<UserProject>()
-                .HasOne(up => up.Project)
-                .WithMany(p => p.UserProjects)
-                .HasForeignKey(up => up.ProjectID);
+            modelBuilder.Entity<Project>()
+                .HasMany(p => p.Skills)
+                .WithMany(s => s.Projects)
+                .UsingEntity<Dictionary<string, object>>
+                (
+                    "ProjectSkills",
+                    r => r.HasOne<Skill>().WithMany().HasForeignKey("SkillId"),
+                    l => l.HasOne<Project>().WithMany().HasForeignKey("ProjectId"),
+                    je =>
+                    {
+                        je.HasKey("SkillId", "ProjectId");
+                        je.HasData
+                        (
+                            new { ProjectId = 1, SkillId = 1 },
+                            new { ProjectId = 1, SkillId = 2 },
+                            new { ProjectId = 2, SkillId = 3 },
+                            new { ProjectId = 3, SkillId = 4 },
+                            new { ProjectId = 4, SkillId = 5 },
+                            new { ProjectId = 5, SkillId = 6 }
+                        );
+                    }
+                );
+
+            modelBuilder.Entity<Project>()
+                .HasMany(p => p.Users)
+                .WithMany(u => u.Projects)
+                .UsingEntity<Dictionary<string, object>>
+                (
+                    "ProjectUsers",
+                    r => r.HasOne<User>().WithMany().HasForeignKey("UserId"),
+                    l => l.HasOne<Project>().WithMany().HasForeignKey("ProjectId"),
+                    je =>
+                    {
+                        je.HasKey("UserId", "ProjectId");
+                        je.HasData
+                        (
+                            new { ProjectId = 1, UserId = 1 },
+                            new { ProjectId = 1, UserId = 2 },
+                            new { ProjectId = 1, UserId = 3 },
+                            new { ProjectId = 2, UserId = 4 },
+                            new { ProjectId = 3, UserId = 5 },
+                            new { ProjectId = 4, UserId = 6 }
+                        );
+                    }
+                );
         }
     }
 }

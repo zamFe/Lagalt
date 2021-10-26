@@ -39,5 +39,8 @@ export class MyProjectsComponent implements OnInit{
     
   }
 
+  get loading(): boolean {
+    return this.projectService.loading;
+  }
 
 }

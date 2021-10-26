@@ -11,8 +11,18 @@
   users: UserCompact[],
   description: string,
   progress: string,
-  source: string | null,
+  source: string,
   administratorIds : number[],
+}
+
+export interface PutProject {
+  id: number,
+  skills: number[],
+  title: string,
+  description: string
+  progress: string,
+  image: string,
+  source: string,
 }
 
 

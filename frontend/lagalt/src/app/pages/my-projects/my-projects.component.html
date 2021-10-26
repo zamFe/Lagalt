@@ -1,4 +1,7 @@
-  <div class="">
+<div class="my-overlay" *ngIf="loading">
+  <i class="fa fa-spinner fa-spin" aria-hidden="true"> Loading..</i>
+</div>
+<div class="">
     <app-my-projects-list-of-projects></app-my-projects-list-of-projects>
   </div>
   <footer class="pagination container justify-content-center">

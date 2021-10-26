@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UserComplete } from 'src/app/models/user/user-complete.model';
+import { PutUser, UserComplete } from 'src/app/models/user/user-complete.model';
 import { NgForm, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '@auth0/auth0-angular';
@@ -7,7 +7,7 @@ import { UserService } from 'src/app/services/user.service';
 import { SkillService } from 'src/app/services/skill.service';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { Skill } from 'src/app/models/skill.model';
+import { Skill} from 'src/app/models/skill.model';
 import { Project } from 'src/app/models/project.model';
 import { ProjectService } from 'src/app/services/project.service';
 
@@ -27,33 +27,30 @@ export class ProfilePage implements OnInit, OnDestroy {
     image: '',
     portfolio: '',
     skills: [],
-    projects: []
+    projects: [],
+    hidden: false
   }
+
 
   public skill: Skill = {
     id: 0,
     name: ''
   }
 
-  
   public isChecked = true;
   public color = 'accent';
 
-
-
-
-
-  constructor(private readonly userService : UserService, public auth: AuthService, 
+  constructor(private readonly userService : UserService, public auth: AuthService,
     private readonly skillService : SkillService, private readonly projectService: ProjectService) {
     this.user$ = this.userService.user$.subscribe((user: UserComplete) => {
       this.user = user;
-      localStorage.setItem('userId', JSON.stringify(user.id)); 
+      localStorage.setItem('userId', JSON.stringify(user.id));
     })
 
     this.skills$ = this.userService.user$.subscribe((user: UserComplete) => {
       this.user.skills = user.skills
-    })    
-    
+    })
+
   }
 
   ngOnInit(): void {
@@ -68,10 +65,11 @@ export class ProfilePage implements OnInit, OnDestroy {
          }
         }, () => {
           this.userService.postUserByUsername(this.user.username)
-        }); 
-        
+        });
+
       }
     );
+    this.skillService.getSkills();
   }
 
 
@@ -98,37 +96,35 @@ export class ProfilePage implements OnInit, OnDestroy {
       projects: []
     }
 
-    
-    this.skillService.postSkill(newSkill)
+    let skillslist: Skill[] = []
+    this.skillService.skills$.subscribe((data) => skillslist = data)
+    let tempSkill = null
+    tempSkill = skillslist.find(element => element.name === addSkillForm.value.skills)
+    if(tempSkill !== undefined){
+      this.user.skills.push(tempSkill)
+      this.userService.putUser()
+    }
+    else{
+     this.skillService.postSkill(newSkill)
 
-    //this.skillService.addSkill(addSkillForm)
-    // WAIT WITH IMPLEMENTING TILL USER MODEL IS UPDATED with skill[] instead of array of ids
+    }
+  }
 
-    // if(addSkillForm){
-    //   this.skills.push(addSkillForm.value.skills);
-    // }
-    // let usersResults : User[] = []
-    // this.userService.getUsers$().subscribe(data => {
-    //   console.log(data);
-    //   usersResults = data
-    // })
-    // let usersResultsById : User
-    // this.userService.getUserById$().subscribe(data => {
-    //   console.log(data);
-    //   usersResultsById = data
-    //   let description = data.description
-    //   console.log(description);
-    // })
+
+
+  refresh() {
+    setTimeout(function(){
+      window.location.reload();
+        },1000)
   }
 
   handleDescription(handleDescriptionForm : NgForm){
-    // maybe check that description is changed, and that description is not equal to empty string or white spaces
     this.user.description = handleDescriptionForm.value.description
-    // RUN PUT USER API CALL so we can update description
-    this.userService.getTest();
+    this.userService.putUser();
   }
-  saveUser() {
-    //this.userService.putUser(this.user)
+
+  get loading(): boolean {
+    return this.projectService.loading;
   }
 
 }

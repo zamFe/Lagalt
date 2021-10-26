@@ -21,7 +21,7 @@ export class MainListOfProjectsItemComponent implements OnInit, OnDestroy {
     users: [],
     description: '',
     progress: '',
-    source: null,
+    source: '',
     administratorIds: []
   };
 
@@ -35,14 +35,15 @@ export class MainListOfProjectsItemComponent implements OnInit, OnDestroy {
     image: '',
     portfolio: '',
     skills: [],
-    projects: []
+    projects: [],
+    hidden: false
   }
   private user$: Subscription;
 
   public skillMatched : String = ""
-  
 
-  constructor(private readonly skillsService: SkillService, private readonly userService: UserService) { 
+
+  constructor(private readonly skillsService: SkillService, private readonly userService: UserService) {
     this.skillsNeeded$ = this.skillsService.skills$.subscribe((skills: Skill[]) => {
       this.skillsNeeded = skills.filter(s => this.project.skills.includes(s))
     })
@@ -50,10 +51,10 @@ export class MainListOfProjectsItemComponent implements OnInit, OnDestroy {
     this.user$ = this.userService.user$.subscribe((user: UserComplete) => {
       this.user = user;
     })
-    
+
   }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.matchSkills()
   }
 

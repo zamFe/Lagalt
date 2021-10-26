@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Project } from "../models/project.model";
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { environment } from "src/environments/environment";
@@ -11,6 +11,7 @@ const API_URL = `${environment.apiUrl}Projects`;
 })
 export class MyProjectService {
 
+  private _loading: boolean = false;
   // Store observables
   public readonly myProjects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
 
@@ -43,11 +44,20 @@ export class MyProjectService {
 
   // API CRUD calls
   public getProjectsByUserId(userId : number): Subscription {
+      this._loading = true;
       return this.http.get<ProjectPageWrapper>(`${API_URL}/User/${userId}?offset=${this.offset}&limit=${this.limit}`)
           .subscribe((project: ProjectPageWrapper) => {
               this.setMyProjects(project.results)
               this.totalEntities = project.totalEntities;
               this.pages = Math.ceil(this.totalEntities/this.limit)
+              this._loading = false;
+          },
+          (error: HttpErrorResponse) => {
+              alert(error.status + " : " + error.statusText)
           });
   }
+
+  get loading(): boolean {
+    return this._loading;
+}
 }
