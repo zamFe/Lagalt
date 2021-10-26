@@ -22,6 +22,7 @@ const defaultUser : UserComplete = {
   providedIn: 'root'
 })
 export class UserService {
+  private _loading: boolean = false;
 
   public readonly users$: BehaviorSubject<UserComplete[]> = new BehaviorSubject<UserComplete[]>([]);
   public readonly user$: BehaviorSubject<UserComplete> = new BehaviorSubject<UserComplete>(defaultUser);
@@ -40,10 +41,12 @@ export class UserService {
 
    // API CRUD calls
   public getUsers(): Subscription {
+    this._loading = true;
     //set users as enum in storage here.
     return this.http.get<UserComplete[]>(API_URL_USERS)
         .subscribe((users: UserComplete[]) => {
-            this.setUsers(users)
+          this._loading = false;
+          this.setUsers(users)
         },
         (error: HttpErrorResponse) => {
             //console.log(error.message);
@@ -52,10 +55,12 @@ export class UserService {
   }
 
   public getUserById(id : number): Subscription {
+    this._loading = true;
     //set users as enum in storage here.
     return this.http.get<UserComplete>(API_URL_USERS +`/${id}`)
         .subscribe((user: UserComplete) => {
-            this.setUser(user)
+          this._loading = false;
+          this.setUser(user)
         },
         (error: HttpErrorResponse) => {
             //console.log(error.message);
@@ -78,6 +83,7 @@ export class UserService {
 
 
   public postUserByUsername(username : string): Subscription {
+    this._loading = true;
     let newUser = {
       username: username,
       skills: [],
@@ -86,7 +92,7 @@ export class UserService {
       portfolio:""}
     return this.http.post<UserComplete>(API_URL_USERS, newUser)
       .subscribe((response: UserComplete) => {
-
+        this._loading = false;
         this.setUser(response)
     },
     (error: HttpErrorResponse) => {
@@ -97,6 +103,7 @@ export class UserService {
 
   // IKKE TESTET
   public putUser(): Subscription {
+    this._loading = true;
     let tempSkills = this.user$.value.skills.map(element => element.id)
     let putUser : PutUser = {
       id: this.user$.value.id,
@@ -107,7 +114,7 @@ export class UserService {
       image: this.user$.value.image,
       portfolio: this.user$.value.portfolio
     }
-
+    this._loading = false;
     return this.http.put(`${API_URL_USERS}/${putUser.id}`, putUser)
     .subscribe(() => {},
     (error: HttpErrorResponse) => {

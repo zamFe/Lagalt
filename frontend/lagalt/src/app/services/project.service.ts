@@ -26,6 +26,8 @@ const defaultProject: Project = {
 })
 export class ProjectService {
 
+    private _loading: boolean = false;
+
     // Store varaibles
     public readonly projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
     public readonly renderProjects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
@@ -57,10 +59,12 @@ export class ProjectService {
 
     // API CRUD calls
     public getProjects(): Subscription {
+        this._loading = true;
         return this.http.get<ProjectPageWrapper>(API_URL)
             .subscribe((page: ProjectPageWrapper) => {
                 this.setProjects(page.results)
                 if (this.renderProjects$.value.length < page.results.length) {
+                    this._loading = false;
                     this.setRenderProjects(page.results)
                 }
             },
@@ -71,8 +75,10 @@ export class ProjectService {
 
 
     public getProjectsByUserId(userId : number): Subscription {
+        this._loading = true;
         return this.http.get<ProjectPageWrapper>(`${API_URL}/User/${userId}`)
             .subscribe((project: ProjectPageWrapper) => {
+                this._loading = false;
                 this.setProjects(project.results)
                 this.setRenderProjects(project.results)
             },
@@ -83,8 +89,10 @@ export class ProjectService {
 
 
     public getProjectById(id: number): Subscription {
+        this._loading = true;
         return this.http.get<Project>(`${API_URL}/${id}`)
             .subscribe((project: Project) => {
+                this._loading = false;
                 this.setProject(project)
             },
             (error: HttpErrorResponse) => {
@@ -93,8 +101,10 @@ export class ProjectService {
     }
 
     public getRecommendedProjectsByUserId(userId: number): Subscription {
+        this._loading = true;
         return this.http.get<ProjectPageWrapper>(`${API_URL}/Recommended/${userId}`)
             .subscribe((page: ProjectPageWrapper) => {
+                this._loading = false;
                 this.setRenderProjects(page.results)
             },
             (error: HttpErrorResponse) => {
@@ -103,8 +113,10 @@ export class ProjectService {
     }
 
     public postProject(project: Object): Subscription {
+        this._loading = true;
         return this.http.post<Project>(API_URL, project)
             .subscribe((response: Project) => {
+                this._loading = false;
                 this.addProject(response)
             },
             (error: HttpErrorResponse) => {
@@ -114,14 +126,21 @@ export class ProjectService {
 
     // IKKE TESTET
     public putProject(project: PutProject): Subscription {
+        this._loading = true;
         this.removeProject(project.id)
         return this.http.put<Project>(`${API_URL}/${project.id}`, project)
         .subscribe((response: Project) => {
+            this._loading = false;
             this.addProject(response)
         },
         (error: HttpErrorResponse) => {
             alert(error.status + " : " + error.statusText)
         });
     }
+
+    get loading(): boolean {
+        return this._loading;
+    }
+    
 
 }

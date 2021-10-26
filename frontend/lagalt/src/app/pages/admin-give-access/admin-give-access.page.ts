@@ -113,4 +113,8 @@ export class AdminGiveAccessPage implements OnInit {
     }
   }
 
+  get loading(): boolean {
+    return this.projectService.loading;
+  }
+
 }

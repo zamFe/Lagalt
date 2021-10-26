@@ -9,6 +9,7 @@ const API_URL = `${environment.apiUrl}Skills`
   providedIn: 'root'
 })
 export class SkillService {
+  private _loading: boolean = false;
 
   public readonly skills$: BehaviorSubject<Skill[]> = new BehaviorSubject<Skill[]>([]);
   constructor(private readonly http: HttpClient) { }
@@ -25,8 +26,10 @@ export class SkillService {
 
   // API CRUD calls
   public getSkills(): Subscription {
+    this._loading = true;
     return this.http.get<Skill[]>(API_URL)
         .subscribe((skills: Skill[]) => {
+          this._loading = false;
             this.setSkills(skills)
         },
         (error: HttpErrorResponse) => {
@@ -36,8 +39,10 @@ export class SkillService {
   }
   
   public postSkill(skill: Object): Subscription {
+    this._loading = true;
     return this.http.post<Skill>(API_URL, skill)
       .subscribe((response) => {
+        this._loading = false;
         this.addSkill(response)
       },
             (error: HttpErrorResponse) => {

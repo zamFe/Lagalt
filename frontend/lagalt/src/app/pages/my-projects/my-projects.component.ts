@@ -28,5 +28,8 @@ export class MyProjectsComponent implements OnInit{
     this.messageService.getMessagesByProjectId(this.projectId)
   }
 
+  get loading(): boolean {
+    return this.projectService.loading;
+  }
 
 }

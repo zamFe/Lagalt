@@ -1,3 +1,6 @@
+<div class="my-overlay" *ngIf="loading">
+  <i class="fa fa-spinner fa-spin" aria-hidden="true"> Loading..</i>
+</div>
 <div class ="container-fluid profilepage">
   <div *ngIf="auth.user$ | async as authUser">
   <div class ="row" style="margin-bottom: 20px;">

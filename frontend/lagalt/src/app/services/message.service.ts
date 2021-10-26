@@ -10,6 +10,7 @@ const API_URL = `${environment.apiUrl}Messages`;
   providedIn: 'root'
 })
 export class MessageService {
+  private _loading: boolean = false;
 
   public readonly messages$: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>([]);
 
@@ -25,8 +26,10 @@ export class MessageService {
   }
 
   public getMessagesByProjectId(projectId: number): Subscription {
+    this._loading = true;
     return this.http.get<MessageResponse>(`${API_URL}/Project/${projectId}`)
         .subscribe((messages: MessageResponse) => {
+          this._loading = false;
             this.setMessages(messages.results)
         },
         (error: HttpErrorResponse) => {
@@ -36,8 +39,10 @@ export class MessageService {
   }
 
   public postMessage(message: Object): Subscription {
+    this._loading = true;
     return this.http.post<Message>(API_URL, message)
       .subscribe((message: Message) => {
+        this._loading = false;
         this.addMessage(message)
       },
       (error: HttpErrorResponse) => {

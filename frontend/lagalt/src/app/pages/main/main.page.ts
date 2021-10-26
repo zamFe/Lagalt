@@ -28,5 +28,8 @@ export class MainPage implements OnInit {
     this.router.navigate(["project"])
   }
 
+  get loading(): boolean {
+    return this.projectService.loading;
+  }
 
 }

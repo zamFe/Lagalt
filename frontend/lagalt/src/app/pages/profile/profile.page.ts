@@ -123,5 +123,8 @@ export class ProfilePage implements OnInit, OnDestroy {
     this.userService.putUser();
   }
 
+  get loading(): boolean {
+    return this.projectService.loading;
+  }
 
 }

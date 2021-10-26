@@ -10,6 +10,7 @@ const API_URL = `${environment.apiUrl}Applications`;
   providedIn: 'root'
 })
 export class ApplicationService {
+  private _loading: boolean = false;
 
   public readonly applications$: BehaviorSubject<Application[]> = new BehaviorSubject<Application[]>([]);
 
@@ -25,8 +26,10 @@ export class ApplicationService {
   }
 
   public getApplicationsByProjectId(projectId: number): Subscription {
+    this._loading = true;
     return this.http.get<ApplicationResponse>(`${API_URL}/Project/${projectId}`)
         .subscribe((applications: ApplicationResponse) => {
+          this._loading = false;
             this.setApplications(applications.results)
         },
         (error: HttpErrorResponse) => {
@@ -36,8 +39,10 @@ export class ApplicationService {
   }
 
   public postApplication(application: Object): Subscription {
+    this._loading = true;
     return this.http.post<Application>(API_URL, application)
       .subscribe((application: Application) => {
+        this._loading = false;
         this.addApplication(application)
       },
       (error: HttpErrorResponse) => {
@@ -46,8 +51,10 @@ export class ApplicationService {
       })
   }
   public putApplication(application: PutApplication): Subscription {
+    this._loading = true;
     return this.http.put<Application>(`${API_URL}/${application.id}`, application)
       .subscribe((application: Application) => {
+        this._loading = false;
         this.addApplication(application)
       },
       (error: HttpErrorResponse) => {

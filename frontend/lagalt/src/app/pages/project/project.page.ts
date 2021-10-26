@@ -116,5 +116,9 @@ export class ProjectPage implements OnInit, OnDestroy {
         },1000)
   }
 
+  get loading(): boolean {
+    return this.projectService.loading;
+  }
+
 
 }
