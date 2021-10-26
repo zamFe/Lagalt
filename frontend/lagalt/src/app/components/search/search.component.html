@@ -2,10 +2,10 @@
     <form class="form-inline" #searchProjectForm="ngForm" (ngSubmit)="searchForProject(searchProjectForm)">
         <div class="d-flex form-outline align-items-center">
             <input
-            ngModel
+            [(ngModel)]="searchField"
             class="form-control"
             placeholder="Søk for et prosjekt her..."
-            #username="ngModel"
+            #searchInput="ngModel"
             name = "searchInput"
             id = "searchInput"
             required>
@@ -14,7 +14,7 @@
         </div>
     </form>
     <div class="filterOptions">
-        <button class="btn filterOption btn-outline-dark btn-all" (click)="searchForProject(searchProjectForm)">Alle</button>
+        <button class="btn filterOption btn-outline-dark btn-all" (click)="searchAll(searchProjectForm)">Alle</button>
         <app-get-recommended></app-get-recommended>
         <button class="btn filterOption btn-outline-dark btn-music" (click)="searchMusic(searchProjectForm)">Musikk</button>
         <button class="btn filterOption btn-outline-dark btn-film" (click)="searchFilm(searchProjectForm)">Film</button>

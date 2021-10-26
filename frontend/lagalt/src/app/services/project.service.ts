@@ -94,6 +94,7 @@ export class ProjectService {
         return this.http.get<ProjectPageWrapper>(`${API_URL}?offset=${this.offset}&limit=${this.limit}&professionId=${this.professionId}`)
             .subscribe((page: ProjectPageWrapper) => {
                 this.setProjects(page.results)
+                
                 this.totalEntities = page.totalEntities;
                 this.pages = Math.ceil(this.totalEntities/this.limit)
             });
