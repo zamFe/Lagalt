@@ -19,14 +19,35 @@ namespace LagaltAPI.Controllers
     {
         private readonly IMapper _mapper;
         private readonly MessageService _service;
+        private readonly ProjectService _projectService;
         private readonly UriService _uriService;
+        private readonly UserService _userService;
 
         // Constructor.
-        public MessagesController(IMapper mapper, MessageService service, UriService uriService)
+        public MessagesController(IMapper mapper, MessageService service,
+            ProjectService projectService, UriService uriService, UserService userService)
         {
             _mapper = mapper;
             _service = service;
+            _projectService = projectService;
             _uriService = uriService;
+            _userService = userService;
+        }
+
+        // Could be expanded to implement a profanity filter.
+        // Should probably also check that the date is valid.
+        private ValidationResult ValidateNewMessage(MessageCreateDTO dtoMessage)
+        {
+            if (!_userService.UserExists(dtoMessage.UserId))
+                return new ValidationResult(false, "Unable to find user");
+
+            if (!_projectService.ProjectExists(dtoMessage.ProjectId))
+                return new ValidationResult(false, "Unable to find project");
+
+            if (! _projectService.UserIsProjectMember(dtoMessage.ProjectId, dtoMessage.UserId))
+                return new ValidationResult(false, "User is not a member of the project");
+
+            return new ValidationResult(true);
         }
 
         /// <summary> Fetches a message from the database based on message id. </summary>
@@ -83,10 +104,11 @@ namespace LagaltAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<MessageReadDTO>> PostMessage(MessageCreateDTO dtoMessage)
         {
-            var domainMessage = _mapper.Map<Message>(dtoMessage);
-            if (!_service.UserCanPostMessage(domainMessage))
-                return BadRequest();
+            var validation = ValidateNewMessage(dtoMessage);
+            if (!validation.Result)
+                return BadRequest(validation.RejectionReason);
 
+            var domainMessage = _mapper.Map<Message>(dtoMessage);
             domainMessage = await _service.AddAsync(domainMessage);
             return CreatedAtAction("GetMessage", 
                 new { messageId = domainMessage.Id }, 

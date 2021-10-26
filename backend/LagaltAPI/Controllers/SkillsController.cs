@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.Skill;
+using LagaltAPI.Models.Wrappers;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,13 +18,38 @@ namespace LagaltAPI.Controllers
     public class SkillsController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly SkillService _service;
+        private readonly ProjectService _projectService;
+        private readonly SkillService _skillService;
+        private readonly UserService _userService;
 
         // Constructor.
-        public SkillsController(IMapper mapper, SkillService service)
+        public SkillsController(IMapper mapper, ProjectService projectService,
+            SkillService skillService, UserService userService)
         {
             _mapper = mapper;
-            _service = service;
+            _projectService = projectService;
+            _skillService = skillService;
+            _userService = userService;
+        }
+
+        private ValidationResult ValidateNewSkill(SkillCreateDTO dtoSkill)
+        {
+            if (_skillService.SkillNameExists(dtoSkill.Name))
+                return new ValidationResult(false, "Skill name already exists");
+
+            foreach (int userId in dtoSkill.Users)
+            {
+                if (!_userService.UserExists(userId))
+                    return new ValidationResult(false, "Skill has invalid user ids");
+            }
+
+            foreach (int projectId in dtoSkill.Projects)
+            {
+                if (!_projectService.ProjectExists(projectId))
+                    return new ValidationResult(false, "Skill has invalid project ids");
+            }
+
+            return new ValidationResult(true);
         }
 
         /// <summary> Fetches all available skills from the database. </summary>
@@ -32,7 +58,7 @@ namespace LagaltAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SkillReadDTO>>> GetSkills()
         {
-            return _mapper.Map<List<SkillReadDTO>>(await _service.GetAllAsync());
+            return _mapper.Map<List<SkillReadDTO>>(await _skillService.GetAllAsync());
         }
 
         /// <summary> Fetches a skill from the database based on skill id. </summary>
@@ -47,7 +73,7 @@ namespace LagaltAPI.Controllers
         {
             try
             {
-                var domainSkill = await _service.GetByIdAsync(skillId);
+                var domainSkill = await _skillService.GetByIdAsync(skillId);
 
                 if (domainSkill != null)
                     return _mapper.Map<SkillReadDTO>(domainSkill);
@@ -68,7 +94,7 @@ namespace LagaltAPI.Controllers
         {
             try
             {
-                var domainSkill = await _service.GetByNameAsync(skillName);
+                var domainSkill = await _skillService.GetByNameAsync(skillName);
 
                 if (domainSkill != null)
                     return _mapper.Map<SkillReadDTO>(domainSkill);
@@ -92,11 +118,12 @@ namespace LagaltAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<SkillReadDTO>> PostSkill(SkillCreateDTO dtoSkill)
         {
-            if (_service.SkillNameExists(dtoSkill.Name))
-                return BadRequest("Skill name already exists");
+            var validation = ValidateNewSkill(dtoSkill);
+            if (!validation.Result)
+                return BadRequest(validation.RejectionReason);
 
             var domainSkill = _mapper.Map<Skill>(dtoSkill);
-            await _service.AddAsync(domainSkill, dtoSkill.Users, dtoSkill.Projects);
+            await _skillService.AddAsync(domainSkill, dtoSkill.Users, dtoSkill.Projects);
 
             return CreatedAtAction("GetSkillById",
                 new { skillId = domainSkill.Id },

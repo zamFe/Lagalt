@@ -18,9 +18,23 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
-        public bool EntityExists(int projectId)
+        public bool ProjectExists(int projectId)
         {
-            return _context.Projects.Any(project => project.Id == projectId);
+            return _context.Projects.Find(projectId) != null;
+        }
+
+        public bool UserIsProjectMember(int projectId, int userId)
+        {
+            return _context.Projects
+                .Where(project => project.Id == projectId)
+                .Any(project => project.Users.Any(user => user.Id == userId));
+        }
+
+        public bool UserIsProjectAdministrator(int projectId, int userId)
+        {
+            return _context.Projects
+                .Where(project => project.Id == projectId)
+                .Any(project => project.AdministratorIds.Contains(userId));
         }
 
         public async Task<Project> AddAsync(

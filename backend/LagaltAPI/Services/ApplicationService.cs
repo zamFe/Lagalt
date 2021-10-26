@@ -18,15 +18,15 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
-        public bool EntityExists(int applicationId)
+        public bool ApplicationExists(int applicationId)
         {
-            return _context.Applications.Any(application => application.Id == applicationId);
+            return _context.Applications.Find(applicationId) != null;
         }
 
-        public bool UserHasAppliedToProject(int userId, int projectId)
+        public bool UserHasAppliedToProject(int userId, int applicationId)
         {
             return _context.Applications.Any(application =>
-                application.UserId == userId && application.ProjectId == projectId);
+                application.UserId == userId && application.ProjectId == applicationId);
         }
 
         public async Task<Application> AddAsync(Application newApplication)

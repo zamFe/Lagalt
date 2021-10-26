@@ -42,9 +42,14 @@ namespace LagaltAPI.Services
             return user;
         }
 
-        public bool EntityExists(int userId)
+        public bool UserExists(int userId)
         {
-            return _context.Users.Any(user => user.Id == userId);
+            return _context.Users.Find(userId) != null;
+        }
+
+        public bool UserExists(string username)
+        {
+            return _context.Users.AsNoTracking().Any(user => user.Username == username);
         }
 
         public async Task<User> AddAsync(User newUser, IEnumerable<int> skillIds)

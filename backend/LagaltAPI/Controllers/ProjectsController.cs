@@ -19,16 +19,84 @@ namespace LagaltAPI.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly ProfessionService _professionService;
         private readonly ProjectService _projectService;
+        private readonly SkillService _skillService;
         private readonly UriService _uriService;
+        private readonly UserService _userService;
 
         // Constructor.
         public ProjectsController(
-            IMapper mapper, ProjectService projectService, UriService uriService)
+            IMapper mapper, ProfessionService professionService, ProjectService projectService,
+            SkillService skillService, UriService uriService, UserService userService)
         {
             _mapper = mapper;
+            _professionService = professionService;
             _projectService = projectService;
+            _skillService = skillService;
             _uriService = uriService;
+            _userService = userService;
+        }
+
+        /// <summary> Checks whether a creation-specific DTO is properly formated. </summary>
+        /// <param name="dtoProject"> A creation-specific DTO containing a new project. </param>
+        /// <returns> A ValidationResult with a result and the reason for the result. </returns>
+        private ValidationResult ValidateNewProject(ProjectCreateDTO dtoProject)
+        {
+            if (dtoProject.AdministratorIds.Length == 0 || dtoProject.Users.Length == 0)
+                return new ValidationResult(false, "A project must have users and administrators");
+
+            foreach (int adminId in dtoProject.AdministratorIds)
+            {
+                if (!Array.Exists(dtoProject.Users, userId => userId == adminId))
+                {
+                    return new ValidationResult(
+                        false, "Project administrators must be project members");
+                }
+            }
+
+            if (!_professionService.ProfessionExists(dtoProject.ProfessionId))
+                return new ValidationResult(false, "Project has invalid profession id");
+
+            foreach (int skillId in dtoProject.Skills)
+            {
+                if (!_skillService.SkillExists(skillId))
+                    return new ValidationResult(false, "Project has invalid skill ids");
+            }
+
+            foreach (int userId in dtoProject.Users)
+            {
+                if (!_userService.UserExists(userId))
+                    return new ValidationResult(false, "Project has invalid user ids");
+            }
+
+            foreach (int adminId in dtoProject.AdministratorIds)
+            {
+                if (!_userService.UserExists(adminId))
+                    return new ValidationResult(false, "Project has invalid admin ids");
+            }
+
+            return new ValidationResult(true);
+        }
+
+        /// <summary> Checks whether an update-specific DTO is properly formated. </summary>
+        /// <param name="dtoProject">
+        ///     An edit-specific DTO containing an updated version of a project.
+        /// </param>
+        /// <param name="endpoint"> The endpoint at which the PUT request was recieved. </param>
+        /// <returns> A ValidationResult with a result and the reason for the result. </returns>
+        private ValidationResult ValidateUpdatedProject(ProjectEditDTO dtoProject, int endpoint)
+        {
+            if (endpoint != dtoProject.Id)
+                return new ValidationResult(false, "Mismatch between project id and API endpoint");
+
+            foreach (int skillId in dtoProject.Skills)
+            {
+                if (!_skillService.SkillExists(skillId))
+                    return new ValidationResult(false, "Project has invalid skill ids");
+            }
+
+            return new ValidationResult(true);
         }
 
         /// <summary> Fetches a project from the database based on project id. </summary>
@@ -136,17 +204,12 @@ namespace LagaltAPI.Controllers
         public async Task<ActionResult<ProjectCompleteReadDTO>> PostProject(
             ProjectCreateDTO dtoProject)
         {
+            var validation = ValidateNewProject(dtoProject);
+            if (!validation.Result)
+                return BadRequest(validation.RejectionReason);
+
             var domainProject = _mapper.Map<Project>(dtoProject);
-
-            if (dtoProject.AdministratorIds.Length == 0 || dtoProject.Users.Length == 0)
-                return BadRequest("A project must have users and administrators");
-
-            foreach (int adminId in dtoProject.AdministratorIds)
-            {
-                if (!Array.Exists(dtoProject.Users, userId => userId == adminId))
-                    return BadRequest("Project administrators must be project members");
-            }
-
+                    
             await _projectService.AddAsync(domainProject, dtoProject.Users, dtoProject.Skills);
             return CreatedAtAction("GetProject",
                 new { projectId = domainProject.Id },
@@ -172,22 +235,22 @@ namespace LagaltAPI.Controllers
         [HttpPut("{projectId}")]
         public async Task<IActionResult> PutProject(int projectId, ProjectEditDTO dtoProject)
         {
-            if (projectId != dtoProject.Id)
-                return BadRequest();
+            var validation = ValidateUpdatedProject(dtoProject, projectId);
+            if (!validation.Result)
+                return BadRequest(validation.RejectionReason);
 
-            if (!_projectService.EntityExists(projectId))
+            if (!_projectService.ProjectExists(projectId))
                 return NotFound();
 
             var domainProject = await _projectService.GetWriteableByIdAsync(projectId);
             _mapper.Map<ProjectEditDTO, Project>(dtoProject, domainProject);
-
             try
             {
                 await _projectService.UpdateAsync(domainProject, dtoProject.Skills);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_projectService.EntityExists(projectId))
+                if (!_projectService.ProjectExists(projectId))
                     return NotFound();
                 else
                     throw;

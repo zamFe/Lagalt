@@ -17,6 +17,11 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
+        public bool SkillExists(int skillId)
+        {
+            return _context.Skills.Find(skillId) != null;
+        }
+
         public bool SkillNameExists(string skillName)
         {
             var normalizedSkillName = skillName.Trim().ToLower();

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LagaltAPI.Models.Domain;
 using LagaltAPI.Models.DTOs.User;
+using LagaltAPI.Models.Wrappers;
 using LagaltAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,13 +18,43 @@ namespace LagaltAPI
     public class UsersController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly UserService _service;
+        private readonly SkillService _skillService;
+        private readonly UserService _userService;
 
         // Constructor.
-        public UsersController(IMapper mapper, UserService service)
+        public UsersController(IMapper mapper, SkillService skillService, UserService userService)
         {
             _mapper = mapper;
-            _service = service;
+            _skillService = skillService;
+            _userService = userService;
+        }
+
+        private ValidationResult ValidateNewUser(UserCreateDTO dtoUser)
+        {
+            if (_userService.UserExists(dtoUser.Username))
+                return new ValidationResult(false, "Username is taken");
+
+            foreach (int skillId in dtoUser.Skills)
+            {
+                if (!_skillService.SkillExists(skillId))
+                    return new ValidationResult(false, "User has invalid skill ids");
+            }
+
+            return new ValidationResult(true);
+        }
+
+        private ValidationResult ValidateUpdatedUser(UserEditDTO dtoUser, int endpoint)
+        {
+            if (endpoint != dtoUser.Id)
+                return new ValidationResult(false, "Mismatch between user id and API endpoint");
+
+            foreach (int skillId in dtoUser.Skills)
+            {
+                if (!_skillService.SkillExists(skillId))
+                    return new ValidationResult(false, "User has invalid skill ids");
+            }
+
+            return new ValidationResult(true);
         }
 
         /// <summary> Fetches a user from the database based on user id. </summary>
@@ -38,7 +69,7 @@ namespace LagaltAPI
         {
             try
             {
-                var domainUser = await _service.GetReadonlyByIdAsync(userId);
+                var domainUser = await _userService.GetReadonlyByIdAsync(userId);
 
                 if (domainUser != null)
                     return _mapper.Map<UserCompleteReadDTO>(domainUser);
@@ -59,7 +90,7 @@ namespace LagaltAPI
         {
             try
             {
-                var domainUser = await _service.GetReadonlyByUsernameAsync(username);
+                var domainUser = await _userService.GetReadonlyByUsernameAsync(username);
 
                 if (domainUser != null)
                     return _mapper.Map<UserCompleteReadDTO>(domainUser);
@@ -80,12 +111,12 @@ namespace LagaltAPI
         [HttpPost]
         public async Task<ActionResult<UserCompleteReadDTO>> PostUser(UserCreateDTO dtoUser)
         {
-            var existingUser = await _service.GetReadonlyByUsernameAsync(dtoUser.Username);
-            if (existingUser != null)
-                return Conflict("User Already Exsists!");
+            var validation = ValidateNewUser(dtoUser);
+            if (!validation.Result)
+                return BadRequest(validation.RejectionReason);
 
-            User domainUser = _mapper.Map<User>(dtoUser);
-            await _service.AddAsync(domainUser, dtoUser.Skills);
+            var domainUser = _mapper.Map<User>(dtoUser);
+            await _userService.AddAsync(domainUser, dtoUser.Skills);
 
             return CreatedAtAction("GetUser",
                 new { userId = domainUser.Id },
@@ -111,23 +142,23 @@ namespace LagaltAPI
         [HttpPut("{userId}")]
         public async Task<IActionResult> PutUser(int userId, UserEditDTO dtoUser)
         {
-            if (userId != dtoUser.Id)
-                return BadRequest();
+            var validation = ValidateUpdatedUser(dtoUser, userId);
+            if (!validation.Result)
+                return BadRequest(validation.RejectionReason);
 
-            if (!_service.EntityExists(userId))
+            if (!_userService.UserExists(userId))
                 return NotFound();
 
-
-            var domainUser = await _service.GetWriteableByIdAsync(userId);
+            var domainUser = await _userService.GetWriteableByIdAsync(userId);
             _mapper.Map<UserEditDTO, User>(dtoUser, domainUser);
 
             try
             {
-                await _service.UpdateAsync(domainUser, dtoUser.Skills);
+                await _userService.UpdateAsync(domainUser, dtoUser.Skills);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_service.EntityExists(userId))
+                if (!_userService.UserExists(userId))
                     return NotFound();
                 else
                     throw;
@@ -151,16 +182,16 @@ namespace LagaltAPI
         [HttpPut("{userId}/Viewed")]
         public async Task<IActionResult> RegisterViews(int userId, int[] projectIds)
         {
-            if (!_service.EntityExists(userId))
+            if (!_userService.UserExists(userId))
                 return NotFound();
 
             try
             {
-                await _service.UpdateViews(userId, projectIds);
+                await _userService.UpdateViews(userId, projectIds);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_service.EntityExists(userId))
+                if (!_userService.UserExists(userId))
                     return NotFound();
                 else
                     throw;
@@ -185,16 +216,16 @@ namespace LagaltAPI
         [HttpPut("{userId}/Clicked")]
         public async Task<IActionResult> RegisterClicks(int userId, int[] projectIds)
         {
-            if (!_service.EntityExists(userId))
+            if (!_userService.UserExists(userId))
                 return NotFound();
 
             try
             {
-                await _service.UpdateClicks(userId, projectIds);
+                await _userService.UpdateClicks(userId, projectIds);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_service.EntityExists(userId))
+                if (!_userService.UserExists(userId))
                     return NotFound();
                 else
                     throw;

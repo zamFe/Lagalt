@@ -18,15 +18,34 @@ namespace LagaltAPI.Controllers
     {
         private readonly IMapper _mapper;
         private readonly UpdateService _updateService;
+        private readonly ProjectService _projectService;
         private readonly UriService _uriService;
+        private readonly UserService _userService;
 
         // Constructor.
         public UpdatesController(
-            IMapper mapper, UpdateService updateService, UriService uriService)
+            IMapper mapper, ProjectService projectService, UpdateService updateService,
+            UriService uriService, UserService userService)
         {
             _mapper = mapper;
+            _projectService = projectService;
             _updateService = updateService;
             _uriService = uriService;
+            _userService = userService;
+        }
+
+        private ValidationResult ValidateNewUpdate(UpdateCreateDTO dtoUpdate)
+        {
+            if (!_userService.UserExists(dtoUpdate.UserId))
+                return new ValidationResult(false, "Unable to find user");
+
+            if (!_projectService.ProjectExists(dtoUpdate.ProjectId))
+                return new ValidationResult(false, "Unable to find project");
+
+            if (!_projectService.UserIsProjectAdministrator(dtoUpdate.ProjectId, dtoUpdate.UserId))
+                return new ValidationResult(false, "User is not an administrator of the project");
+
+            return new ValidationResult(true);
         }
 
         /// <summary> Fetches a project update from the database based on update id. </summary>
@@ -88,11 +107,13 @@ namespace LagaltAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<UpdateReadDTO>> PostUpdate(UpdateCreateDTO dtoUpdate)
         {
-            var domainUpdate = _mapper.Map<Update>(dtoUpdate);
-            if (!_updateService.UpdateIsValid(domainUpdate))
-                return BadRequest();
+            var validation = ValidateNewUpdate(dtoUpdate);
+            if (!validation.Result)
+                return BadRequest(validation.RejectionReason);
 
+            var domainUpdate = _mapper.Map<Update>(dtoUpdate);
             domainUpdate = await _updateService.AddAsync(domainUpdate);
+
             return CreatedAtAction("GetUpdate",
                 new { updateId = domainUpdate.Id },
                 _mapper.Map<UpdateReadDTO>(domainUpdate));
