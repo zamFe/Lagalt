@@ -15,7 +15,7 @@ namespace LagaltAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
-    [Authorize]
+    //[Authorize]
     public class ApplicationsController : ControllerBase
     {
         private readonly IMapper _mapper;
