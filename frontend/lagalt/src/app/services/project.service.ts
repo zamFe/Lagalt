@@ -66,6 +66,7 @@ export class ProjectService {
         this.offset += this.limit;
         this.currentPage++;
         this.getProjects();
+        
     }
     public prevPage(): void {
         this.offset -= this.limit;
@@ -73,16 +74,16 @@ export class ProjectService {
         this.getProjects();
     }
 
-    public nextPageRecommendedProjects(userId: number): void {
-        this.offset += this.limit;
-        this.currentPage++;
-        this.getRecommendedProjectsByUserId(userId);
-    }
-    public prevPageRecommendedProjects(userId: number): void {
-        this.offset -= this.limit;
-        this.currentPage--;
-        this.getRecommendedProjectsByUserId(userId);
-    }
+    // public nextPageRecommendedProjects(userId: number): void {
+    //     this.offset += this.limit;
+    //     this.currentPage++;
+    //     this.getRecommendedProjectsByUserId(userId);
+    // }
+    // public prevPageRecommendedProjects(userId: number): void {
+    //     this.offset -= this.limit;
+    //     this.currentPage--;
+    //     this.getRecommendedProjectsByUserId(userId);
+    // }
 
     // Filter modifier
     public filterSearchByProfession(professionId: number) {
@@ -112,7 +113,6 @@ export class ProjectService {
         return this.http.get<ProjectPageWrapper>(`${API_URL}/Recommended/${userId}`)
             .subscribe((page: ProjectPageWrapper) => {
                 this.setProjects(page.results)
-                this.pages = Math.ceil(this.totalEntities/this.limit)
             })
     }
 

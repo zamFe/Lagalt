@@ -9,7 +9,7 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class GetRecommendedComponent implements OnInit {
 
-  private userId: number = 0;
+  public userId: number = 0;
   constructor(private readonly projectService: ProjectService, private readonly userService: UserService) { 
     this.userService.user$.subscribe(user => this.userId = user.id)
   }

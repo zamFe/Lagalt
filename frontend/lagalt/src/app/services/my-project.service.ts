@@ -16,7 +16,7 @@ export class MyProjectService {
 
   // Page properties
   public offset = 0;
-  public limit = 2;
+  public limit = 10;
   public pages = 0;
   public currentPage = 1;
   public totalEntities = 0;
@@ -43,9 +43,10 @@ export class MyProjectService {
 
   // API CRUD calls
   public getProjectsByUserId(userId : number): Subscription {
-      return this.http.get<ProjectPageWrapper>(`${API_URL}/User/${userId}`)
+      return this.http.get<ProjectPageWrapper>(`${API_URL}/User/${userId}?offset=${this.offset}&limit=${this.limit}`)
           .subscribe((project: ProjectPageWrapper) => {
               this.setMyProjects(project.results)
+              this.totalEntities = project.totalEntities;
               this.pages = Math.ceil(this.totalEntities/this.limit)
           });
   }

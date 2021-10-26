@@ -13,7 +13,6 @@ export class MainPage implements OnInit {
   constructor(
     private readonly projectService: ProjectService,
     private readonly skillsService: SkillService) {
-
     }
 
   get totalPages(): number {
