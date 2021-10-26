@@ -1,0 +1,24 @@
+<div *ngIf="this.userRole === 'admin', else isUser">
+  <label id="project-status">
+    <div style="font-weight: bold;">
+      Project status
+    </div>
+  </label>
+  <mat-radio-group
+    aria-labelledby="project-status"
+    class="project-status-radio-group"
+    [(ngModel)]="progress">
+    <mat-radio-button class="project-status-radio-button" *ngFor="let state of status" [value]="state" (change)="radioChange($event)">
+      {{state}}
+    </mat-radio-button>
+  </mat-radio-group>
+  <div>Your Project status is: {{this.progress}}</div>
+</div>
+  <ng-template #isUser>
+  <div *ngIf="this.userRole === 'user', else isGuest">
+  </div>
+</ng-template>
+<ng-template #isGuest>
+  <div>
+  </div>
+</ng-template>

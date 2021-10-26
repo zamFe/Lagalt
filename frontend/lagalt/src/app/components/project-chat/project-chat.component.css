@@ -1,0 +1,13 @@
+.chat{
+  border: 3px solid black;
+}
+.chatbtn{
+  background-color: #354A59;
+}
+.chatlist{
+  background-color: white;
+}
+.refreshbtn{
+  background-color: #354A59;
+  margin-top: 10px;
+}
