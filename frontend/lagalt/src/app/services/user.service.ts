@@ -43,6 +43,10 @@ export class UserService {
     return this.http.get<UserComplete[]>(API_URL_USERS)
         .subscribe((users: UserComplete[]) => {
             this.setUsers(users)
+        },
+        (error: HttpErrorResponse) => {
+            //console.log(error.message);
+            alert(error.message)
         });
   }
 
@@ -51,9 +55,14 @@ export class UserService {
     return this.http.get<UserComplete>(API_URL_USERS +`/${id}`)
         .subscribe((user: UserComplete) => {
             this.setUserById(user)
+        },
+        (error: HttpErrorResponse) => {
+            //console.log(error.message);
+            alert(error.message)
         });
   }
 
+  // trenger ikke error
   public getUserByUsername(username: string): Subscription{
     return this.http.get<UserComplete>(`${API_URL_USERS}/username/${username}`)
         .subscribe((user: UserComplete) => {
@@ -61,6 +70,7 @@ export class UserService {
         });
   }
 
+  // trenger ikke error
   public userExists(username: string): Observable<any>{
     return this.http.get(`${API_URL_USERS}/username/${username}`)
   }
@@ -78,6 +88,10 @@ export class UserService {
         console.log(response);
 
         this.setUserById(response)
+    },
+    (error: HttpErrorResponse) => {
+        //console.log(error.message);
+        alert(error.message)
     });
   }
 
@@ -86,6 +100,10 @@ export class UserService {
     return this.http.put<UserComplete>(`${API_URL_USERS}/${user.id}`, user)
       .subscribe(() => {
         //this.setUserById(user)
+      },
+      (error: HttpErrorResponse) => {
+          //console.log(error.message);
+          alert(error.message)
       });
   }
   public getTest() {

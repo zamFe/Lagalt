@@ -1,5 +1,5 @@
 import { Injectable} from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Project, PutProject } from "../models/project.model";
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { finalize, map, retry, switchMap, tap } from "rxjs/operators";
@@ -57,13 +57,15 @@ export class ProjectService {
 
     // API CRUD calls
     public getProjects(): Subscription {
-        return this.http.get<ProjectPageWrapper>(API_URL)
+        return this.http.get<ProjectPageWrapper>(API_URL + "/jladhl")
             .subscribe((page: ProjectPageWrapper) => {
                 this.setProjects(page.results)
                 if (this.renderProjects$.value.length < page.results.length) {
                     this.setRenderProjects(page.results)
                 }
-
+            },
+            (error: HttpErrorResponse) => {
+                alert(error.message)
             });
     }
 
@@ -73,6 +75,9 @@ export class ProjectService {
             .subscribe((project: ProjectPageWrapper) => {
                 this.setProjects(project.results)
                 this.setRenderProjects(project.results)
+            },
+            (error: HttpErrorResponse) => {
+                alert(error.message)
             });
     }
 
@@ -81,6 +86,9 @@ export class ProjectService {
         return this.http.get<Project>(`${API_URL}/${id}`)
             .subscribe((project: Project) => {
                 this.setProject(project)
+            },
+            (error: HttpErrorResponse) => {
+                alert(error.message)
             });
     }
 
@@ -88,6 +96,9 @@ export class ProjectService {
         return this.http.get<ProjectPageWrapper>(`${API_URL}/Recommended/${userId}`)
             .subscribe((page: ProjectPageWrapper) => {
                 this.setRenderProjects(page.results)
+            },
+            (error: HttpErrorResponse) => {
+                alert(error.message)
             })
     }
 
@@ -95,6 +106,9 @@ export class ProjectService {
         return this.http.post<Project>(API_URL, project)
             .subscribe((response: Project) => {
                 this.addProject(response)
+            },
+            (error: HttpErrorResponse) => {
+                alert(error.message)
             });
     }
 
@@ -104,6 +118,10 @@ export class ProjectService {
         return this.http.put<Project>(`${API_URL}/${project.id}`, project)
         .subscribe((response: Project) => {
             this.addProject(response)
+        },
+        (error: HttpErrorResponse) => {
+            alert(error.message)
         });
     }
+
 }

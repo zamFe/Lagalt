@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Profession } from '../models/profession.model';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -24,6 +24,10 @@ export class ProfessionService {
     return this.http.get<Profession[]>(API_URL)
         .subscribe((professions: Profession[]) => {
             this.setProfessions(professions);
+        },
+        (error: HttpErrorResponse) => {
+            //console.log(error.message);
+            alert(error.message)
         });
 }
 }
