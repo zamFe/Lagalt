@@ -18,53 +18,20 @@ export class SearchComponent implements OnInit, OnDestroy {
     private router: Router) {
   }
 
-  searchForProject(searchProjectForm : NgForm) : void {
-    // run get call which includes searchResults instead
-    // if search field is empty do normal getProjects
-    // else, getProjects(projectTitle)
-    
-    //this.projectService.getProjects()
+  searchForProject(professionId: number) : void {
+    this.handleRouteChange();
+    this.handleFilter(professionId);
+    this.handlePageReset();
 
-    let searchResults : Project[] = []
-    this.projectService.projects$.subscribe(data => {
-      searchResults = data.filter(p => p.title.toLowerCase().includes(searchProjectForm.value.searchInput.toLowerCase()))
-    }).unsubscribe()
-    searchResults.forEach(el => console.log(el))
-    this.projectService.setProjects(searchResults)
 
+    if (this.searchField !== "") {
+      this.projectService.keyword = this.searchField;
+    }
+    this.projectService.getProjects();
     this.searchField = "";
-
+    this.projectService.keyword = "";
   }
   
-  searchAll(searchProjectForm : NgForm): void {
-    this.handleRouteChange()
-    this.handleFilter(0)
-    this.searchForProject(searchProjectForm)
-  }
-
-  searchMusic(searchProjectForm : NgForm): void {
-    this.handleRouteChange()
-    this.handleFilter(1)
-    this.searchForProject(searchProjectForm)
-  }
-
-  searchFilm(searchProjectForm : NgForm): void {
-    this.handleRouteChange()
-    this.handleFilter(2)
-    this.searchForProject(searchProjectForm)
-  }
-
-  searchGame(searchProjectForm : NgForm): void {
-    this.handleRouteChange()
-    this.handleFilter(3)
-    this.searchForProject(searchProjectForm)
-  }
-
-  searchWeb(searchProjectForm : NgForm): void {
-    this.handleRouteChange()
-    this.handleFilter(4)
-    this.searchForProject(searchProjectForm)
-  }
 
   handleRouteChange() {
     if (this.router.url !== "/main") {
@@ -75,6 +42,11 @@ export class SearchComponent implements OnInit, OnDestroy {
   handleFilter(professionId: number) {
     this.professionId = professionId
     this.projectService.filterSearchByProfession(professionId)
+  }
+
+  handlePageReset() {
+    this.projectService.offset = 0;
+    this.projectService.currentPage = 1;
   }
 
   ngOnInit(): void {

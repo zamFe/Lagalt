@@ -38,6 +38,7 @@ export class ProjectService {
 
     // Filter properties
     public professionId = 0;
+    public keyword = "";
 
     constructor(private readonly http : HttpClient) {
     }
@@ -90,14 +91,14 @@ export class ProjectService {
 
 
     // API CRUD calls
-    public getProjects(): Subscription {
-        return this.http.get<ProjectPageWrapper>(`${API_URL}?offset=${this.offset}&limit=${this.limit}&professionId=${this.professionId}`)
-            .subscribe((page: ProjectPageWrapper) => {
-                this.setProjects(page.results)
-                
-                this.totalEntities = page.totalEntities;
-                this.pages = Math.ceil(this.totalEntities/this.limit)
-            });
+    public getProjects() {
+        return this.http.get<ProjectPageWrapper>
+        (`${API_URL}?offset=${this.offset}&limit=${this.limit}&professionId=${this.professionId}&keyword=${this.keyword}`)
+        .subscribe((page: ProjectPageWrapper) => {
+            this.setProjects(page.results)
+            this.totalEntities = page.totalEntities;
+            this.pages = Math.ceil(this.totalEntities/this.limit)
+        });
     }
 
     public getProjectById(id: number): Subscription {
@@ -122,7 +123,6 @@ export class ProjectService {
             });
     }
 
-    // IKKE TESTET
     public putProject(project: Project): Subscription {
         this.removeProject(project.id)
         return this.http.put<Project>(`${API_URL}/${project.id}`, project)

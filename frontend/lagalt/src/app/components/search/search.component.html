@@ -1,5 +1,5 @@
 <div class="">
-    <form class="form-inline" #searchProjectForm="ngForm" (ngSubmit)="searchForProject(searchProjectForm)">
+    <form class="form-inline" #searchProjectForm="ngForm" (ngSubmit)="searchForProject(professionId)">
         <div class="d-flex form-outline align-items-center">
             <input
             [(ngModel)]="searchField"
@@ -14,11 +14,11 @@
         </div>
     </form>
     <div class="filterOptions">
-        <button class="btn filterOption btn-outline-dark btn-all" (click)="searchAll(searchProjectForm)">Alle</button>
+        <button class="btn filterOption btn-outline-dark btn-all" (click)="searchForProject(0)">Alle</button>
         <app-get-recommended></app-get-recommended>
-        <button class="btn filterOption btn-outline-dark btn-music" (click)="searchMusic(searchProjectForm)">Musikk</button>
-        <button class="btn filterOption btn-outline-dark btn-film" (click)="searchFilm(searchProjectForm)">Film</button>
-        <button class="btn filterOption btn-outline-dark btn-game" (click)="searchGame(searchProjectForm)">Spill</button>
-        <button class="btn filterOption btn-outline-dark btn-web" (click)="searchWeb(searchProjectForm)">Web</button>
+        <button class="btn filterOption btn-outline-dark btn-music" (click)="searchForProject(1)">Musikk</button>
+        <button class="btn filterOption btn-outline-dark btn-film" (click)="searchForProject(2)">Film</button>
+        <button class="btn filterOption btn-outline-dark btn-game" (click)="searchForProject(3)">Spill</button>
+        <button class="btn filterOption btn-outline-dark btn-web" (click)="searchForProject(4)">Web</button>
     </div>
 </div>
