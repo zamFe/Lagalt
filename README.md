@@ -14,7 +14,8 @@ Lagalt is a project management platform designed to connect individuals in creat
 
 ### Website
 1. Navigate to `Lagalt/frontend/lagalt`
-2. Run `ng serve --open` in a terminal
+2. Run `npm install`
+3. Run `ng serve --open`
 
 ### API (Dev mode)
 
