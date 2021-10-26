@@ -16,9 +16,16 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
+        public bool ProfessionExists(int professionId)
+        {
+            return _context.Professions.Find(professionId) != null;
+        }
+
         public async Task<IEnumerable<Profession>> GetAllAsync()
         {
-            return await _context.Professions.ToListAsync();
+            return await _context.Professions
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }

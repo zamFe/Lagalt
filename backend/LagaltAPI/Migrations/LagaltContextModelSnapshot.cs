@@ -56,7 +56,7 @@ namespace LagaltAPI.Migrations
                         {
                             Id = 1,
                             Accepted = true,
-                            Motivation = "I also love submarines",
+                            Motivation = "Jeg elsker også ubåter!!!",
                             ProjectId = 1,
                             Seen = false,
                             UserId = 2
@@ -65,7 +65,7 @@ namespace LagaltAPI.Migrations
                         {
                             Id = 2,
                             Accepted = true,
-                            Motivation = "Trying to figure out if i like submarines",
+                            Motivation = "Prøver å finne ut om jeg liker ubåter...",
                             ProjectId = 1,
                             Seen = false,
                             UserId = 3
@@ -74,7 +74,7 @@ namespace LagaltAPI.Migrations
                         {
                             Id = 3,
                             Accepted = false,
-                            Motivation = "What's a submarine?",
+                            Motivation = "Hva er en ubåt?",
                             ProjectId = 1,
                             Seen = false,
                             UserId = 5
@@ -114,7 +114,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 1,
-                            Content = "Anyone else like submarines?",
+                            Content = "Andre enn meg som liker ubåter?",
                             PostedTime = new DateTime(2021, 10, 2, 12, 30, 52, 0, DateTimeKind.Unspecified),
                             ProjectId = 1,
                             UserId = 1
@@ -122,7 +122,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 2,
-                            Content = "Yeah",
+                            Content = "Jaa",
                             PostedTime = new DateTime(2021, 10, 2, 12, 40, 33, 0, DateTimeKind.Unspecified),
                             ProjectId = 1,
                             UserId = 2
@@ -130,7 +130,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 3,
-                            Content = "Not sure yet. We will see",
+                            Content = "Usikker, vi må se an",
                             PostedTime = new DateTime(2021, 10, 3, 8, 20, 3, 0, DateTimeKind.Unspecified),
                             ProjectId = 1,
                             UserId = 3
@@ -157,7 +157,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Music"
+                            Name = "Musikk"
                         },
                         new
                         {
@@ -167,12 +167,12 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 3,
-                            Name = "Game Development"
+                            Name = "Spillutvikling"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Web Development"
+                            Name = "Webutvikling"
                         });
                 });
 
@@ -184,6 +184,7 @@ namespace LagaltAPI.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int[]>("AdministratorIds")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<string>("Description")
@@ -223,45 +224,46 @@ namespace LagaltAPI.Migrations
                         {
                             Id = 1,
                             AdministratorIds = new[] { 1 },
-                            Description = "I've always wanted to travel by submarine and I've also got to make new songs",
+                            Description = "Jeg har alltid hatt lyst til å reise i en ubåt, og jeg må også skrive låter",
                             Image = "https://upload.wikimedia.org/wikipedia/commons/d/d8/Submarine_Vepr_by_Ilya_Kurganov_crop.jpg",
                             ProfessionId = 1,
                             Progress = "In Progress",
-                            Title = "Writing an album on a Submarine"
+                            Title = "Skrive et album på en ubåt"
                         },
                         new
                         {
                             Id = 2,
                             AdministratorIds = new[] { 4 },
-                            Description = "Some call them movies and some call them films. But what if both were correct?",
+                            Description = "Some call them movies and some call them films. På norsk gjør vi det litt enklere",
                             ProfessionId = 2,
                             Progress = "Founding",
-                            Title = "The Cinematic Movie Film"
+                            Title = "Den Filmiske Film Filmen"
                         },
                         new
                         {
                             Id = 3,
                             AdministratorIds = new[] { 5 },
-                            Description = "What could go wrong?",
+                            Description = "Hva kan gå galt?",
                             ProfessionId = 3,
                             Progress = "Completed",
                             Source = "https://github.com/vocollapse/Blockinger",
-                            Title = "Yet Another Tetris Game"
+                            Title = "Enda et tetris spill"
                         },
                         new
                         {
                             Id = 4,
                             AdministratorIds = new[] { 6 },
-                            Description = "It was better before",
+                            Description = "Alt var bedre før",
                             ProfessionId = 3,
                             Progress = "Stalled",
                             Source = "https://github.com/ddevault/TrueCraft",
-                            Title = "Minecraft Nostalgia"
+                            Title = "Minecraft Nostalgi"
                         },
                         new
                         {
                             Id = 5,
-                            Description = "I did indeed read it",
+                            AdministratorIds = new int[0],
+                            Description = "Jeg har definitivt lest det",
                             Image = "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png",
                             ProfessionId = 4,
                             Progress = "Stalled",
@@ -290,17 +292,17 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Guitar"
+                            Name = "Gitar"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Drums"
+                            Name = "Trommer"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Acting"
+                            Name = "Skuespill"
                         },
                         new
                         {
@@ -319,6 +321,46 @@ namespace LagaltAPI.Migrations
                         });
                 });
 
+            modelBuilder.Entity("LagaltAPI.Models.Domain.Update", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(140)
+                        .HasColumnType("character varying(140)");
+
+                    b.Property<DateTime>("PostedTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Updates");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Content = "Nå har vi fått leid en ubåt!",
+                            PostedTime = new DateTime(2021, 10, 9, 2, 30, 32, 0, DateTimeKind.Unspecified),
+                            ProjectId = 1,
+                            UserId = 1
+                        });
+                });
+
             modelBuilder.Entity("LagaltAPI.Models.Domain.User", b =>
                 {
                     b.Property<int>("Id")
@@ -327,12 +369,15 @@ namespace LagaltAPI.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int[]>("AppliedTo")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("Clicked")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<int[]>("ContributedTo")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<string>("Description")
@@ -356,6 +401,7 @@ namespace LagaltAPI.Migrations
                         .HasColumnType("character varying(20)");
 
                     b.Property<int[]>("Viewed")
+                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.HasKey("Id");
@@ -366,6 +412,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 1,
+                            AppliedTo = new int[0],
                             Clicked = new[] { 1 },
                             ContributedTo = new[] { 1 },
                             Description = "Looking for my friend, Mr. Tambourine",
@@ -381,7 +428,7 @@ namespace LagaltAPI.Migrations
                             AppliedTo = new[] { 1 },
                             Clicked = new[] { 1 },
                             ContributedTo = new[] { 1 },
-                            Description = "Currently learning to fly",
+                            Description = "Lærer å fly for øyeblikket",
                             Hidden = false,
                             Portfolio = "https://en.wikipedia.org/wiki/Dave_Grohl#Career",
                             Username = "Grohl",
@@ -392,6 +439,7 @@ namespace LagaltAPI.Migrations
                             Id = 3,
                             AppliedTo = new[] { 1 },
                             Clicked = new[] { 1 },
+                            ContributedTo = new int[0],
                             Hidden = true,
                             Image = "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg",
                             Username = "DoubleOh",
@@ -400,6 +448,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 4,
+                            AppliedTo = new int[0],
                             Clicked = new[] { 2 },
                             ContributedTo = new[] { 2 },
                             Hidden = false,
@@ -410,9 +459,10 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 5,
+                            AppliedTo = new int[0],
                             Clicked = new[] { 3 },
                             ContributedTo = new[] { 3 },
-                            Description = "Game dev, I guess",
+                            Description = "Spillutvikler, elns",
                             Hidden = false,
                             Username = "Rob",
                             Viewed = new[] { 3 }
@@ -420,6 +470,7 @@ namespace LagaltAPI.Migrations
                         new
                         {
                             Id = 6,
+                            AppliedTo = new int[0],
                             Clicked = new[] { 4 },
                             ContributedTo = new[] { 4 },
                             Hidden = false,
@@ -655,6 +706,25 @@ namespace LagaltAPI.Migrations
                     b.Navigation("Profession");
                 });
 
+            modelBuilder.Entity("LagaltAPI.Models.Domain.Update", b =>
+                {
+                    b.HasOne("LagaltAPI.Models.Domain.Project", "Project")
+                        .WithMany("Updates")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LagaltAPI.Models.Domain.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ProjectSkills", b =>
                 {
                     b.HasOne("LagaltAPI.Models.Domain.Project", null)
@@ -708,6 +778,8 @@ namespace LagaltAPI.Migrations
             modelBuilder.Entity("LagaltAPI.Models.Domain.Project", b =>
                 {
                     b.Navigation("Messages");
+
+                    b.Navigation("Updates");
                 });
 
             modelBuilder.Entity("LagaltAPI.Models.Domain.User", b =>

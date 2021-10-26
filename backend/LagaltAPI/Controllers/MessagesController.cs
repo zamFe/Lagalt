@@ -14,18 +14,40 @@ namespace LagaltAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
+    [Authorize]
     public class MessagesController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly MessageService _service;
+        private readonly ProjectService _projectService;
         private readonly UriService _uriService;
+        private readonly UserService _userService;
 
         // Constructor.
-        public MessagesController(IMapper mapper, MessageService service, UriService uriService)
+        public MessagesController(IMapper mapper, MessageService service,
+            ProjectService projectService, UriService uriService, UserService userService)
         {
             _mapper = mapper;
             _service = service;
+            _projectService = projectService;
             _uriService = uriService;
+            _userService = userService;
+        }
+
+        // Could be expanded to implement a profanity filter.
+        // Should probably also check that the date is valid.
+        private ValidationResult ValidateNewMessage(MessageCreateDTO dtoMessage)
+        {
+            if (!_userService.UserExists(dtoMessage.UserId))
+                return new ValidationResult(false, "Unable to find user");
+
+            if (!_projectService.ProjectExists(dtoMessage.ProjectId))
+                return new ValidationResult(false, "Unable to find project");
+
+            if (! _projectService.UserIsProjectMember(dtoMessage.ProjectId, dtoMessage.UserId))
+                return new ValidationResult(false, "User is not a member of the project");
+
+            return new ValidationResult(true);
         }
 
         /// <summary> Fetches a message from the database based on message id. </summary>
@@ -35,7 +57,6 @@ namespace LagaltAPI.Controllers
         ///     If it is not, then NotFound is returned instead.
         /// </returns>
         // GET: api/Messages/5
-        [Authorize]
         [HttpGet("{messageId}")]
         public async Task<ActionResult<MessageReadDTO>> GetMessage(int messageId)
         {
@@ -59,7 +80,6 @@ namespace LagaltAPI.Controllers
         /// <param name="limit"> Specifies how many messages to include. </param>
         /// <returns> An enumerable containing read-specific DTOs of the messages. </returns>
         // GET: api/Messages/Project/5?offset=5&limit=5
-        [Authorize]
         [HttpGet("Project/{projectId}")]
         public async Task<ActionResult<Page<MessageReadDTO>>> GetProjectMessages
             (int projectId, [FromQuery] int offset, [FromQuery] int limit)
@@ -67,8 +87,9 @@ namespace LagaltAPI.Controllers
             var range = new PageRange(offset, limit);
             var messages = _mapper.Map<List<MessageReadDTO>>(
                 await _service.GetPageByProjectIdAsync(projectId, range));
+            var totalMessages = await _service.GetTotalProjectMessagesAsync(projectId);
             var baseUri = _uriService.GetBaseUrl() + $"api/Messages/Project/{projectId}";
-            return new Page<MessageReadDTO>(messages, range, baseUri);
+            return new Page<MessageReadDTO>(messages, totalMessages, range, baseUri);
         }
 
         /// <summary> Adds a new message entry to the database. </summary>
@@ -80,13 +101,15 @@ namespace LagaltAPI.Controllers
         ///     or BadRequest on failure.
         /// </returns>
         // POST: api/Messages
-        [Authorize]
         [HttpPost]
         public async Task<ActionResult<MessageReadDTO>> PostMessage(MessageCreateDTO dtoMessage)
         {
+            var validation = ValidateNewMessage(dtoMessage);
+            if (!validation.Result)
+                return BadRequest(validation.RejectionReason);
+
             var domainMessage = _mapper.Map<Message>(dtoMessage);
             domainMessage = await _service.AddAsync(domainMessage);
-
             return CreatedAtAction("GetMessage", 
                 new { messageId = domainMessage.Id }, 
                 _mapper.Map<MessageReadDTO>(domainMessage));

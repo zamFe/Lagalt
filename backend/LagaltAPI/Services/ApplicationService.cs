@@ -18,34 +18,42 @@ namespace LagaltAPI.Services
             _context = context;
         }
 
-        public bool EntityExists(int applicationId)
+        public bool ApplicationExists(int applicationId)
         {
-            return _context.Applications.Any(application => application.Id == applicationId);
+            return _context.Applications.Find(applicationId) != null;
         }
 
-        public bool UserHasAppliedToProject(int userId, int projectId)
+        public bool UserHasAppliedToProject(int userId, int applicationId)
         {
             return _context.Applications.Any(application =>
-                application.UserId == userId && application.ProjectId == projectId);
+                application.UserId == userId && application.ProjectId == applicationId);
         }
 
         public async Task<Application> AddAsync(Application newApplication)
         {
-            // TODO - Check if skills are missing from returned application.
-            // TODO - Uncomment when ready to log history for applications.
             var user = await _context.Users
-                .FindAsync(newApplication.UserId);
-            //user.AppliedTo.Add(newApplication.Id);
+                .Include(user => user.Skills)
+                .Where(user => user.Id == newApplication.UserId)
+                .FirstAsync();
+            user.AppliedTo = user.AppliedTo.Union(new int[] {newApplication.ProjectId}).ToArray();
             newApplication.User = user;
 
-            //_context.Entry(user).State = EntityState.Modified;
+            _context.Entry(user).State = EntityState.Modified;
             _context.Applications.Add(newApplication);
-
             await _context.SaveChangesAsync();
             return newApplication;
         }
 
-        public async Task<Application> GetByIdAsync(int applicationId)
+        public async Task<Application> GetReadonlyByIdAsync(int applicationId)
+        {
+            return await _context.Applications
+                .AsNoTracking()
+                .Include(application => application.User.Skills)
+                .Where(application => application.Id == applicationId)
+                .FirstAsync();
+        }
+
+        public async Task<Application> GetWriteableByIdAsync(int applicationId)
         {
             return await _context.Applications
                 .Include(application => application.User.Skills)
@@ -57,18 +65,28 @@ namespace LagaltAPI.Services
             int projectId, PageRange range)
         {
             return await _context.Applications
+                .AsNoTracking()
                 .Include(application => application.User.Skills)
                 .Where(application => application.ProjectId == projectId)
+                .OrderByDescending(application => application.Id)
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
-                .OrderByDescending(application => application.Id)
                 .ToListAsync();
+        }
+
+        public async Task<int> GetTotalProjectApplicationsAsync(int projectId)
+        {
+            return await _context.Applications
+                .Where(application => application.ProjectId == projectId)
+                .CountAsync();
         }
 
         public async Task UpdateAsync(Application updatedApplication, bool newlyAccepted = false)
         {
             if (newlyAccepted)
             {
+                updatedApplication.Seen = true;
+
                 var user = await _context.Users
                     .Include(user => user.Projects)
                     .FirstAsync(user => user.Id == updatedApplication.UserId);
