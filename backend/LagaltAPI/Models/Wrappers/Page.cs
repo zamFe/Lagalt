@@ -21,16 +21,31 @@ namespace LagaltAPI.Models.Wrappers
         public IEnumerable<T> Results { get; set; }
 
         // Constructor.
-        public Page(ICollection<T> data, int totalEntities, PageRange range, string baseUri)
+        public Page(ICollection<T> data, int totalEntities, PageRange range, string baseUri,
+            string keyword = "")
         {
             TotalEntities = totalEntities;
 
-            Next = TotalEntities <= range.Limit + range.Offset - 1
-                ? ""
-                : baseUri + $"?offset={range.Offset + range.Limit}&limit={range.Limit}";
-            Previous = range.Offset == 1
-                ? ""
-                : baseUri + $"?offset={range.Offset - range.Limit}&limit={range.Limit}";
+            if (keyword != "")
+            {
+                var normalizedKeyword = keyword.Trim().ToLower();
+                Next = TotalEntities <= range.Limit + range.Offset - 1
+                    ? ""
+                    : baseUri + $"?offset={range.Offset + range.Limit}&limit={range.Limit}&keyword={normalizedKeyword}";
+                Previous = range.Offset == 1
+                    ? ""
+                    : baseUri + $"?offset={range.Offset - range.Limit}&limit={range.Limit}&keyword={normalizedKeyword}";
+            }
+            else
+            {
+                Next = TotalEntities <= range.Limit + range.Offset - 1
+                    ? ""
+                    : baseUri + $"?offset={range.Offset + range.Limit}&limit={range.Limit}";
+                Previous = range.Offset == 1
+                    ? ""
+                    : baseUri + $"?offset={range.Offset - range.Limit}&limit={range.Limit}";
+            }
+            
             Results = data;
         }
     }
