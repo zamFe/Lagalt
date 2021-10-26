@@ -68,6 +68,8 @@ namespace LagaltAPI.Services
                 .AsNoTracking()
                 .Include(application => application.User.Skills)
                 .Where(application => application.ProjectId == projectId)
+                .Where(application => application.Seen == false)
+                .Where(application => application.Accepted == false)
                 .OrderByDescending(application => application.Id)
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
