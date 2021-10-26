@@ -41,11 +41,12 @@ export class ProjectStatusComponent implements OnInit, OnDestroy {
 
     })
     this.project$ = this.projectService.project$.subscribe((project : Project) => {
+      let tempProjectIds = project.skills.map(element => element.id)
       this.administratorIds = project.administratorIds
       this.putProject.id = project.id
       this.putProject.description = project.description
       this.putProject.image = project.image
-      this.putProject.skills = project.skills
+      this.putProject.skills = tempProjectIds
       this.putProject.source = project.source
       this.putProject.title = project.title
 

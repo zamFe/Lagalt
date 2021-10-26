@@ -1,4 +1,4 @@
-import { IdSkill, Skill } from "../skill.model";
+import { Skill } from "../skill.model";
 
 export interface UserComplete {
   id : number,
@@ -12,7 +12,7 @@ export interface UserComplete {
 }
 
 export interface PostUser {
-  skills : IdSkill[]
+  skills : number[]
   username: string,
   description: string,
   image: string,
@@ -21,7 +21,7 @@ export interface PostUser {
 
 export interface PutUser {
   id : number,
-  skills : IdSkill[],
+  skills : number[],
   hidden : boolean,
   username : string,
   description : string,

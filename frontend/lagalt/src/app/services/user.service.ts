@@ -32,9 +32,10 @@ export class UserService {
   public setUsers(users: UserComplete[]): void {
     this.users$.next(users)
   }
-  public setUserById(user: UserComplete): void {
+  public setUser(user: UserComplete): void {
     this.user$.next(user)
   }
+
 
 
    // API CRUD calls
@@ -50,14 +51,14 @@ export class UserService {
     //set users as enum in storage here.
     return this.http.get<UserComplete>(API_URL_USERS +`/${id}`)
         .subscribe((user: UserComplete) => {
-            this.setUserById(user)
+            this.setUser(user)
         });
   }
 
   public getUserByUsername(username: string): Subscription{
     return this.http.get<UserComplete>(`${API_URL_USERS}/username/${username}`)
         .subscribe((user: UserComplete) => {
-            this.setUserById(user)
+            this.setUser(user)
         });
   }
 
@@ -75,20 +76,25 @@ export class UserService {
       portfolio:""}
     return this.http.post<UserComplete>(API_URL_USERS, newUser)
       .subscribe((response: UserComplete) => {
-        console.log(response);
-
-        this.setUserById(response)
+        this.setUser(response)
     });
   }
 
   // IKKE TESTET
-  public putUser(user: PutUser): Subscription {
-    return this.http.put<UserComplete>(`${API_URL_USERS}/${user.id}`, user)
-      .subscribe(() => {
-        //this.setUserById(user)
-      });
+  public putUser(): Subscription {
+    let tempSkills = this.user$.value.skills.map(element => element.id)
+    let putUser : PutUser = {
+      id: this.user$.value.id,
+      skills: tempSkills,
+      hidden: this.user$.value.hidden,
+      username: this.user$.value.username,
+      description: this.user$.value.description,
+      image: this.user$.value.image,
+      portfolio: this.user$.value.portfolio
+    }
+
+    return this.http.put(`${API_URL_USERS}/${putUser.id}`, putUser)
+    .subscribe()
+
   }
-  public getTest() {
-    return this.http.get<UserComplete[]>(API_URL_USERS).subscribe(data => console.log(data))
-}
 }

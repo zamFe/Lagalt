@@ -7,7 +7,7 @@ import { UserService } from 'src/app/services/user.service';
 import { SkillService } from 'src/app/services/skill.service';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { Skill, IdSkill } from 'src/app/models/skill.model';
+import { Skill} from 'src/app/models/skill.model';
 import { Project } from 'src/app/models/project.model';
 import { ProjectService } from 'src/app/services/project.service';
 
@@ -30,15 +30,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     projects: [],
     hidden: false
   }
-  public putUser: PutUser = {
-    id: 0,
-    skills: [],
-    hidden: false,
-    username: '',
-    description: '',
-    image: '',
-    portfolio: ''
-  }
+
 
   public skill: Skill = {
     id: 0,
@@ -77,6 +69,7 @@ export class ProfilePage implements OnInit, OnDestroy {
 
       }
     );
+    this.skillService.getSkills();
   }
 
 
@@ -103,8 +96,18 @@ export class ProfilePage implements OnInit, OnDestroy {
       projects: []
     }
 
+    let skillslist: Skill[] = []
+    this.skillService.skills$.subscribe((data) => skillslist = data)
+    let tempSkill = null
+    tempSkill = skillslist.find(element => element.name === addSkillForm.value.skills)
+    if(tempSkill !== undefined){
+      this.user.skills.push(tempSkill)
+      this.userService.putUser()
+    }
+    else{
+     this.skillService.postSkill(newSkill)
 
-    this.skillService.postSkill(newSkill)
+    }
   }
 
 
@@ -116,21 +119,9 @@ export class ProfilePage implements OnInit, OnDestroy {
   }
 
   handleDescription(handleDescriptionForm : NgForm){
-    this.putUser = {
-      username : this.user.username,
-      id: this.user.id,
-      description: handleDescriptionForm.value.description,
-      image: this.user.image,
-      portfolio: this.user.portfolio,
-      skills: this.user.skills,
-      hidden: this.user.hidden,
-      }
-    console.log(this.putUser);
+    this.user.description = handleDescriptionForm.value.description
+    this.userService.putUser();
+  }
 
-      this.userService.putUser(this.putUser);
-  }
-  saveUser() {
-    //this.userService.putUser(this.user)
-  }
 
 }

@@ -1,4 +1,4 @@
- import { IdSkill, Skill } from "./skill.model"
+ import { Skill } from "./skill.model"
  import { Profession } from "./profession.model"
  import { UserCompact } from "./user/user-compact.model"
 
@@ -17,7 +17,7 @@
 
 export interface PutProject {
   id: number,
-  skills: IdSkill[],
+  skills: number[],
   title: string,
   description: string
   progress: string,
