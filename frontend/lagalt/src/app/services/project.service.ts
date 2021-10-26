@@ -31,10 +31,13 @@ export class ProjectService {
 
     // Page properties
     public offset = 0;
-    public limit = 2;
+    public limit = 10;
     public pages = 0;
     public currentPage = 1;
     public totalEntities = 0;
+
+    // Filter properties
+    public professionId = 0;
 
     constructor(private readonly http : HttpClient) {
     }
@@ -58,37 +61,39 @@ export class ProjectService {
     }
 
     // Page modifiers
-    nextPage(): void {
+    public nextPage(): void {
         this.offset += this.limit;
         this.currentPage++;
         this.getProjects();
     }
-    prevPage(): void {
+    public prevPage(): void {
         this.offset -= this.limit;
         this.currentPage--;
         this.getProjects();
     }
 
-    nextPageRecommendedProjects(userId: number): void {
+    public nextPageRecommendedProjects(userId: number): void {
         this.offset += this.limit;
         this.currentPage++;
         this.getRecommendedProjectsByUserId(userId);
     }
-    prevPageRecommendedProjects(userId: number): void {
+    public prevPageRecommendedProjects(userId: number): void {
         this.offset -= this.limit;
         this.currentPage--;
         this.getRecommendedProjectsByUserId(userId);
+    }
+
+    // Filter modifier
+    public filterSearchByProfession(professionId: number) {
+        this.professionId = professionId;
     }
 
 
     // API CRUD calls
     public getProjects(): Subscription {
-        return this.http.get<ProjectPageWrapper>(`${API_URL}?offset=${this.offset}&limit=${this.limit}`)
+        return this.http.get<ProjectPageWrapper>(`${API_URL}?offset=${this.offset}&limit=${this.limit}&professionId=${this.professionId}`)
             .subscribe((page: ProjectPageWrapper) => {
                 this.setProjects(page.results)
-                // if (this.renderProjects$.value.length < page.results.length) {
-                //     this.setMyProjects(page.results)
-                // }
                 this.totalEntities = page.totalEntities;
                 this.pages = Math.ceil(this.totalEntities/this.limit)
             });
