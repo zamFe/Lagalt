@@ -80,10 +80,13 @@ namespace LagaltAPI.Services
         }
 
         public async Task<IEnumerable<Project>> GetPageAsync(
-            PageRange range, int professionId = 0)
+            PageRange range, int professionId = 0, string keyword = "")
         {
-            if (professionId == 0)
+            var normalizedKeyword = keyword == null ? "" : keyword.ToLower().Trim();
+
+            if (professionId == 0 && normalizedKeyword == "")
             {
+                // No filters.
                 return await _context.Projects
                 .AsNoTracking()
                 .Include(project => project.Skills)
@@ -93,8 +96,10 @@ namespace LagaltAPI.Services
                 .Take(range.Limit)
                 .ToListAsync();
             }
-
-            return await _context.Projects
+            else if (professionId != 0 && normalizedKeyword == "")
+            {
+                // Just profession filter.
+                return await _context.Projects
                 .AsNoTracking()
                 .Include(project => project.Skills)
                 .Include(project => project.Profession)
@@ -103,6 +108,34 @@ namespace LagaltAPI.Services
                 .Skip(range.Offset - 1)
                 .Take(range.Limit)
                 .ToListAsync();
+            }
+            else if (professionId == 0 && normalizedKeyword != "")
+            {
+                // Just keyword filter.
+                return await _context.Projects
+                .AsNoTracking()
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .Where(project => project.Title.ToLower().Contains(normalizedKeyword))
+                .OrderByDescending(project => project.Id)
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
+                .ToListAsync();
+            }
+            else
+            {
+                // Both profession & keyword filter.
+                return await _context.Projects
+                .AsNoTracking()
+                .Include(project => project.Skills)
+                .Include(project => project.Profession)
+                .Where(project => project.ProfessionId == professionId)
+                .Where(project => project.Title.ToLower().Contains(normalizedKeyword))
+                .OrderByDescending(project => project.Id)
+                .Skip(range.Offset - 1)
+                .Take(range.Limit)
+                .ToListAsync();
+            }            
         }
 
         // Currently only looks at projects matching the user's skills.
@@ -145,14 +178,37 @@ namespace LagaltAPI.Services
                 .ToListAsync();
         }
 
-        public async Task<int> GetTotalProjectsAsync(int professionId = 0)
+        public async Task<int> GetTotalProjectsAsync(int professionId = 0, string keyword = "")
         {
-            if (professionId == 0)
-             return await _context.Projects.CountAsync();
+            var normalizedKeyword = keyword == null ? "" : keyword.ToLower().Trim();
 
-            return await _context.Projects
+            if (professionId == 0 && normalizedKeyword == "")
+            {
+                // No filters.
+                return await _context.Projects.CountAsync();
+            }
+            else if (professionId != 0 && normalizedKeyword == "")
+            {
+                // Just profession filter.
+                return await _context.Projects
                 .Where(project => project.ProfessionId == professionId)
                 .CountAsync();
+            }
+            else if (professionId == 0 && normalizedKeyword != "")
+            {
+                // Just keyword filter.
+                return await _context.Projects
+                .Where(project => project.Title.ToLower().Contains(normalizedKeyword))
+                .CountAsync();
+            }
+            else
+            {
+                // Both profession & keyword filter.
+                return await _context.Projects
+                .Where(project => project.ProfessionId == professionId)
+                .Where(project => project.Title.ToLower().Contains(normalizedKeyword))
+                .CountAsync();
+            }
         }
 
         public async Task<int> GetTotalRecommendedProjectsAsync(int userId)

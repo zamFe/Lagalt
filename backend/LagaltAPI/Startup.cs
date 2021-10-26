@@ -157,7 +157,7 @@ namespace LagaltAPI
             });
             services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
+                options.AddPolicy(name: _clientOrigin,
                                   builder =>
                                   {
                                       builder.WithOrigins("http://localhost:4200")
