@@ -27,7 +27,7 @@ export class ProfessionService {
         },
         (error: HttpErrorResponse) => {
             //console.log(error.message);
-            alert(error.message)
+            alert(error.status + " : " + error.statusText)
         });
 }
 }

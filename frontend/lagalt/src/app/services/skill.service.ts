@@ -31,7 +31,7 @@ export class SkillService {
         },
         (error: HttpErrorResponse) => {
             //console.log(error.message);
-            alert(error.message)
+            alert(error.status + " : " + error.statusText)
         });
   }
   
@@ -40,10 +40,10 @@ export class SkillService {
       .subscribe((response) => {
         this.addSkill(response)
       },
-      (error: HttpErrorResponse) => {
-          //console.log(error.message);
-          alert(error.message)
-      })
+            (error: HttpErrorResponse) => {
+                //console.log(error.message);
+                alert(error.status + " : " + error.statusText)
+            })
   }
     
 }

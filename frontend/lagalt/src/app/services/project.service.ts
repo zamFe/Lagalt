@@ -57,7 +57,7 @@ export class ProjectService {
 
     // API CRUD calls
     public getProjects(): Subscription {
-        return this.http.get<ProjectPageWrapper>(API_URL)
+        return this.http.get<ProjectPageWrapper>(API_URL + "/jkshj")
             .subscribe((page: ProjectPageWrapper) => {
                 this.setProjects(page.results)
                 if (this.renderProjects$.value.length < page.results.length) {
@@ -65,7 +65,7 @@ export class ProjectService {
                 }
             },
             (error: HttpErrorResponse) => {
-                alert(error.message)
+                alert(error.status + " : " + error.statusText)
             });
     }
 
@@ -77,7 +77,7 @@ export class ProjectService {
                 this.setRenderProjects(project.results)
             },
             (error: HttpErrorResponse) => {
-                alert(error.message)
+                alert(error.status + " : " + error.statusText)
             });
     }
 
@@ -88,7 +88,7 @@ export class ProjectService {
                 this.setProject(project)
             },
             (error: HttpErrorResponse) => {
-                alert(error.message)
+                alert(error.status + " : " + error.statusText)
             });
     }
 
@@ -98,7 +98,7 @@ export class ProjectService {
                 this.setRenderProjects(page.results)
             },
             (error: HttpErrorResponse) => {
-                alert(error.message)
+                alert(error.status + " : " + error.statusText)
             })
     }
 
@@ -108,7 +108,7 @@ export class ProjectService {
                 this.addProject(response)
             },
             (error: HttpErrorResponse) => {
-                alert(error.message)
+                alert(error.status + " : " + error.statusText)
             });
     }
 
@@ -120,7 +120,7 @@ export class ProjectService {
             this.addProject(response)
         },
         (error: HttpErrorResponse) => {
-            alert(error.message)
+            alert(error.status + " : " + error.statusText)
         });
     }
 

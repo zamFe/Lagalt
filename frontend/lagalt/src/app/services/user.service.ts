@@ -47,7 +47,7 @@ export class UserService {
         },
         (error: HttpErrorResponse) => {
             //console.log(error.message);
-            alert(error.message)
+            alert(error.status + " : " + error.statusText)
         });
   }
 
@@ -59,7 +59,7 @@ export class UserService {
         },
         (error: HttpErrorResponse) => {
             //console.log(error.message);
-            alert(error.message)
+            alert(error.status + " : " + error.statusText)
         });
   }
 
@@ -91,7 +91,7 @@ export class UserService {
     },
     (error: HttpErrorResponse) => {
         //console.log(error.message);
-        alert(error.message)
+        alert(error.status + " : " + error.statusText)
     });
   }
 
@@ -112,7 +112,7 @@ export class UserService {
     .subscribe(() => {},
     (error: HttpErrorResponse) => {
       //console.log(error.message);
-      alert(error.message)
+      alert(error.status + " : " + error.statusText)
     });
   }
 }

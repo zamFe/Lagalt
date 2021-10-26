@@ -31,7 +31,7 @@ export class MessageService {
         },
         (error: HttpErrorResponse) => {
             //console.log(error.message);
-            alert(error.message)
+            alert(error.status + " : " + error.statusText)
         });
   }
 
@@ -42,7 +42,7 @@ export class MessageService {
       },
       (error: HttpErrorResponse) => {
           //console.log(error.message);
-          alert(error.message)
+          alert(error.status + " : " + error.statusText)
       })
   }
 }
