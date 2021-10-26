@@ -1,7 +1,9 @@
-﻿using LagaltAPI.Models.Domain;
+﻿using Bogus;
+using LagaltAPI.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LagaltAPI.Context
 {
@@ -53,204 +55,82 @@ namespace LagaltAPI.Context
             foreach (Skill s in skills)
                 modelBuilder.Entity<Skill>().HasData(s);
 
-            var users = new User[]
-            {
-                new User
-                {
-                    Id = 1,
-                    Hidden = false,
-                    Username = "Bob",
-                    Description = "Looking for my friend, Mr. Tambourine",
-                    Image = "https://upload.wikimedia.org/wikipedia/commons/0/02/Bob_Dylan_-_Azkena_Rock_Festival_2010_2.jpg",
-                    Portfolio = "https://en.wikipedia.org/wiki/Bob_Dylan_discography",
-                    Viewed = new int[] { 1 },
-                    Clicked = new int[] { 1 },
-                    ContributedTo = new int[] { 1 }
-                },
-                new User
-                {
-                    Id = 2,
-                    Hidden = false,
-                    Username = "Grohl",
-                    Description = "Lærer å fly for øyeblikket",
-                    Portfolio = "https://en.wikipedia.org/wiki/Dave_Grohl#Career",
-                    Viewed = new int[] { 1 },
-                    Clicked = new int[] { 1 },
-                    AppliedTo = new int[] { 1 },
-                    ContributedTo = new int[] { 1 }
-                },
-                new User
-                {
-                    Id = 3,
-                    Username = "DoubleOh",
-                    Image = "https://upload.wikimedia.org/wikipedia/commons/6/6b/Sean_Connery_as_James_Bond_in_Goldfinger.jpg",
-                    Viewed = new int[] { 1 },
-                    Clicked = new int[] { 1 },
-                    AppliedTo = new int[] { 1 }
-                },
-                new User
-                {
-                    Id = 4,
-                    Hidden = false,
-                    Username = "ManOfEgg",
-                    Portfolio = "https://static.wikia.nocookie.net/villains/images/2/21/Mister_Robotnik_the_Doctor.jpg/",
-                    Viewed = new int[] { 2 },
-                    Clicked = new int[] { 2 },
-                    ContributedTo = new int[] { 2 }
-                },
-                new User
-                {
-                    Id = 5,
-                    Hidden = false,
-                    Username = "Rob",
-                    Description = "Spillutvikler, elns",
-                    Viewed = new int[] { 3 },
-                    Clicked = new int[] { 3 },
-                    ContributedTo = new int[] { 3 }
-                },
-                new User{
-                    Id = 6,
-                    Hidden = false,
-                    Username = "Drew",
-                    Image = "https://avatars.githubusercontent.com/u/1310872",
-                    Portfolio = "https://git.sr.ht/~sircmpwn",
-                    Viewed = new int[] { 4 },
-                    Clicked = new int[] { 4 },
-                    ContributedTo = new int[] { 4 }
-                }
-            };
-            foreach (User u in users)
-                modelBuilder.Entity<User>().HasData(u);
+            /* SEEDING PLAN:
+            * PROJECTS: 1000
+            * USERS: 2000
+            * PROFESSIONS: 4
+            * ADMINS: 300
+            * SKILLS: 100
+            * MESSAGES: 1000
+            * APPLICATIONS: 1000
+            * UPDATES: 1000
+            */
 
-            var projects = new Project[]
-            {
-                new Project
-                {
-                    Id = 1,
-                    ProfessionId = professions[0].Id,
-                    AdministratorIds = new int[] {1},
-                    Title = "Skrive et album på en ubåt",
-                    Description = "Jeg har alltid hatt lyst til å reise i en ubåt, og jeg må også skrive låter",
-                    Progress = "In Progress",
-                    Image = "https://upload.wikimedia.org/wikipedia/commons/d/d8/Submarine_Vepr_by_Ilya_Kurganov_crop.jpg"
-                },
-                new Project
-                {
-                    Id = 2,
-                    ProfessionId = professions[1].Id,
-                    AdministratorIds = new int[] {4},
-                    Title = "Den Filmiske Film Filmen",
-                    Description = "Some call them movies and some call them films. På norsk gjør vi det litt enklere"
-                },
-                new Project
-                {
-                    Id = 3,
-                    ProfessionId = professions[2].Id,
-                    AdministratorIds = new int[] {5},
-                    Title = "Enda et tetris spill",
-                    Description = "Hva kan gå galt?",
-                    Progress =  "Completed",
-                    Source = "https://github.com/vocollapse/Blockinger"
-                },
-                new Project
-                {
-                    Id = 4,
-                    ProfessionId = professions[2].Id,
-                    AdministratorIds = new int[] {6},
-                    Title = "Minecraft Nostalgi",
-                    Description = "Alt var bedre før",
-                    Progress = "Stalled",
-                    Source = "https://github.com/ddevault/TrueCraft"
-                },
-                new Project
-                {
-                    Id = 5,
-                    ProfessionId = professions[3].Id,
-                    Title = "Reddit API",
-                    Description = "Jeg har definitivt lest det",
-                    Progress = "Stalled",
-                    Image = "https://raw.githubusercontent.com/ddevault/TrueCraft/master/TrueCraft.Client/Content/terrain.png",
-                    Source = "https://github.com/ddevault/RedditSharp"
-                },
-            };
-            foreach (Project p in projects)
-                modelBuilder.Entity<Project>().HasData(p);
+            var userIds = 1;
+            var userFaker = new Faker<User>()
+                .RuleFor(u => u.Id, f => userIds++)
+                .RuleFor(u => u.Hidden, f => f.Random.Bool())
+                .RuleFor(u => u.Username, f => f.Internet.UserName())
+                .RuleFor(u => u.Description, f => f.Name.JobTitle())
+                .RuleFor(u => u.Image, f => f.Image.PicsumUrl())
+                .RuleFor(u => u.Portfolio, f => f.Internet.Url())
+                .RuleFor(u => u.Viewed, f => Enumerable.Range(10, 100).Select(x => f.Random.Int(1, 1000)).ToArray())
+                .RuleFor(u => u.Clicked, f => Enumerable.Range(5, 50).Select(x => f.Random.Int(1, 1000)).ToArray())
+                .RuleFor(u => u.ContributedTo, f => Enumerable.Range(1, 10).Select(x => f.Random.Int(1, 1000)).ToArray());
 
-            var messages = new Message[]
-            {
-                // Submarine project messsages
-                new Message
-                {
-                    Id = 1,
-                    UserId = users[0].Id,
-                    ProjectId = projects[0].Id,
-                    Content = "Andre enn meg som liker ubåter?",
-                    PostedTime = new DateTime(2021, 10, 2, 12, 30, 52)
-                },
-                new Message
-                {
-                    Id = 2,
-                    UserId = users[1].Id,
-                    ProjectId = projects[0].Id,
-                    Content = "Jaa",
-                    PostedTime = new DateTime(2021, 10, 2, 12, 40, 33)
-                },
-                new Message
-                {
-                    Id = 3,
-                    UserId = users[2].Id,
-                    ProjectId = projects[0].Id,
-                    Content = "Usikker, vi må se an",
-                    PostedTime = new DateTime(2021, 10, 3, 8, 20, 03)
-                },
-            };
-            foreach (Message m in messages)
-                modelBuilder.Entity<Message>().HasData(m);
+            modelBuilder
+                .Entity<User>()
+                .HasData(userFaker.Generate(2000));
 
-            var updates = new Update[]
-            {
-                // Submarine project updates
-                new Update
-                {
-                    Id = 1,
-                    UserId = users[0].Id,
-                    ProjectId = projects[0].Id,
-                    Content = "Nå har vi fått leid en ubåt!",
-                    PostedTime = new DateTime(2021, 10, 9, 2, 30, 32)
-                },
-            };
-            foreach (Update u in updates)
-                modelBuilder.Entity<Update>().HasData(u);
+            var rand = new Random();
 
-            var applications = new Application[]
-            {
-                new Application
-                {
-                    Id = 1,
-                    ProjectId = projects[0].Id,
-                    UserId = users[1].Id,
-                    Accepted = true,
-                    Motivation = "Jeg elsker også ubåter!!!",
-                },
-                new Application
-                {
-                    Id = 2,
-                    ProjectId = projects[0].Id,
-                    UserId = users[2].Id,
-                    Accepted = true,
-                    Motivation = "Prøver å finne ut om jeg liker ubåter...",
-                },
-                new Application
-                {
-                    Id = 3,
-                    ProjectId = projects[0].Id,
-                    UserId = users[4].Id,
-                    Accepted = false,
-                    Motivation = "Hva er en ubåt?",
-                },
-            };
-            foreach (Application a in applications)
-                modelBuilder.Entity<Application>().HasData(a);
+            var projectIds = 1;
+            var projectFaker = new Faker<Project>()
+                .RuleFor(p => p.Id, f => projectIds++)
+                .RuleFor(p => p.ProfessionId, f => f.Random.Int(1, 4))
+                .RuleFor(p => p.AdministratorIds, f => Enumerable.Range(1, 3).Select(x => f.Random.Int(1, 2000)).ToArray())
+                .RuleFor(p => p.Title, f => f.Commerce.ProductName())
+                .RuleFor(p => p.Description, f => f.Commerce.ProductDescription())
+                .RuleFor(p => p.Progress, f => "founding")
+                .RuleFor(p => p.Image, f => f.Image.PicsumUrl());
+
+            modelBuilder
+                .Entity<Project>()
+                .HasData(projectFaker.Generate(1000));
+
+            var messageIds = 1;
+            var messageFaker = new Faker<Message>()
+                .RuleFor(m => m.Id, f => messageIds++)
+                .RuleFor(m => m.UserId, f => f.Random.Int(1, 2000))
+                .RuleFor(m => m.ProjectId, f => f.Random.Int(1, 1000))
+                .RuleFor(m => m.Content, f => f.Lorem.Sentence(3, 5))
+                .RuleFor(m => m.PostedTime, f => f.Date.Recent());
+
+            modelBuilder
+                .Entity<Message>()
+                .HasData(messageFaker.Generate(1000));
+
+            var updateIds = 1;
+            var updateFaker = new Faker<Update>()
+                .RuleFor(m => m.Id, f => updateIds++)
+                .RuleFor(m => m.UserId, f => f.Random.Int(1, 2000))
+                .RuleFor(m => m.ProjectId, f => f.Random.Int(1, 1000))
+                .RuleFor(m => m.Content, f => f.Lorem.Sentence(3, 5))
+                .RuleFor(m => m.PostedTime, f => f.Date.Recent());
+
+            modelBuilder
+                .Entity<Update>()
+                .HasData(updateFaker.Generate(1000));
+
+            var applicationIds = 1;
+            var applicationFaker = new Faker<Application>()
+                .RuleFor(m => m.Id, f => applicationIds++)
+                .RuleFor(m => m.ProjectId, f => f.Random.Int(1, 1000))
+                .RuleFor(m => m.UserId, f => f.Random.Int(1, 2000))
+                .RuleFor(m => m.Accepted, f => f.Random.Bool())
+                .RuleFor(m => m.Motivation, f => f.Lorem.Sentence(3, 5));
+
+            modelBuilder.Entity<Application>().HasData(applicationFaker.Generate(1000));
 
             modelBuilder.Entity<User>()
                 .HasMany(user => user.Skills)

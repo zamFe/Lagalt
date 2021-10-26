@@ -124,11 +124,12 @@ namespace LagaltAPI.Controllers
         }
 
         /// <summary>
-        ///     Fetches projects from the database according to the specified offset and limit.
+        ///     Fetches projects from the database, filtering based on query parameters.
         /// </summary>
         /// <param name="offset"> Specifies the index of the first project to be included. </param>
         /// <param name="limit"> Specifies how many projects to include. </param>
         /// <param name="professionId"> Specifies a profession id to filter projects by. </param>
+        /// <param name="keyword"> Specifies a keyword to filter projects by. </param>
         /// <returns>
         ///     A page containing all available read-specific DTOs within the specified range.
         /// </returns>
@@ -136,15 +137,16 @@ namespace LagaltAPI.Controllers
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<Page<ProjectCompactReadDTO>>> GetProjects(
-            [FromQuery] int offset, [FromQuery] int limit, [FromQuery] int professionId)
+            [FromQuery] int offset, [FromQuery] int limit, [FromQuery] int professionId,
+            [FromQuery] string keyword)
         {
             // TODO - Track history (viewed).
 
             var range = new PageRange(offset, limit);
 
             var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
-                await _projectService.GetPageAsync(range, professionId));
-            var totalProjects = await _projectService.GetTotalProjectsAsync(professionId);
+                await _projectService.GetPageAsync(range, professionId, keyword));
+            var totalProjects = await _projectService.GetTotalProjectsAsync(professionId, keyword);
             var baseUri = _uriService.GetBaseUrl() + "api/Projects";
             return new Page<ProjectCompactReadDTO>(projects, totalProjects, range, baseUri);
         }
