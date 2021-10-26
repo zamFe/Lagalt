@@ -143,12 +143,13 @@ namespace LagaltAPI.Controllers
             // TODO - Track history (viewed).
 
             var range = new PageRange(offset, limit);
+            var validKeyword = keyword == null ? "" : keyword.Trim().ToLower();
 
             var projects = _mapper.Map<List<ProjectCompactReadDTO>>(
-                await _projectService.GetPageAsync(range, professionId, keyword));
-            var totalProjects = await _projectService.GetTotalProjectsAsync(professionId, keyword);
+                await _projectService.GetPageAsync(range, professionId, validKeyword));
+            var totalProjects = await _projectService.GetTotalProjectsAsync(professionId, validKeyword);
             var baseUri = _uriService.GetBaseUrl() + "api/Projects";
-            return new Page<ProjectCompactReadDTO>(projects, totalProjects, range, baseUri);
+            return new Page<ProjectCompactReadDTO>(projects, totalProjects, range, baseUri, validKeyword);
         }
 
         /// <summary> Generates recommended projects for a user. </summary>
