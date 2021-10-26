@@ -57,7 +57,7 @@ export class ProjectService {
 
     // API CRUD calls
     public getProjects(): Subscription {
-        return this.http.get<ProjectPageWrapper>(API_URL + "/jladhl")
+        return this.http.get<ProjectPageWrapper>(API_URL)
             .subscribe((page: ProjectPageWrapper) => {
                 this.setProjects(page.results)
                 if (this.renderProjects$.value.length < page.results.length) {
