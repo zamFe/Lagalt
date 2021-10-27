@@ -44,14 +44,13 @@ namespace LagaltAPI.Context
                 modelBuilder.Entity<Profession>().HasData(p);
 
             /* SEEDING PLAN */
-            int PROJECT_COUNT = 1000;
-            int USER_COUNT = 2000;
+            int PROJECT_COUNT = 100;
+            int USER_COUNT = 200;
             int PROFESSION_COUNT = 4;
-            int ADMIN_COUNT = 300;
             int SKILL_COUNT = 100;
-            int MESSAGE_COUNT = 1000;
-            int APPLICATION_COUNT = 1000;
-            int UPDATE_COUNT = 1000;
+            int MESSAGE_COUNT = 500;
+            int APPLICATION_COUNT = 200;
+            int UPDATE_COUNT = 300;
 
             var skillIds = 1;
             var skillFaker = new Faker<Skill>()
@@ -69,8 +68,8 @@ namespace LagaltAPI.Context
                 .RuleFor(u => u.Description, f => f.Name.JobTitle())
                 .RuleFor(u => u.Image, f => f.Image.PicsumUrl())
                 .RuleFor(u => u.Portfolio, f => f.Internet.Url())
-                .RuleFor(u => u.Viewed, f => Enumerable.Range(10, 100).Select(x => f.Random.Int(1, PROJECT_COUNT)).ToArray())
-                .RuleFor(u => u.Clicked, f => Enumerable.Range(5, 50).Select(x => f.Random.Int(1, PROJECT_COUNT)).ToArray())
+                .RuleFor(u => u.Viewed, f => Enumerable.Range(10, 50).Select(x => f.Random.Int(1, PROJECT_COUNT)).ToArray())
+                .RuleFor(u => u.Clicked, (f, u) => Enumerable.Range(5, 25).Select(x => u.Viewed[f.Random.Int(1, u.Viewed.Length - 1)]).ToArray())
                 .RuleFor(u => u.ContributedTo, f => Enumerable.Range(1, 10).Select(x => f.Random.Int(1, PROJECT_COUNT)).ToArray());
 
             modelBuilder
