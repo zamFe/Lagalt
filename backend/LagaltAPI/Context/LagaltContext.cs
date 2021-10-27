@@ -198,7 +198,7 @@ namespace LagaltAPI.Context
         {
             Random rnd = new();
             List<object> output = new();
-            for(int i = 0; i < 2000; i++)
+            for(int i = 0; i < 100; i++)
             {
                 int pId = rnd.Next(1, 1000);
                 int uId = rnd.Next(1, 2000);
@@ -213,7 +213,7 @@ namespace LagaltAPI.Context
         {
             Random rnd = new();
             List<object> output = new();
-            for (int i = 1; i <= 2000; i++)
+            for (int i = 1; i <= 100; i++)
             {
                 for(int j = 0; j < rnd.Next(3, 6); j++)
                 {
@@ -231,7 +231,7 @@ namespace LagaltAPI.Context
         {
             Random rnd = new();
             List<object> output = new();
-            for (int i = 1; i <= 1000; i++)
+            for (int i = 1; i <= 50; i++)
             {
                 for (int j = 0; j < rnd.Next(3, 6); j++)
                 {
