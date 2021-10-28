@@ -1,9 +1,12 @@
 .container {
   padding: 1rem;
 }
-
+.matchedSkill + .border {
+  border-color: green;
+  background-color: #A3BE8C;
+}
 .border {
-  border-color: #81A1C1;
+  /* border-color: #81A1C1; */
   border-width: 0.2rem !important;
 }
 
@@ -12,9 +15,11 @@
     min-width: 168px;
     min-height: 100px;
 }
-
+.matchedSkill:hover ~ .projectItem{
+  background-color: green;
+}
 .list-item {
-  color: green;
+  border-color: green;
   font-weight: bold;
 }
 

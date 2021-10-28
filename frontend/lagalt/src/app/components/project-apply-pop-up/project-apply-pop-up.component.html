@@ -29,7 +29,7 @@
          </form>
         </div>
         <div *ngIf="userAccept" class="modal-footer">
-          <button type="button" class="btn" (click)="applyToProject()">Apply</button>
+          <button type="button" class="btn" (click)="applyToProject(); modal.dismiss()">Apply</button>
           <!-- <button type="button" class="btn" (click)="modal.close('Apply click')">Apply</button> -->
         </div>
       </ng-template>
