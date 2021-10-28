@@ -5,8 +5,6 @@ import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { catchError, finalize, mapTo, retry, switchMap, tap } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 
-
-
 const API_URL_USERS = `${environment.apiUrl}Users`
 const defaultUser : UserComplete = {
   id: 0,
@@ -24,6 +22,7 @@ const defaultUser : UserComplete = {
 export class UserService {
   private _loading: boolean = false;
 
+  // Store variables
   public readonly users$: BehaviorSubject<UserComplete[]> = new BehaviorSubject<UserComplete[]>([]);
   public readonly user$: BehaviorSubject<UserComplete> = new BehaviorSubject<UserComplete>(defaultUser);
 
@@ -36,8 +35,6 @@ export class UserService {
   public setUser(user: UserComplete): void {
     this.user$.next(user)
   }
-
-
 
    // API CRUD calls
   public getUsers(): Subscription {
@@ -68,7 +65,6 @@ export class UserService {
         });
   }
 
-  // trenger ikke error
   public getUserByUsername(username: string): Subscription{
     return this.http.get<UserComplete>(`${API_URL_USERS}/username/${username}`)
         .subscribe((user: UserComplete) => {
@@ -76,7 +72,6 @@ export class UserService {
         });
   }
 
-  // trenger ikke error
   public userExists(username: string): Observable<any>{
     return this.http.get(`${API_URL_USERS}/username/${username}`)
   }
@@ -96,12 +91,10 @@ export class UserService {
         this.setUser(response)
     },
     (error: HttpErrorResponse) => {
-        //console.log(error.message);
         alert(error.status + " : " + error.statusText)
     });
   }
 
-  // IKKE TESTET
   public putUser(): Subscription {
     this._loading = true;
     let tempSkills = this.user$.value.skills.map(element => element.id)
@@ -118,7 +111,6 @@ export class UserService {
     return this.http.put(`${API_URL_USERS}/${putUser.id}`, putUser)
     .subscribe(() => {},
     (error: HttpErrorResponse) => {
-      //console.log(error.message);
       alert(error.status + " : " + error.statusText)
     });
   }

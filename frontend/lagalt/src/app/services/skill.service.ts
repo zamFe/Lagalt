@@ -12,6 +12,7 @@ export class SkillService {
   private _loading: boolean = false;
 
   public readonly skills$: BehaviorSubject<Skill[]> = new BehaviorSubject<Skill[]>([]);
+  
   constructor(private readonly http: HttpClient) { }
 
 
@@ -33,7 +34,6 @@ export class SkillService {
             this.setSkills(skills)
         },
         (error: HttpErrorResponse) => {
-            //console.log(error.message);
             alert(error.status + " : " + error.statusText)
         });
   }
@@ -46,9 +46,7 @@ export class SkillService {
         this.addSkill(response)
       },
             (error: HttpErrorResponse) => {
-                //console.log(error.message);
                 alert(error.status + " : " + error.statusText)
             })
-  }
-    
+  }   
 }

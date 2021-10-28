@@ -33,7 +33,6 @@ export class MessageService {
             this.setMessages(messages.results)
         },
         (error: HttpErrorResponse) => {
-            //console.log(error.message);
             alert(error.status + " : " + error.statusText)
         });
   }
@@ -46,7 +45,6 @@ export class MessageService {
         this.addMessage(message)
       },
       (error: HttpErrorResponse) => {
-          //console.log(error.message);
           alert(error.status + " : " + error.statusText)
       })
   }

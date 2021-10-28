@@ -1,71 +1,72 @@
 <div class="my-overlay" *ngIf="loading">
   <i class="fa fa-spinner fa-spin" aria-hidden="true"> Loading..</i>
 </div>
-<div class ="container-fluid profilepage">
+<div class="container-fluid profilepage">
   <div *ngIf="auth.user$ | async as authUser">
-  <div class ="row" style="margin-bottom: 20px;">
-    <h1 class ="col-sm-10 text-center">
-      Hei {{authUser.name}}
-    </h1>
-    <div class ="col-sm-2 text-end">
-      <mat-slide-toggle
-        [(ngModel)]="isChecked"
-        class="example-margin"
-        (change) = "changed()"
-        >Privat modus
-      </mat-slide-toggle>
+    <div class="row" style="margin-bottom: 20px">
+      <h1 class="col-sm-10 text-center">Hei {{authUser.name}}</h1>
+      <div class="col-sm-2 text-end">
+        <mat-slide-toggle
+          [(ngModel)]="isChecked"
+          class="example-margin"
+          (change)="changed()"
+          >Privat modus
+        </mat-slide-toggle>
+      </div>
     </div>
   </div>
-  </div>
-  <div class ="row">
+  <div class="row">
     <div class="col-sm-6">
-      <form #addSkillForm="ngForm" (ngSubmit)="addSkill(addSkillForm); addSkillForm.resetForm()">
+      <form
+        #addSkillForm="ngForm"
+        (ngSubmit)="addSkill(addSkillForm); addSkillForm.resetForm()"
+      >
         <input
-        ngModel
-        class="form-control"
-        placeholder="Legg til erfaringer..."
-        #username="ngModel"
-        name = "skills"
-        id = "skills"
-        required> <br/>
+          ngModel
+          class="form-control"
+          placeholder="Legg til erfaringer..."
+          #username="ngModel"
+          name="skills"
+          id="skills"
+          required
+        />
+        <br />
         <div class="p-3 justify-content-center">
-          <button class="btn skill form-control"
-          type="submit" >Legg til erfaring</button>
-          <h5>
-            Dine nåværende erfaringer er:
-          </h5>
+          <button class="btn skill form-control" type="submit">
+            Legg til erfaring
+          </button>
+          <h5>Dine nåværende erfaringer er:</h5>
           <div class="curr-skills">
             <ul>
               <li *ngFor="let skill of user.skills">{{skill.name}}</li>
             </ul>
           </div>
-
         </div>
       </form>
     </div>
-    <div class ="col-sm-6">
-      <form #handleDescriptionForm="ngForm" (ngSubmit)="handleDescription(handleDescriptionForm)">
+    <div class="col-sm-6">
+      <form
+        #handleDescriptionForm="ngForm"
+        (ngSubmit)="handleDescription(handleDescriptionForm)"
+      >
         <input
-        ngModel
-        class="form-control"
-        placeholder="Gi en kort beskrivelse av deg selv..."
-        #username="ngModel"
-        name = "description"
-        id = "description"
-        required> <br/>
+          ngModel
+          class="form-control"
+          placeholder="Gi en kort beskrivelse av deg selv..."
+          #username="ngModel"
+          name="description"
+          id="description"
+          required
+        />
+        <br />
         <div class="p-3 justify-content-center">
-          <button class="btn desc form-control"
-            type="submit">Oppdater din beskrivelse
+          <button class="btn desc form-control" type="submit">
+            Oppdater din beskrivelse
           </button>
-          <h5>
-            Din nåværende beskrivelse er:
-          </h5>
-          <div class="current-desc">
-            {{user.description}}
-          </div>
+          <h5>Din nåværende beskrivelse er:</h5>
+          <div class="current-desc">{{user.description}}</div>
         </div>
       </form>
     </div>
   </div>
 </div>
-

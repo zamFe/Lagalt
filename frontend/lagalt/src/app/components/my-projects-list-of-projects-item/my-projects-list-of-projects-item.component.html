@@ -1,11 +1,11 @@
 <div class="container border my-1 text-center d-flex flex-column">
   <li class="projectItem row">
     <div class="col-sm-6">
-      <span class="align-self-center h4">{{project.title}}</span>
+      <span class="align-self-center h4">{{ project.title }}</span>
       <div class="row mt-3">
         <div class="col-sm-3">
           <div [ngSwitch]="project.profession.id">
-              <div *ngSwitchCase="1" class="filterOption btn-music">
+            <div *ngSwitchCase="1" class="filterOption btn-music">
               <span>Musikk</span>
             </div>
             <div *ngSwitchCase="2" class="filterOption btn-film">
@@ -24,9 +24,7 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-3">
-
-    </div>
+    <div class="col-sm-3"></div>
     <div class="col-sm-3">
       <div class="d-flex col col-sm-4">
         <span class="row-sm-6 align-self-center">
@@ -34,7 +32,7 @@
         </span>
         <ul class="row-sm-6">
           <li *ngFor="let skill of project.skills">
-            {{skill.name}}
+            {{ skill.name }}
           </li>
         </ul>
       </div>

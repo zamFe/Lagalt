@@ -1,46 +1,58 @@
-
-<div *ngIf="this.userRole === 'admin', else isUser">
-</div>
+<div *ngIf="this.userRole === 'admin'; else isUser"></div>
 <ng-template #isUser>
-  <div *ngIf="this.userRole === 'user', else isGuest">
+  <div *ngIf="this.userRole === 'user'; else isGuest">
     <div class="popup">
       <ng-template #content let-modal>
-        <div class=" modal-header ">
-          <h4 class="modal-title" id="modal-basic-title">Søk deg inn til prosjektet:<br/> <h2>{{projectName}}</h2></h4>
-          <button type="button" class="btn close btn" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">
+            Søk deg inn til prosjektet:<br />
+            <h2>{{ projectName }}</h2>
+          </h4>
+          <button
+            type="button"
+            class="btn close btn"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+          >
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="check text-center">
           <mat-checkbox class="example-margin" [(ngModel)]="userAccept">
-           <h5>
-            Jeg godkjenner at prosjektleder kan <br/> se brukernavnet og erfaringene mine
-           </h5>
+            <h5>
+              Jeg godkjenner at prosjektleder kan <br />
+              se brukernavnet og erfaringene mine
+            </h5>
           </mat-checkbox>
         </div>
         <div class="checkingsize modal-body modal-lg">
-          <form [formGroup] = "textAreaForm">
-            <div  class="sub-heading text-center">
-              <h6>
-                Motivasjon for og bli med på prosjektet:
-              </h6>
+          <form [formGroup]="textAreaForm">
+            <div class="sub-heading text-center">
+              <h6>Motivasjon for og bli med på prosjektet:</h6>
             </div>
-            <textarea class ="text-area" formControlName="textArea"></textarea>
-         </form>
+            <textarea class="text-area" formControlName="textArea"></textarea>
+          </form>
         </div>
         <div *ngIf="userAccept" class="modal-footer">
-          <button type="button" class="btn" (click)="applyToProject(); modal.dismiss()">Apply</button>
+          <button
+            type="button"
+            class="btn"
+            (click)="applyToProject(); modal.dismiss()"
+          >
+            Apply
+          </button>
           <!-- <button type="button" class="btn" (click)="modal.close('Apply click')">Apply</button> -->
         </div>
       </ng-template>
 
-      <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Søk deg inn til prosjektet</button>
+      <button class="btn btn-lg btn-outline-primary" (click)="open(content)">
+        Søk deg inn til prosjektet
+      </button>
 
-      <hr>
+      <hr />
     </div>
   </div>
 </ng-template>
 <ng-template #isGuest>
-  <div>
-  </div>
+  <div></div>
 </ng-template>

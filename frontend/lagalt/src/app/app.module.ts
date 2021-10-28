@@ -9,11 +9,9 @@ import { MainListOfProjectsComponent } from './components/main-list-of-projects/
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MainListOfProjectsItemComponent } from './components/main-list-of-projects-item/main-list-of-projects-item.component';
 import { ProfilePage } from './pages/profile/profile.page';
-import { ProfileUserInfoComponent } from './components/profile-user-info/profile-user-info.component';
-import { ProfileSettingsComponent } from './components/profile-settings/profile-settings.component';
-import { ProjectPage } from "./pages/project/project.page";
+import { ProjectPage } from './pages/project/project.page';
 import { ProjectChatComponent } from './components/project-chat/project-chat.component';
-import { HttpClientModule, HTTP_INTERCEPTORS} from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './token-interceptor';
 import { ProjectApplyPopUpComponent } from './components/project-apply-pop-up/project-apply-pop-up.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -45,8 +43,6 @@ import { GetRecommendedComponent } from './components/get-recommended/get-recomm
     NavbarComponent,
     MainListOfProjectsItemComponent,
     ProfilePage,
-    ProfileUserInfoComponent,
-    ProfileSettingsComponent,
     ProjectPage,
     ProjectChatComponent,
     ProjectApplyPopUpComponent,
@@ -74,27 +70,24 @@ import { GetRecommendedComponent } from './components/get-recommended/get-recomm
     NgbModule,
     AuthModule.forRoot({
       domain: 'dev--rmchv2w.eu.auth0.com',
-      clientId: 'OoAzUGX9zMtfwak3auYzMkZCuURGRbA3'
+      clientId: 'OoAzUGX9zMtfwak3auYzMkZCuURGRbA3',
     }),
     MatRadioModule,
     MatCheckboxModule,
   ],
-  exports: [
-    MatSlideToggleModule,
-    BrowserAnimationsModule,
-  ],
+  exports: [MatSlideToggleModule, BrowserAnimationsModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
-      multi: true
+      multi: true,
     },
     {
       provide: JWT_OPTIONS,
-      useValue: JWT_OPTIONS
+      useValue: JWT_OPTIONS,
     },
-    JwtHelperService
+    JwtHelperService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

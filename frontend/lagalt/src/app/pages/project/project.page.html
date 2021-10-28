@@ -2,46 +2,38 @@
   <i class="fa fa-spinner fa-spin" aria-hidden="true"> Loading..</i>
 </div>
 
-<div class ="projectPage container-fluid">
-
+<div class="projectPage container-fluid">
   <div class="row project-details">
-    <img class="image col-sm-3" src="{{project.image}}"
-    onerror="this.src='https://cdn.mos.cms.futurecdn.net/3upZx2gxxLpW7MBbnKYQLH-970-80.jpg.webp'" alt="project logo"/>
+    <img
+      class="image col-sm-3"
+      src="{{project.image}}"
+      onerror="this.src='https://cdn.mos.cms.futurecdn.net/3upZx2gxxLpW7MBbnKYQLH-970-80.jpg.webp'"
+      alt="project logo"
+    />
     <div class="col-sm-7 project-industry text-center">
       <div class="title">
         <h1>{{project.title}}</h1>
       </div>
       <div class="description text-center">
-        <h3>
-          Prosjekt beskrivelse:
-        </h3>
+        <h3>Prosjekt beskrivelse:</h3>
       </div>
     </div>
-    <div  class="col-sm-2 project-name text-center">
-      <div class="" style="font-weight: bold;">
-          <!-- Prosjektet er laget av: {{user.username}} -->
-      </div>
-      <div class="statusdiv" style="font-weight: bold;">
+    <div class="col-sm-2 project-name text-center">
+      <div class="statusdiv" style="font-weight: bold">
         <div class="statustext">
           <h5>Prosjekt status:</h5>
         </div>
-        <div class="projectprogress text-center">
-          {{project.progress}}
-        </div>
+        <div class="projectprogress text-center">{{project.progress}}</div>
       </div>
       <div class="skillsdiv">
         <div class="skilltext text-center">
-          <h5>
-            Ferdigheter som trengs:
-          </h5>
+          <h5>Ferdigheter som trengs:</h5>
         </div>
         <div class="skilllist text-start">
           <div *ngFor="let skill of project.skills">
-            <li>
-              {{skill.name}}
-            </li>
+            <li>{{skill.name}}</li>
           </div>
-      </div>
+        </div>
       </div>
 
       <!-- <h4>{{project.profession}}</h4> -->
@@ -53,27 +45,31 @@
     </div>
     <div class="col-sm-7">
       <div class="projdesc text-center">
-        <h5>
-          {{project.description}}
-        </h5>
+        <h5>{{project.description}}</h5>
       </div>
     </div>
 
     <div class="col-sm-2">
-      <div class="skillsinput " *ngIf="this.userRole === 'admin'">
+      <div class="skillsinput" *ngIf="this.userRole === 'admin'">
         <div class="skillsinputdiv">
-          <form #addSkillForm="ngForm" (ngSubmit)="addSkill(addSkillForm); addSkillForm.resetForm()">
+          <form
+            #addSkillForm="ngForm"
+            (ngSubmit)="addSkill(addSkillForm); addSkillForm.resetForm()"
+          >
             <input
-            ngModel
-            class="form-control"
-            placeholder="Legg til erfaring..."
-            #username="ngModel"
-            name = "skills"
-            id = "skills"
-            required> <br/>
+              ngModel
+              class="form-control"
+              placeholder="Legg til erfaring..."
+              #username="ngModel"
+              name="skills"
+              id="skills"
+              required
+            />
+            <br />
             <div class="text-center">
-              <button class="btn skill form-control"
-              type="submit">Legg til</button>
+              <button class="btn skill form-control" type="submit">
+                Legg til
+              </button>
             </div>
           </form>
         </div>
@@ -92,4 +88,4 @@
       </div>
     </div>
   </div>
- </div>
+</div>

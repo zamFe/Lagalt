@@ -6,16 +6,14 @@ import { SkillService } from 'src/app/services/skill.service';
 @Component({
   selector: 'app-my-projects',
   templateUrl: './my-projects.component.html',
-  styleUrls: ['./my-projects.component.css']
+  styleUrls: ['./my-projects.component.css'],
 })
-export class MyProjectsComponent implements OnInit{
-
+export class MyProjectsComponent implements OnInit {
   public userId: number = 0;
-  constructor(private readonly myProjectService: MyProjectService,
-    private readonly skillsService: SkillService) {
-  }
-  
-
+  constructor(
+    private readonly myProjectService: MyProjectService,
+    private readonly skillsService: SkillService
+  ) {}
 
   get totalPages(): number {
     return this.myProjectService.pages;
@@ -27,16 +25,15 @@ export class MyProjectsComponent implements OnInit{
   onNextClick() {
     this.myProjectService.nextPage(this.userId);
   }
-  
+
   onPrevClick() {
     this.myProjectService.prevPage(this.userId);
   }
 
   ngOnInit(): void {
-    this.userId = Number(localStorage.getItem('userId'))
+    this.userId = Number(localStorage.getItem('userId'));
     this.myProjectService.getProjectsByUserId(this.userId);
     this.skillsService.getSkills();
-    
   }
 
   get loading(): boolean {
@@ -46,5 +43,4 @@ export class MyProjectsComponent implements OnInit{
   get myProjectsPagination(): boolean {
     return this.myProjectService.myProjectsPagination;
   }
-
 }

@@ -1,24 +1,58 @@
 <div class="">
-    <form class="form-inline" #searchProjectForm="ngForm" (ngSubmit)="searchForProject(professionId)">
-        <div class="d-flex form-outline align-items-center">
-            <input
-            [(ngModel)]="searchField"
-            class="form-control"
-            placeholder="Søk for et prosjekt her..."
-            #searchInput="ngModel"
-            name = "searchInput"
-            id = "searchInput"
-            required>
-            <button class="btn btn-outline-dark btn-search form-control"
-                            type="submit">Søk</button>
-        </div>
-    </form>
-    <div class="filterOptions">
-        <button class="btn filterOption btn-outline-dark btn-all" (click)="searchForProject(0)">Alle</button>
-        <app-get-recommended></app-get-recommended>
-        <button class="btn filterOption btn-outline-dark btn-music" (click)="searchForProject(1)">Musikk</button>
-        <button class="btn filterOption btn-outline-dark btn-film" (click)="searchForProject(2)">Film</button>
-        <button class="btn filterOption btn-outline-dark btn-game" (click)="searchForProject(3)">Spill</button>
-        <button class="btn filterOption btn-outline-dark btn-web" (click)="searchForProject(4)">Web</button>
+  <form
+    class="form-inline"
+    #searchProjectForm="ngForm"
+    (ngSubmit)="searchForProject(professionId)"
+  >
+    <div class="d-flex form-outline align-items-center">
+      <input
+        [(ngModel)]="searchField"
+        class="form-control"
+        placeholder="Søk for et prosjekt her..."
+        #searchInput="ngModel"
+        name="searchInput"
+        id="searchInput"
+        required
+      />
+      <button
+        class="btn btn-outline-dark btn-search form-control"
+        type="submit"
+      >
+        Søk
+      </button>
     </div>
+  </form>
+  <div class="filterOptions">
+    <button
+      class="btn filterOption btn-outline-dark btn-all"
+      (click)="searchForProject(0)"
+    >
+      Alle
+    </button>
+    <app-get-recommended></app-get-recommended>
+    <button
+      class="btn filterOption btn-outline-dark btn-music"
+      (click)="searchForProject(1)"
+    >
+      Musikk
+    </button>
+    <button
+      class="btn filterOption btn-outline-dark btn-film"
+      (click)="searchForProject(2)"
+    >
+      Film
+    </button>
+    <button
+      class="btn filterOption btn-outline-dark btn-game"
+      (click)="searchForProject(3)"
+    >
+      Spill
+    </button>
+    <button
+      class="btn filterOption btn-outline-dark btn-web"
+      (click)="searchForProject(4)"
+    >
+      Web
+    </button>
+  </div>
 </div>
