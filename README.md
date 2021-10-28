@@ -31,6 +31,7 @@ Lagalt is a project management platform designed to connect individuals in creat
 
 The Lagalt website is written in Angular.
 It is a single page web application hosted as an Azure static web app.
+
 Hostet at: [lagalt website](https://orange-tree-0b9310403.azurestaticapps.net)
 
 ### Back-End
@@ -38,6 +39,7 @@ Hostet at: [lagalt website](https://orange-tree-0b9310403.azurestaticapps.net)
 The Lagalt API is written in ASP.NET.
 It is a RESTful api with CORS protection and authorization.
 It is hosted on an Azure App Service.
+
 Hostet at: [lagalt API](https://lagalt-api-f.azurewebsites.net)
 
 ### Data Storage
