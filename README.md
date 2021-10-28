@@ -27,7 +27,7 @@ Lagalt is a project management platform designed to connect individuals in creat
     * **AUTH_DOMAIN:** Domain for Auth0
     * **CLOUD_PLATFORM:** Either "HEROKU" or "AZURE" *!only for Heroku and Azure!*
     * **DATABASE_URL:** The connection string for pgsql. Supports the formats given by Heroku and Azure
-    * **FRONTEND_URL** The url to your front-end *can be localhost*. This is to bypass CORS restrictions
+    * **FRONTEND_URL** The url to your front-end (*can be localhost*). This is to bypass CORS restrictions
 4. Open `Lagalt/backend/LagaptAPI/LagaltAPI.sln` in Visual Studio 2019
 5. Run `update-database` in the package manager console
 
