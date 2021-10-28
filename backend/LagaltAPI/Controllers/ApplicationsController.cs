@@ -15,7 +15,7 @@ namespace LagaltAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
-    //[Authorize]
+    [Authorize]
     public class ApplicationsController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -37,10 +37,10 @@ namespace LagaltAPI.Controllers
 
         private  ValidationResult ValidateNewApplication(Application application)
         {
-            if (_userService.UserExists(application.UserId))
+            if (!_userService.UserExists(application.UserId))
                 return new ValidationResult(false, "Unable to find user");
 
-            if (_projectService.ProjectExists(application.ProjectId))
+            if (!_projectService.ProjectExists(application.ProjectId))
                 return new ValidationResult(false, "Unable to find project");
 
             if (_applicationService.UserHasAppliedToProject(

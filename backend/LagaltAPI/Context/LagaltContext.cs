@@ -43,16 +43,14 @@ namespace LagaltAPI.Context
             foreach (Profession p in professions)
                 modelBuilder.Entity<Profession>().HasData(p);
 
-            /* SEEDING PLAN:
-            * PROJECTS: 1000
-            * USERS: 2000
-            * PROFESSIONS: 4
-            * ADMINS: 300
-            * SKILLS: 100
-            * MESSAGES: 1000
-            * APPLICATIONS: 1000
-            * UPDATES: 1000
-            */
+            /* SEEDING PLAN */
+            int PROJECT_COUNT = 100;
+            int USER_COUNT = 200;
+            int PROFESSION_COUNT = 4;
+            int SKILL_COUNT = 100;
+            int MESSAGE_COUNT = 500;
+            int APPLICATION_COUNT = 200;
+            int UPDATE_COUNT = 300;
 
             var skillIds = 1;
             var skillFaker = new Faker<Skill>()
@@ -70,21 +68,21 @@ namespace LagaltAPI.Context
                 .RuleFor(u => u.Description, f => f.Name.JobTitle())
                 .RuleFor(u => u.Image, f => f.Image.PicsumUrl())
                 .RuleFor(u => u.Portfolio, f => f.Internet.Url())
-                .RuleFor(u => u.Viewed, f => Enumerable.Range(10, 100).Select(x => f.Random.Int(1, 1000)).ToArray())
-                .RuleFor(u => u.Clicked, f => Enumerable.Range(5, 50).Select(x => f.Random.Int(1, 1000)).ToArray())
-                .RuleFor(u => u.ContributedTo, f => Enumerable.Range(1, 10).Select(x => f.Random.Int(1, 1000)).ToArray());
+                .RuleFor(u => u.Viewed, f => Enumerable.Range(10, 50).Select(x => f.Random.Int(1, PROJECT_COUNT)).ToArray())
+                .RuleFor(u => u.Clicked, (f, u) => Enumerable.Range(5, 25).Select(x => u.Viewed[f.Random.Int(1, u.Viewed.Length - 1)]).ToArray())
+                .RuleFor(u => u.ContributedTo, f => Enumerable.Range(1, 10).Select(x => f.Random.Int(1, PROJECT_COUNT)).ToArray());
 
             modelBuilder
                 .Entity<User>()
-                .HasData(userFaker.Generate(2000));
+                .HasData(userFaker.Generate(USER_COUNT));
 
             var rand = new Random();
 
             var projectIds = 1;
             var projectFaker = new Faker<Project>()
                 .RuleFor(p => p.Id, f => projectIds++)
-                .RuleFor(p => p.ProfessionId, f => f.Random.Int(1, 4))
-                .RuleFor(p => p.AdministratorIds, f => Enumerable.Range(1, 3).Select(x => f.Random.Int(1, 2000)).ToArray())
+                .RuleFor(p => p.ProfessionId, f => f.Random.Int(1, PROFESSION_COUNT))
+                .RuleFor(p => p.AdministratorIds, f => Enumerable.Range(1, 3).Select(x => f.Random.Int(1, USER_COUNT)).ToArray())
                 .RuleFor(p => p.Title, f => f.Commerce.ProductName())
                 .RuleFor(p => p.Description, f => f.Commerce.ProductDescription())
                 .RuleFor(p => p.Progress, f => "founding")
@@ -92,41 +90,41 @@ namespace LagaltAPI.Context
 
             modelBuilder
                 .Entity<Project>()
-                .HasData(projectFaker.Generate(1000));
+                .HasData(projectFaker.Generate(PROJECT_COUNT));
 
             var messageIds = 1;
             var messageFaker = new Faker<Message>()
                 .RuleFor(m => m.Id, f => messageIds++)
-                .RuleFor(m => m.UserId, f => f.Random.Int(1, 2000))
-                .RuleFor(m => m.ProjectId, f => f.Random.Int(1, 1000))
+                .RuleFor(m => m.UserId, f => f.Random.Int(1, USER_COUNT))
+                .RuleFor(m => m.ProjectId, f => f.Random.Int(1, PROJECT_COUNT))
                 .RuleFor(m => m.Content, f => f.Lorem.Sentence(3, 5))
                 .RuleFor(m => m.PostedTime, f => f.Date.Recent());
 
             modelBuilder
                 .Entity<Message>()
-                .HasData(messageFaker.Generate(1000));
+                .HasData(messageFaker.Generate(MESSAGE_COUNT));
 
             var updateIds = 1;
             var updateFaker = new Faker<Update>()
                 .RuleFor(m => m.Id, f => updateIds++)
-                .RuleFor(m => m.UserId, f => f.Random.Int(1, 2000))
-                .RuleFor(m => m.ProjectId, f => f.Random.Int(1, 1000))
+                .RuleFor(m => m.UserId, f => f.Random.Int(1, USER_COUNT))
+                .RuleFor(m => m.ProjectId, f => f.Random.Int(1, PROJECT_COUNT))
                 .RuleFor(m => m.Content, f => f.Lorem.Sentence(3, 5))
                 .RuleFor(m => m.PostedTime, f => f.Date.Recent());
 
             modelBuilder
                 .Entity<Update>()
-                .HasData(updateFaker.Generate(1000));
+                .HasData(updateFaker.Generate(UPDATE_COUNT));
 
             var applicationIds = 1;
             var applicationFaker = new Faker<Application>()
                 .RuleFor(a => a.Id, f => applicationIds++)
-                .RuleFor(a => a.ProjectId, f => f.Random.Int(1, 1000))
-                .RuleFor(a => a.UserId, f => f.Random.Int(1, 2000))
+                .RuleFor(a => a.ProjectId, f => f.Random.Int(1, PROJECT_COUNT))
+                .RuleFor(a => a.UserId, f => f.Random.Int(1, USER_COUNT))
                 .RuleFor(a => a.Accepted, f => f.Random.Bool())
                 .RuleFor(a => a.Motivation, f => f.Lorem.Sentence(3, 5));
 
-            modelBuilder.Entity<Application>().HasData(applicationFaker.Generate(1000));
+            modelBuilder.Entity<Application>().HasData(applicationFaker.Generate(APPLICATION_COUNT));
 
             modelBuilder.Entity<User>()
                 .HasMany(user => user.Skills)
@@ -141,7 +139,7 @@ namespace LagaltAPI.Context
                         je.HasKey("SkillId", "UserId");
                         je.HasData
                         (
-                            GenerateUserSkills()
+                            GenerateUserSkills(SKILL_COUNT, USER_COUNT)
                         );
                     }
                 );
@@ -159,7 +157,7 @@ namespace LagaltAPI.Context
                         je.HasKey("SkillId", "ProjectId");
                         je.HasData
                         (
-                            GenerateProjectSkills()
+                            GenerateProjectSkills(SKILL_COUNT, PROJECT_COUNT)
                         );
                     }
                 );
@@ -177,7 +175,7 @@ namespace LagaltAPI.Context
                         je.HasKey("UserId", "ProjectId");
                         je.HasData
                         (
-                           GenerateUserProjects()
+                           GenerateUserProjects(PROJECT_COUNT, USER_COUNT)
                         );
                     }
                 );
@@ -194,14 +192,14 @@ namespace LagaltAPI.Context
             public int UserId { get; }
         }
 
-        private static List<object> GenerateUserProjects()
+        private static List<object> GenerateUserProjects(int PROJECT_COUNT, int USER_COUNT)
         {
             Random rnd = new();
             List<object> output = new();
-            for(int i = 0; i < 2000; i++)
+            for(int i = 0; i < 100; i++)
             {
-                int pId = rnd.Next(1, 1000);
-                int uId = rnd.Next(1, 2000);
+                int pId = rnd.Next(1, PROJECT_COUNT);
+                int uId = rnd.Next(1, USER_COUNT);
                 if (!output.Contains(new { ProjectId = pId, UserId = uId })) {
                     output.Add(new { ProjectId = pId, UserId = uId });
                 }
@@ -209,15 +207,15 @@ namespace LagaltAPI.Context
             return output;
         }
 
-        private static List<object> GenerateUserSkills()
+        private static List<object> GenerateUserSkills(int SKILL_COUNT, int USER_COUNT)
         {
             Random rnd = new();
             List<object> output = new();
-            for (int i = 1; i <= 2000; i++)
+            for (int i = 1; i <= USER_COUNT; i++)
             {
-                for(int j = 0; j < rnd.Next(3, 6); j++)
+                for(int j = 0; j < rnd.Next(1, 3); j++)
                 {
-                    int sId = rnd.Next(1, 100);
+                    int sId = rnd.Next(1, SKILL_COUNT);
                     if (!output.Contains(new { SkillId = sId, UserId = i }))
                     {
                         output.Add(new { SkillId = sId, UserId = i });
@@ -227,15 +225,15 @@ namespace LagaltAPI.Context
             return output;
         }
 
-        private static List<object> GenerateProjectSkills()
+        private static List<object> GenerateProjectSkills(int SKILL_COUNT, int PROJECT_COUNT)
         {
             Random rnd = new();
             List<object> output = new();
-            for (int i = 1; i <= 1000; i++)
+            for (int i = 1; i <= PROJECT_COUNT; i++)
             {
-                for (int j = 0; j < rnd.Next(3, 6); j++)
+                for (int j = 0; j < rnd.Next(1, 3); j++)
                 {
-                    int sId = rnd.Next(1, 100);
+                    int sId = rnd.Next(1, SKILL_COUNT);
                     if (!output.Contains(new { SkillId = sId, ProjectId = i }))
                     {
                         output.Add(new { SkillId = sId, ProjectId = i });
