@@ -23,6 +23,8 @@
 }
 .projectprogress{
   color:#354A59;
+  margin-bottom: 15px;
+
 }
 
 .projcet-apply-button{
@@ -97,21 +99,28 @@
   background-color: #D8DEE9;
   border: solid;
   border-radius: 1%;
+  margin-bottom: 10px;
+
 }
 
 .skillsinputdiv{
   margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .status{
-  margin-top: 5px;
+  margin-top: 15px;
   background-color: #D8DEE9;
   border: solid;
   border-radius: 1%;
   height: 180px;
 }
-
-
+.statustext{
+  margin-top: 15px;
+}
+.skilltext{
+ margin-top: 15px;
+}
 .my-overlay {
   left: 0 !important;
   top: 0 !important;
@@ -131,3 +140,4 @@
 .my-overlay i.fa.fa-spinner.fa-spin, .spinner-big {
   font-size: 100px !important;
 }
+
