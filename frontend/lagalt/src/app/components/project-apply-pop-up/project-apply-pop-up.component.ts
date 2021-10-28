@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Project } from "../../models/project.model";
+import { Project } from '../../models/project.model';
 import { ProjectService } from 'src/app/services/project.service';
 import { Observable, Subscription } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
@@ -15,79 +15,75 @@ import { ApplicationService } from 'src/app/services/application.service';
   styleUrls: ['./project-apply-pop-up.component.css'],
 })
 export class ProjectApplyPopUpComponent implements OnInit, OnDestroy {
-  private project$: Subscription
-  private user$ : Subscription
-  public progress: string = "";
-  public adminId : number[] = [];
-  public userId : number = 0;
-  public projectId : number = 0
-  public userRole: string = ""
-  public userAccept : boolean = true
+  private project$: Subscription;
+  private user$: Subscription;
+  public progress: string = '';
+  public adminId: number[] = [];
+  public userId: number = 0;
+  public projectId: number = 0;
+  public userRole: string = '';
+  public userAccept: boolean = true;
 
-  public application : PostApplication = {
+  public application: PostApplication = {
     projectId: 0,
     userId: 0,
-    motivation: ''
-  }
+    motivation: '',
+  };
 
   closeResult = '';
 
-  projectName: string = ""
+  projectName: string = '';
   public textAreaForm: FormGroup;
 
-  constructor(private modalService: NgbModal, private fb : FormBuilder,
-    private readonly projectService: ProjectService, private readonly userService: UserService,
-    private readonly applicationService : ApplicationService) {
+  constructor(
+    private modalService: NgbModal,
+    private fb: FormBuilder,
+    private readonly projectService: ProjectService,
+    private readonly userService: UserService,
+    private readonly applicationService: ApplicationService
+  ) {
     this.textAreaForm = fb.group({
-      textArea: ""
+      textArea: '',
     });
 
-    this.project$ = this.projectService.project$.subscribe((project : Project) => {
-      this.projectId = project.id
-      this.projectName = project.title
-    })
+    this.project$ = this.projectService.project$.subscribe(
+      (project: Project) => {
+        this.projectId = project.id;
+        this.projectName = project.title;
+      }
+    );
 
-    this.project$ = this.projectService.project$.subscribe((project : Project) => {
-      this.adminId = project.administratorIds
-
-
-    })
-    this.user$ = this.userService.user$.subscribe((user : UserComplete) => {
-      this.userId = user.id
-
-    })
+    this.project$ = this.projectService.project$.subscribe(
+      (project: Project) => {
+        this.adminId = project.administratorIds;
+      }
+    );
+    this.user$ = this.userService.user$.subscribe((user: UserComplete) => {
+      this.userId = user.id;
+    });
     if (this.userId && this.adminId?.includes(this.userId)) {
-      this.userRole = "admin"
-    }
-    else if (this.userId) {
-      this.userRole = "user"
-    }
-    else {
-      this.userRole = "guest"
+      this.userRole = 'admin';
+    } else if (this.userId) {
+      this.userRole = 'user';
+    } else {
+      this.userRole = 'guest';
     }
   }
-  applyToProject(){
-    this.application.userId = this.userId
-    this.application.projectId = this.projectId
-    this.application.motivation = this.textAreaForm.value.textArea
-    this.applicationService.postApplication(this.application)
+  applyToProject() {
+    this.application.userId = this.userId;
+    this.application.projectId = this.projectId;
+    this.application.motivation = this.textAreaForm.value.textArea;
+    this.applicationService.postApplication(this.application);
   }
 
   open(content: any) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
-  ifAdmin(){
+  ifAdmin() {
     // Check if current user is in the projects admin id list
-
   }
 
-
-  ngOnInit(): void {
-
-
-  }
-  ngOnDestroy(): void {
-  }
-
+  ngOnInit(): void {}
+  ngOnDestroy(): void {}
 }

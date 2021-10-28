@@ -1,5 +1,5 @@
-export interface UserCompact{
-    id : number,
-    username: string,
-    image : string
+export interface UserCompact {
+  id: number;
+  username: string;
+  image: string;
 }

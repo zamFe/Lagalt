@@ -11,9 +11,6 @@ import { UserComplete } from 'src/app/models/user/user-complete.model';
 import { NgForm } from '@angular/forms';
 import { SkillService } from 'src/app/services/skill.service';
 
-
-
-
 @Component({
   selector: 'app-project',
   templateUrl: './project.page.html',
@@ -53,12 +50,12 @@ export class ProjectPage implements OnInit, OnDestroy {
   public userRole: string = "";
   public adminName : string = "";
   private userIdsInProject: number[] = [];
+
   constructor(private readonly projectService : ProjectService,
               private readonly messageService : MessageService,
               private readonly userService : UserService,
               private readonly skillService : SkillService,
               private route: ActivatedRoute) {
-
     this.projectId = Number(this.route.snapshot.params.id)
     this.project$ = this.projectService.project$.subscribe((project: Project) => {
       this.project = project;
@@ -85,7 +82,6 @@ export class ProjectPage implements OnInit, OnDestroy {
     else {
       this.userRole = "guest"
     }
-
   }
 
   ngOnInit(): void {
@@ -101,9 +97,7 @@ export class ProjectPage implements OnInit, OnDestroy {
     this.project$.unsubscribe();
   }
 
-
   addSkill(addSkillForm : NgForm){
-
     let projectId : number[] = []
     this.projectService.project$.subscribe((project : Project) => {
       projectId = [project.id]

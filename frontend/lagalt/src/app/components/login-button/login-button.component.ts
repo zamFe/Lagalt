@@ -5,7 +5,7 @@ import { DOCUMENT } from '@angular/common';
 @Component({
   selector: 'app-login-button',
   templateUrl: './login-button.component.html',
-  styleUrls: ['./login-button.component.css']
+  styleUrls: ['./login-button.component.css'],
 })
 export class LoginButtonComponent implements OnInit {
   constructor(public auth: AuthService) {}
@@ -13,9 +13,10 @@ export class LoginButtonComponent implements OnInit {
   ngOnInit(): void {}
 
   loginWithRedirect(): void {
-    //this.auth.loginWithRedirect();
-    this.auth.loginWithRedirect({appState: {
-      target: "profile"
-    }});
+    this.auth.loginWithRedirect({
+      appState: {
+        target: 'profile',
+      },
+    });
   }
 }

@@ -1,4 +1,4 @@
 export interface Profession {
-    id: number,
-    name: string
+  id: number;
+  name: string;
 }

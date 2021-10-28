@@ -6,14 +6,13 @@ import { Router, RouterLink, NavigationExtras } from '@angular/router';
 @Component({
   selector: 'app-main',
   templateUrl: './main.page.html',
-  styleUrls: ['./main.page.css']
+  styleUrls: ['./main.page.css'],
 })
 export class MainPage implements OnInit {
-
   constructor(
     private readonly projectService: ProjectService,
-    private readonly skillsService: SkillService) {
-    }
+    private readonly skillsService: SkillService
+  ) {}
 
   get totalPages(): number {
     return this.projectService.pages;
@@ -25,11 +24,11 @@ export class MainPage implements OnInit {
   onNextClick() {
     this.projectService.nextPage();
   }
-  
+
   onPrevClick() {
     this.projectService.prevPage();
   }
-  
+
   get loading(): boolean {
     return this.projectService.loading;
   }

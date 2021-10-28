@@ -3,22 +3,22 @@
 }
 
 .border {
-  border-color: #81A1C1;
+  border-color: #81a1c1;
   border-width: 0.2rem !important;
 }
 
 .projectItem {
-    margin: 0;
-    min-width: 168px;
-    min-height: 100px;
+  margin: 0;
+  min-width: 168px;
+  min-height: 100px;
 }
 
 ul {
-  list-style: none ;
+  list-style: none;
 }
 
 span {
-    opacity: 1;
+  opacity: 1;
 }
 
 .filterOption {
@@ -34,14 +34,14 @@ span {
 }
 
 .btn-music {
-  background-color: #D08770;
+  background-color: #d08770;
 }
 .btn-film {
-  background-color: #EBCB8B;
+  background-color: #ebcb8b;
 }
 .btn-game {
-  background-color: #A3BE8C;
+  background-color: #a3be8c;
 }
 .btn-web {
-  background-color: #B48EAD;
+  background-color: #b48ead;
 }

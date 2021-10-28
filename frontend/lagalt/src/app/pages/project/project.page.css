@@ -1,125 +1,125 @@
-
-.title{
-  background: rgb(229,233,240);
-  background: linear-gradient(90deg, rgba(229,233,240,1) 0%, rgba(216,222,233,1) 35%, rgba(229,233,240,1) 100%);
+.title {
+  background: rgb(229, 233, 240);
+  background: linear-gradient(
+    90deg,
+    rgba(229, 233, 240, 1) 0%,
+    rgba(216, 222, 233, 1) 35%,
+    rgba(229, 233, 240, 1) 100%
+  );
   min-height: 60px;
   text-align: center;
-  color: #2E3440;
+  color: #2e3440;
 }
-.projectPage{
-  background-color: #ECEFF4;
+.projectPage {
+  background-color: #eceff4;
   margin-top: 20px;
- }
- .appchat{
-   margin-top: 10px;
- }
-.projdesc{
-  color:#354A59;
-
 }
-.image{
-    max-height: 275px;
-    max-width: 336px;
+.appchat {
+  margin-top: 10px;
 }
-.projectprogress{
-  color:#354A59;
+.projdesc {
+  color: #354a59;
+}
+.image {
+  max-height: 275px;
+  max-width: 336px;
+}
+.projectprogress {
+  color: #354a59;
   margin-bottom: 15px;
-
 }
 
-.projcet-apply-button{
-    margin: 0;
-    position: absolute;
-    top: 10%;
-    left: 90%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+.projcet-apply-button {
+  margin: 0;
+  position: absolute;
+  top: 10%;
+  left: 90%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
-.description{
+.description {
   margin-top: 160px;
   border: solid;
   width: 65%;
   border-radius: 1%;
-  border-color: #D8DEE9;
-  background-color: #E5E9F0;
+  border-color: #d8dee9;
+  background-color: #e5e9f0;
   margin-left: 125px;
-
 }
-.projdesc{
+.projdesc {
   margin-top: 5px;
   border: solid;
-  border-color: #D8DEE9;
+  border-color: #d8dee9;
   border-width: 2px;
   border-radius: 1%;
   min-height: 500px;
   width: 65%;
   margin: 0 auto;
 }
-.project-industry{
+.project-industry {
 }
 
-.skilllist{
-  color:#354A59;
+.skilllist {
+  color: #354a59;
   margin-left: 15px;
 }
-.skill{
+.skill {
   width: 100px;
   color: white;
-  background-color:#354A59 ;
+  background-color: #354a59;
 }
-.skillsinput{
+.skillsinput {
   text-align: end;
   width: 180;
   margin-top: 5px;
-  background-color: #D8DEE9;
+  background-color: #d8dee9;
   border: solid;
   border-radius: 1%;
   height: 145px;
 }
-.applications{
+.applications {
   margin-top: 25px;
 }
 
-.apply{
+.apply {
   margin-top: 25px;
 }
-.lager{
+.lager {
   margin-top: 15px;
 }
 
-.statusdiv{
-  background-color: #D8DEE9;
+.statusdiv {
+  background-color: #d8dee9;
   border: solid;
   border-radius: 1%;
 }
 
-.skillsdiv{
+.skillsdiv {
   min-height: 200px;
   margin-top: 15px;
-  background-color: #D8DEE9;
+  background-color: #d8dee9;
   border: solid;
   border-radius: 1%;
   margin-bottom: 10px;
-
 }
 
-.skillsinputdiv{
+.skillsinputdiv {
   margin-top: 20px;
   margin-bottom: 10px;
 }
 
-.status{
+.status {
   margin-top: 15px;
-  background-color: #D8DEE9;
+  background-color: #d8dee9;
   border: solid;
   border-radius: 1%;
   height: 180px;
 }
-.statustext{
+.statustext {
   margin-top: 15px;
 }
-.skilltext{
- margin-top: 15px;
+.skilltext {
+  margin-top: 15px;
 }
 .my-overlay {
   left: 0 !important;
@@ -128,7 +128,7 @@
   width: 100% !important;
   height: 100% !important;
   position: fixed !important;
-  background-color: rgba(0,0,0,0.9) !important;
+  background-color: rgba(0, 0, 0, 0.9) !important;
   cursor: pointer !important;
   visibility: visible !important;
   transition: visibility 0s, opacity 0.4s linear !important;
@@ -137,7 +137,7 @@
   justify-content: center;
   cursor: wait !important;
 }
-.my-overlay i.fa.fa-spinner.fa-spin, .spinner-big {
+.my-overlay i.fa.fa-spinner.fa-spin,
+.spinner-big {
   font-size: 100px !important;
 }
-

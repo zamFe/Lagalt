@@ -3,15 +3,29 @@
 </div>
 <div class="container border my-1 text-center d-flex flex-column">
   <ul class="d-flex flex-wrap flex-column">
-    <div *ngFor="let application of applications" >
+    <div *ngFor="let application of applications">
       <li class="projectItem row" *ngIf="application.seen === false">
         <div class="col-sm-3">
           <div class="row mt-3">
             <span class="align-self-center h4">Brukernavn:</span>
-            <span class="align-self-center h4">{{application.user.username}}</span>
+            <span class="align-self-center h4"
+              >{{application.user.username}}</span
+            >
             <div class="button-box col-lg-12">
-              <button type="button" class="btn-accept" (click)="acceptApplication(application.id)">Godkjenn</button>
-              <button type="button" class="btn-decline" (click)="declineApplication(application.id)">Avvis</button>
+              <button
+                type="button"
+                class="btn-accept"
+                (click)="acceptApplication(application.id)"
+              >
+                Godkjenn
+              </button>
+              <button
+                type="button"
+                class="btn-decline"
+                (click)="declineApplication(application.id)"
+              >
+                Avvis
+              </button>
             </div>
           </div>
         </div>
@@ -19,23 +33,19 @@
           <div class="container">
             <div class="row">
               <div class="form-group col-sm">
-                <div style="font-weight:bold;">
+                <div style="font-weight: bold">
                   Erfaringer som prosjektet trenger
                 </div>
-                <div *ngFor= "let skill of application.user.skills">
+                <div *ngFor="let skill of application.user.skills">
                   <div *ngIf="this.skillMatched === 'Matched'" class="col-sm-3">
-                  {{skill.name}}
+                    {{skill.name}}
                   </div>
                 </div>
               </div>
               <div class="form-group col-sm">
-                <div style="font-weight:bold;">
-                  Motivasjon for å bli med
-                </div>
-                <br/>
-                <div>
-                  {{application.motivation}}
-                </div>
+                <div style="font-weight: bold">Motivasjon for å bli med</div>
+                <br />
+                <div>{{application.motivation}}</div>
               </div>
             </div>
           </div>

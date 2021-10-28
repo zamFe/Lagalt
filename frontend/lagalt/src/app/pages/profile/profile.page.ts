@@ -1,20 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { PutUser, UserComplete } from 'src/app/models/user/user-complete.model';
-import { NgForm, ReactiveFormsModule } from '@angular/forms';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { UserComplete } from 'src/app/models/user/user-complete.model';
+import { NgForm } from '@angular/forms';
 import { AuthService } from '@auth0/auth0-angular';
 import { UserService } from 'src/app/services/user.service';
 import { SkillService } from 'src/app/services/skill.service';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { Skill} from 'src/app/models/skill.model';
-import { Project } from 'src/app/models/project.model';
+import { Skill } from 'src/app/models/skill.model';
 import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
-  styleUrls: ['./profile.page.css']
+  styleUrls: ['./profile.page.css'],
 })
 export class ProfilePage implements OnInit, OnDestroy {
   public profileJson: string = '';
@@ -28,103 +26,104 @@ export class ProfilePage implements OnInit, OnDestroy {
     portfolio: '',
     skills: [],
     projects: [],
-    hidden: false
-  }
-
+    hidden: false,
+  };
 
   public skill: Skill = {
     id: 0,
-    name: ''
-  }
+    name: '',
+  };
 
   public isChecked = true;
   public color = 'accent';
 
-  constructor(private readonly userService : UserService, public auth: AuthService,
-    private readonly skillService : SkillService, private readonly projectService: ProjectService) {
+  constructor(
+    private readonly userService: UserService,
+    public auth: AuthService,
+    private readonly skillService: SkillService,
+    private readonly projectService: ProjectService
+  ) {
     this.user$ = this.userService.user$.subscribe((user: UserComplete) => {
       this.user = user;
       localStorage.setItem('userId', JSON.stringify(user.id));
-    })
+    });
 
     this.skills$ = this.userService.user$.subscribe((user: UserComplete) => {
-      this.user.skills = user.skills
-    })
-
+      this.user.skills = user.skills;
+    });
   }
 
   ngOnInit(): void {
-    this.auth.idTokenClaims$.subscribe(data => localStorage.setItem('token', data!.__raw));
-    this.auth.user$.subscribe(
-      (profile) => {
-        this.user.username = JSON.parse(JSON.stringify(profile?.nickname, null, 2))
-        this.userService.userExists(this.user.username).pipe(finalize(() => {
-        })).subscribe(res => {
-          if(res){
-            this.userService.getUserByUsername(this.user.username)
-         }
-        }, () => {
-          this.userService.postUserByUsername(this.user.username)
-        });
-
-      }
+    this.auth.idTokenClaims$.subscribe((data) =>
+      localStorage.setItem('token', data!.__raw)
     );
+    this.auth.user$.subscribe((profile) => {
+      this.user.username = JSON.parse(
+        JSON.stringify(profile?.nickname, null, 2)
+      );
+      this.userService
+        .userExists(this.user.username)
+        .pipe(finalize(() => {}))
+        .subscribe(
+          (res) => {
+            if (res) {
+              this.userService.getUserByUsername(this.user.username);
+            }
+          },
+          () => {
+            this.userService.postUserByUsername(this.user.username);
+          }
+        );
+    });
     this.skillService.getSkills();
   }
-
 
   ngOnDestroy(): void {
     this.user$.unsubscribe();
   }
 
   //Changes the hidden mode button from true to false or false to true
-  changed(){
-  }
-
+  changed() {}
 
   //Adds skill to a list in the user profile
-  addSkill(addSkillForm : NgForm){
+  addSkill(addSkillForm: NgForm) {
+    let userId: number[] = [];
+    this.userService.user$.subscribe((user: UserComplete) => {
+      userId = [user.id];
+    });
 
-    let userId : number[] = []
-    this.userService.user$.subscribe((user : UserComplete) => {
-      userId = [user.id]
-    })
-
-    let newSkill : Object = {
+    let newSkill: Object = {
       name: addSkillForm.value.skills,
       users: userId,
-      projects: []
-    }
+      projects: [],
+    };
 
-    let skillslist: Skill[] = []
-    this.skillService.skills$.subscribe((data) => skillslist = data)
-    let tempSkill = null
-    tempSkill = skillslist.find(element => element.name === addSkillForm.value.skills)
-    if(tempSkill !== undefined){
-      this.user.skills.push(tempSkill)
-      this.userService.putUser()
-    }
-    else{
-     this.skillService.postSkill(newSkill)
-
+    let skillslist: Skill[] = [];
+    this.skillService.skills$.subscribe((data) => (skillslist = data));
+    let tempSkill = null;
+    tempSkill = skillslist.find(
+      (element) => element.name === addSkillForm.value.skills
+    );
+    if (tempSkill !== undefined) {
+      this.user.skills.push(tempSkill);
+      this.userService.putUser();
+    } else {
+      this.skillService.postSkill(newSkill);
     }
   }
-
-
 
   refresh() {
-    setTimeout(function(){
+    setTimeout(function () {
       window.location.reload();
-        },1000)
+    }, 1000);
   }
 
-  handleDescription(handleDescriptionForm : NgForm){
-    this.user.description = handleDescriptionForm.value.description
+  handleDescription(handleDescriptionForm: NgForm) {
+    this.user.description = handleDescriptionForm.value.description;
     this.userService.putUser();
   }
 
   get loading(): boolean {
     return this.projectService.loading;
   }
-
 }
