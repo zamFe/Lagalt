@@ -21,7 +21,7 @@ Lagalt is a project management platform designed to connect individuals in creat
 
 *Optional:* Set up Auth0 to access restricted endpoints (or remove \[Authorize] in the api controllers)
 1. Set up a PostgreSQL server
-2. The code supports Local, Heroku and Azure deployment, but you need to specify some environment variables:
+2. The code supports Local, Heroku and Azure deployment, but you need to specify some environment variables (either locally on your pc account, or in the config settings for Heroku or Azure):
     * **ASPNETCORE_ENVIRONMENT:** Set to "Production" *!only for Heroku and Azure!*
     * **AUTH_AUDIENCE:** Audience for Auth0
     * **AUTH_DOMAIN:** Domain for Auth0
