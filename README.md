@@ -4,11 +4,11 @@ Lagalt is a project management platform designed to connect individuals in creat
 
 ## The Team
 
-- [Edlix](https://github.com/Edlix)
+- [Edvard Lindgren](https://github.com/Edlix)
 - [Emil Onsøyen](https://github.com/emilons)
-- [lassoer](https://github.com/lassoer)
-- [singh1999](https://github.com/singh1999)
-- [zamfe](https://github.com/zamFe)
+- [Lasse Sørmo](https://github.com/lassoer)
+- [Rahul Singh](https://github.com/singh1999)
+- [Felix Amundsen Zamora](https://github.com/zamFe)
 
 ## Installation Instructons
 
@@ -30,16 +30,19 @@ Lagalt is a project management platform designed to connect individuals in creat
 ### Front-End
 
 The Lagalt website is written in Angular.
+It is a single page web application hosted as an Azure static web app.
 Hostet at: [lagalt website](https://orange-tree-0b9310403.azurestaticapps.net)
 
 ### Back-End
 
 The Lagalt API is written in ASP.NET.
+It is a RESTful api with CORS protection and authorization.
+It is hosted on an Azure App Service.
 Hostet at: [lagalt API](https://lagalt-api-f.azurewebsites.net)
 
 ### Data Storage
 
-The Lagalt API communicates with a Heroku Postgres database using Entity Framework.
+The Lagalt API communicates with an Azure PostgreSQL database using Entity Framework.
 
 ## Features
 
