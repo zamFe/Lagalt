@@ -34,6 +34,10 @@ export class MainPage implements OnInit {
     return this.projectService.loading;
   }
 
+  get recommended(): boolean {
+    return this.projectService.recommended;
+  }
+
   ngOnInit(): void {
     this.projectService.getProjects();
     this.skillsService.getSkills();

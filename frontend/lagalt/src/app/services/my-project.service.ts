@@ -12,9 +12,12 @@ const API_URL = `${environment.apiUrl}Projects`;
 export class MyProjectService {
 
   private _loading: boolean = false;
+  private _myProjectsPagination: boolean = false;
+ 
   // Store observables
   public readonly myProjects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
-
+ 
+  
   // Page properties
   public offset = 0;
   public limit = 10;
@@ -50,6 +53,12 @@ export class MyProjectService {
               this.setMyProjects(project.results)
               this.totalEntities = project.totalEntities;
               this.pages = Math.ceil(this.totalEntities/this.limit)
+              if (this.totalEntities > this.limit) {
+                  this._myProjectsPagination = true;
+              }
+              else {
+                  this._myProjectsPagination = false;
+              }
               this._loading = false;
           },
           (error: HttpErrorResponse) => {
@@ -59,5 +68,10 @@ export class MyProjectService {
 
   get loading(): boolean {
     return this._loading;
-}
+  }
+
+  get myProjectsPagination(): boolean {
+    return this._myProjectsPagination;
+  }
+  
 }

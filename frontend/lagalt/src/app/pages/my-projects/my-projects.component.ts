@@ -43,4 +43,8 @@ export class MyProjectsComponent implements OnInit{
     return this.myProjectService.loading;
   }
 
+  get myProjectsPagination(): boolean {
+    return this.myProjectService.myProjectsPagination;
+  }
+
 }

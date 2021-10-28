@@ -26,10 +26,13 @@ const defaultProject: Project = {
 export class ProjectService {
 
     private _loading: boolean = false;
+    private _recommended: boolean = false; 
 
     // Store observables
     public readonly projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
     public readonly project$: BehaviorSubject<Project> = new BehaviorSubject<Project>(defaultProject);
+    
+    
 
     // Page properties
     public offset = 0;
@@ -76,17 +79,6 @@ export class ProjectService {
         this.getProjects();
     }
 
-    // public nextPageRecommendedProjects(userId: number): void {
-    //     this.offset += this.limit;
-    //     this.currentPage++;
-    //     this.getRecommendedProjectsByUserId(userId);
-    // }
-    // public prevPageRecommendedProjects(userId: number): void {
-    //     this.offset -= this.limit;
-    //     this.currentPage--;
-    //     this.getRecommendedProjectsByUserId(userId);
-    // }
-
     // Filter modifier
     public filterSearchByProfession(professionId: number) {
         this.professionId = professionId;
@@ -94,6 +86,7 @@ export class ProjectService {
 
         // API CRUD calls
     public getProjects(): Subscription {
+        this._recommended = false;
         this._loading = true;
         return this.http.get<ProjectPageWrapper>
         (`${API_URL}?offset=${this.offset}&limit=${this.limit}&professionId=${this.professionId}&keyword=${this.keyword}`)
@@ -121,6 +114,7 @@ export class ProjectService {
     }
 
     public getRecommendedProjectsByUserId(userId: number): Subscription {
+        this._recommended = true;
         this._loading = true;
         return this.http.get<ProjectPageWrapper>(`${API_URL}/Recommended/${userId}`)
             .subscribe((page: ProjectPageWrapper) => {
@@ -160,6 +154,8 @@ export class ProjectService {
     get loading(): boolean {
         return this._loading;
     }
-    
 
+    get recommended(): boolean {
+        return this._recommended;
+    }
 }

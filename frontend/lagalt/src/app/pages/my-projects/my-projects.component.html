@@ -4,7 +4,7 @@
 <div class="">
     <app-my-projects-list-of-projects></app-my-projects-list-of-projects>
   </div>
-  <footer class="pagination container justify-content-center">
+  <footer class="pagination container justify-content-center" *ngIf="myProjectsPagination">
     <div>
       <div class="mt-1">
         <button class="btn btn-outline-dark" (click)="onPrevClick()" [disabled]="currentPage === 1">Prev</button>&nbsp;
