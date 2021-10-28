@@ -19,11 +19,17 @@ Lagalt is a project management platform designed to connect individuals in creat
 
 ### API (Dev mode)
 
-1. Install PostgreSQL and set up a server on localhost
-2. In the environment variables for your pc account, add a new variable
-   `CONNECTION_STRING`, with your PostgreSQL connection string as value
-3. Open `Lagalt/backend/LagaptAPI/LagaltAPI.sln` in Visual Studio 2019
-4. Run `update-database` in the package manager console
+*Optional:* Set up Auth0 to access restricted endpoints (or remove \[Authorize] in the api controllers)
+1. Set up a PostgreSQL server
+2. The code supports Local, Heroku and Azure deployment, but you need to specify some environment variables:
+    * **ASPNETCORE_ENVIRONMENT:** Set to "Production" *!only for Heroku and Azure!*
+    * **AUTH_AUDIENCE:** Audience for Auth0
+    * **AUTH_DOMAIN:** Domain for Auth0
+    * **CLOUD_PLATFORM:** Either "HEROKU" or "AZURE" *!only for Heroku and Azure!*
+    * **DATABASE_URL:** The connection string for pgsql. Supports the formats given by Heroku and Azure
+    * **FRONTEND_URL** The url to your front-end *can be localhost*. This is to bypass CORS restrictions
+4. Open `Lagalt/backend/LagaptAPI/LagaltAPI.sln` in Visual Studio 2019
+5. Run `update-database` in the package manager console
 
 ## Technical
 
