@@ -89,6 +89,7 @@ export class AdminGiveAccessPage implements OnInit {
       seen : true
     }
     this.applicationService.putApplication(this.putApplication)
+    this.applications = this.applications.filter(element => element.id !== id)
   }
 
   acceptApplication(id: number){
@@ -98,6 +99,7 @@ export class AdminGiveAccessPage implements OnInit {
       seen : true
     }
     this.applicationService.putApplication(this.putApplication)
+    this.applications = this.applications.filter(element => element.id !== id)
   }
 
   ngOnInit(): void {
