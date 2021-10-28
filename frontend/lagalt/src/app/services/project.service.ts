@@ -32,8 +32,6 @@ export class ProjectService {
     public readonly projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
     public readonly project$: BehaviorSubject<Project> = new BehaviorSubject<Project>(defaultProject);
     
-    
-
     // Page properties
     public offset = 0;
     public limit = 10;
@@ -46,6 +44,14 @@ export class ProjectService {
     public keyword = "";
 
     constructor(private readonly http : HttpClient) {
+    }
+
+    // Getters
+    get loading(): boolean {
+        return this._loading;
+    }
+    get recommended(): boolean {
+        return this._recommended;
     }
 
     // State CRUD functions
@@ -84,7 +90,7 @@ export class ProjectService {
         this.professionId = professionId;
     }
 
-        // API CRUD calls
+    // API CRUD calls
     public getProjects(): Subscription {
         this._recommended = false;
         this._loading = true;
@@ -149,13 +155,5 @@ export class ProjectService {
         (error: HttpErrorResponse) => {
             alert(error.status + " : " + error.statusText)
         });
-    }
-
-    get loading(): boolean {
-        return this._loading;
-    }
-
-    get recommended(): boolean {
-        return this._recommended;
     }
 }

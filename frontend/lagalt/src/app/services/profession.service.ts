@@ -29,7 +29,6 @@ export class ProfessionService {
             this.setProfessions(professions);
         },
         (error: HttpErrorResponse) => {
-            //console.log(error.message);
             alert(error.status + " : " + error.statusText)
         });
 }

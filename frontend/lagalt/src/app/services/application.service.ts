@@ -33,7 +33,6 @@ export class ApplicationService {
             this.setApplications(applications.results)
         },
         (error: HttpErrorResponse) => {
-            //console.log(error.message);
             alert(error.status + " : " + error.statusText)
         });
   }
@@ -46,7 +45,6 @@ export class ApplicationService {
         this.addApplication(application)
       },
       (error: HttpErrorResponse) => {
-          //console.log(error.message);
           alert(error.status + " : " + error.statusText)
       })
   }
@@ -58,7 +56,6 @@ export class ApplicationService {
         this.addApplication(application)
       },
       (error: HttpErrorResponse) => {
-          //console.log(error.message);
           alert(error.status + " : " + error.statusText)
       })
   }

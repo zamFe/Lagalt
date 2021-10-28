@@ -17,7 +17,6 @@ export class MyProjectService {
   // Store observables
   public readonly myProjects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
  
-  
   // Page properties
   public offset = 0;
   public limit = 10;
@@ -26,6 +25,15 @@ export class MyProjectService {
   public totalEntities = 0;
 
   constructor(private readonly http : HttpClient) {
+  }
+  
+  // Getters
+  get loading(): boolean {
+    return this._loading;
+  }
+
+  get myProjectsPagination(): boolean {
+    return this._myProjectsPagination;
   }
 
   // State CRUD functions
@@ -63,15 +71,7 @@ export class MyProjectService {
           },
           (error: HttpErrorResponse) => {
               alert(error.status + " : " + error.statusText)
-          });
+          }
+        );
   }
-
-  get loading(): boolean {
-    return this._loading;
-  }
-
-  get myProjectsPagination(): boolean {
-    return this._myProjectsPagination;
-  }
-  
 }
