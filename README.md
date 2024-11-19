@@ -6,7 +6,6 @@ Lagalt is a project management platform designed to connect individuals in creat
 
 - [Edvard Lindgren](https://github.com/Edlix)
 - [Emil Onsøyen](https://github.com/emilons)
-- [Lasse Sørmo](https://github.com/lassoer)
 - [Rahul Singh](https://github.com/singh1999)
 - [Felix Amundsen Zamora](https://github.com/zamFe)
 
